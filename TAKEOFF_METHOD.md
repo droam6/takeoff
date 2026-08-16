@@ -425,32 +425,60 @@ Every ⚠️ has a matching tick-box question. Nothing is flagged without being 
 
 ---
 
-## 10. The output template
+## 10. The output template — ANSWER PACK, then PROOF
 
-Every `TAKEOFF_<job>.md` follows this exact order. Do not reorder it, and do not let any
-part of §10.5 leak upward.
+The document is two documents in one binder, and the divider between them is unmissable.
 
-### 10.1 — ORDER THIS  *(the totals box, first thing on the page)*
+**ANSWER PACK** — pages 1–3. What to order, what to check, what to answer. Written to be read
+on a phone, in a ute, once. **THE PROOF** — everything after. Written to be checked, not read.
 
-A single box with the order quantities. **Extra for cuts is already added**, and the box
-says so in words.
+Branding, boxes, header and footer strips are specified in `BRAND.md` and are not optional
+decoration — the header's *drawings revision measured against* line is the only thing
+standing between a tradie and quoting off a superseded set.
+
+### Page 1 — the answer
+
+1. **Header strip** with the document control block: job ref (`TKF-###`), our takeoff
+   revision, **the drawing revision we measured against**, what this supersedes, date.
+2. **ORDER THIS box.** Dotted leaders, monospace, extra for cuts already added.
+   **Pending lines go inside the box**, prefixed `+ ~`, naming the question that unblocks
+   them — a tradie who reads only the box must still learn a room is missing from it.
+   The settings line sits under the bottom rule (§10.1a).
+3. **NOT INCLUDED box.** Same construction, no leaders. Scope we did not measure —
+   waterproofing, screed and falls, substrate prep, labour and pricing — plus every
+   ⚠-unresolved item, each pointing at its question.
+4. **One sentence** on measured vs order. Not a section, not a bulleted explainer: one line
+   saying the order figures are the measured areas with their settings applied and the
+   measured areas are in the proof.
+5. **CHECK THESE *n* THINGS BEFORE YOU QUOTE.** Three to five tick-box questions, only what
+   moves a number materially, each with what it's worth in m².
+
+### 10.1a The ORDER THIS box in detail
 
 ```
 ==================================================
-  ORDER THIS
+          ORDER THIS
 ==================================================
-  Floor tiles ................  36.4 m²
-  Wall tiles .................  58.6 m²
-  Feature tiles ..............  12.0 m²
-  Tile skirting ..............   7.3 m
+  Floor tiles ..............   36.4 m²
+  Wall tiles ...............   58.6 m²
+  Feature tiles ............   12.0 m²
+  Tile skirting ............    7.3 m
+
+  + ~50.8 m² master ensuite walls — pending Q1
 ==================================================
-  Straight lay, 10% extra for cuts — your usual.
-  Different pattern this job? Tell us and we'll re-cut it.
+  Straight lay, 10% extra for cuts and breakage —
+  trade standard, not your settings yet.
 ```
 
-**The settings line is mandatory.** One plain sentence under the rule, saying what was
-applied and where it came from, then an invitation to change it. It is the difference
-between a number handed down and a number he owns.
+- **Round to 0.1** (or up to whole m², per profile). Round each room first, then make the
+  total the sum of the rounded rooms, so the room lines on page 2 visibly add to the total.
+- **One material per line.** Different tile = different order = different line.
+- **Pending lines inside the box**, `+ ~`, each naming its question.
+- Where m² per box was given, a boxes line sits under its material, rounded up, with the
+  coverage shown: `boxes to buy .... 26 boxes  (1.44 m²/box = 37.4 m²)`.
+
+**The settings line is mandatory** — one plain sentence saying what was applied, where it
+came from, and inviting a change:
 
 | Situation | The line reads |
 |---|---|
@@ -458,121 +486,66 @@ between a number handed down and a number he owns.
 | Profile confirmed, job overrides it | *Herringbone this job, 15% extra for cuts — not your usual straight 10%. Say the word if that's wrong.* |
 | Buffers set in the profile | *Straight lay, 10% for cuts plus your standing 5% batch buffer. Drop the buffer any time and we'll re-cut it.* |
 | No profile yet | *Straight lay, 10% extra for cuts — trade standard, not your settings yet. Tell us how you actually work and we'll re-cut every number.* |
-| Box counts available | add: *Boxes worked out at 1.44 m² per box, rounded up.* |
 
-Where m² per box was given, add a boxes line **under** the m² line for that material, with
-the coverage shown so the packaging gap is visible:
+### Page 2 — the rooms
 
-```
-  Floor tiles ................  36.4 m²
-     boxes to buy ............  26 boxes   (1.44 m²/box = 37.4 m²)
-```
+6. **Room by room.** Order quantities, one number per line, rounded to 0.1, plain English,
+   **no arithmetic at all**. ✅ or ⚠ against the room and against any line needing
+   confirmation. One short line per room where the tiling is unusual.
+7. **SITE NOTES box.** Everything about the drawing set that a person standing on site needs
+   and would otherwise have to dig out of the proof: scale anomalies between sheets,
+   hand-drawn markups, setout discrepancies, the measurement convention from the notes page.
 
-Rules:
+### Page 3 — the answer form
 
-- **Round to 0.1.** Round each room first, then make the total the sum of the rounded room
-  figures — so the rooms visibly add up to the total. A total that doesn't match the lines
-  above it destroys trust in every other number on the page.
-- **One material per line.** Different tile = different line, because it's a different
-  order.
-- Anything that is not safe to order (a LOW room, per §6) is **excluded from the box** and
-  listed immediately underneath:
+8. **ASSUMPTIONS — THE ANSWER FORM.** Every fill-in as a table row:
 
-```
-  NOT IN THAT TOTAL — 2 things we can't finish yet
-  • Master ensuite walls — about 50.8 m² more. We need the ceiling
-    height first (question 1).
-  • Powder room floor — about 3.1 m². The floor plan sheet isn't in
-    the set (question 2).
-```
+   | What we assumed | We used | Worth | Your answer |
+   |---|---|---|---|
+   | Master ensuite ceiling height, and whether it's sloped | flat 2700 | ~50.8 m² | ______ |
 
-### 10.2 — CHECK THESE *n* THINGS BEFORE YOU QUOTE
+   Scribble-friendly: he writes in the last column, photographs it, sends it back. Publishing
+   what each assumption is *worth* is the point — it lets him spend his time on the two that
+   matter and ignore the eight that don't.
 
-Immediately below the box. Tick-boxes, plain questions, no numbering scheme beyond 1, 2, 3.
+   Scope choices (tile under the vanity? behind the bath?) go underneath as tick-boxes.
+
+### The divider
 
 ```
-⚠️ CHECK THESE 4 THINGS BEFORE YOU QUOTE
-
-[ ] 1. How high are the master ensuite walls, and is the ceiling sloped?
-       Every other room says 2700. The master ensuite drawings don't say,
-       anywhere. Until you tell us we can't give you a wall number for
-       that room. The floor is fine.
+===========================================================
+   THE PROOF — for checking, not reading.
+===========================================================
 ```
 
-Rules:
+A tradie who stops here has everything he needs and knows it. A tradie who wants to audit us
+has all of it. Neither wades through the other's document.
 
-- **Only what changes a number materially.** Aim for three to five. If everything is
-  urgent, nothing is.
-- Each one: the question in bold as a single line, then two or three plain lines saying
-  what's missing and what it moves. Never more.
-- State the size of the exposure in m² where you can — that's how he decides what to chase.
-- Smaller items do **not** get promoted here. They go in §10.5 under *What we had to fill
-  in*, with a one-line pointer from this section so nothing is hidden:
-  *"There are 8 smaller things we filled in — they're listed at the bottom."*
+### THE PROOF
 
-### 10.3 — ROOM BY ROOM
+9. **The measured areas, and how they became the order** — full precision, then the
+   conversion in visible steps (§7.8), stating that the measured column never changes with
+   anyone's settings and the order column always does.
+10. **Room by room working** — every `×`, every subtraction (§8).
+11. **What we double-checked** — the §5 checks as plain statements with ✅/⚠.
+12. **What we had to fill in** — pointing back to the page-3 form, plus anything that needs
+    saying but doesn't change a number.
+13. **The drawings we read** — sheet numbers, titles, scale, revision.
+14. **Before you quote** — the closing checklist (§11).
 
-One block per room. **Order quantities** (extra for cuts already in), one number per line,
-rounded to 0.1.
+### Last page — the account form
 
-```
-MAIN BATHROOM  ✅
-  Floor tiles ................   9.0 m²
-  Wall tiles .................  29.6 m²   (includes 2 niches)
-  Feature tiles ..............   6.0 m²   behind the vanity
-```
+15. **SET UP YOUR ACCOUNT — answer once, applies to every job you ever send.** The six
+    profile questions (`PROFILE_QUESTIONS.md`) as a fillable form with tick-boxes and blanks.
+    It goes last because it is not about this job. Ask it after he has seen his numbers, not
+    before (`PROFILE_QUESTIONS.md`, *How to ask them*).
 
-Rules:
+### Other trades
 
-- ✅ or ⚠️ against the room name, and against any individual line that needs confirming.
-- A short plain note in the right-hand column where the number needs context
-  (*behind the vanity*, *splashback only*, *tiles run under the vanity*).
-- **No arithmetic in this section.** Not one `×`. It all lives in §10.5.
-- Where a room's tiling is unusual, say so in one plain line, because that's the line that
-  stops him quoting the wrong thing:
-  *"The laundry is not a tiled room — it's a 450 high splashback over the bench, nothing
-  else."*
-
-### 10.4 — Other trades  *(only if in scope)*
-
-Same shape, kept short. Painters get walls and ceilings.
-
-### 10.5 — HOW WE GOT THESE NUMBERS
-
-Everything else, below a clear divider, in this order:
-
-1. **The measured areas, and how they became the order** — the full-precision measured
-   figures (the plans' truth, §7.7), then the conversion shown as its own visible steps:
-   cut allowance, any buffers, rounding, boxes. State plainly that the measured column
-   never changes with anyone's settings and the order column always does.
-2. **Room-by-room working** — every `×` and every subtraction, per §8.
-3. **What we double-checked** — the §5 checks, written as plain statements with ✅/⚠️,
-   *not* as a pass/fail matrix. e.g. *"We added up the four wall drawings and compared them
-   to the walls on the floor plan. Both come to 13,330 mm — dead on."*
-4. **What we had to fill in** — every assumption, each phrased as a question (§10.6).
-5. **The drawings we read** — sheet numbers, titles, scale, revision.
-6. **Before you quote** — the closing checklist (§11).
-
-### 10.6 — Every assumption is a question
-
-Any value inferred, scaled, taken as standard practice, or carried over from another room
-is written as a question a busy tradie can answer in one word.
-
-```
-The main bath window is 1000 wide on the plan, but no sheet says how tall it is.
-We used 1360 and took 1.4 m² off that wall. What's the real height?
-```
-
-Never:
-
-```
-Assumed window height 1360mm.
-```
-
-The first can be answered before the quote goes out. The second can only be discovered on
-site, too late.
-
----
+Painter (or any other trade's) quantities are **behind a profile toggle**, `include_painting`,
+**off by default for tilers**. Measured regardless, mentioned in one line in the proof, shown
+in full only when the customer has asked for them. A tiler should not have to scroll past a
+painter's numbers to reach his own.
 
 ## 11. Before you quote — the closing checklist
 

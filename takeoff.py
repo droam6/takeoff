@@ -22,7 +22,7 @@ Usage
     python takeoff.py plans.pdf
     python takeoff.py plans.pdf --job smith-reno --trade tiler \
         --rooms "main bath, ensuite" --wastage 10
-    python takeoff.py plans.pdf --customer sydney-tiler \
+    python takeoff.py plans.pdf --customer angus \
         --lay-pattern herringbone --tile-size "600x600 porcelain" --m2-per-box 1.44
     python takeoff.py plans.pdf --intake-only
     python takeoff.py plans.pdf --no-analyse
@@ -297,6 +297,7 @@ TRADE_STANDARD = {
     "skirting_in_order_box": "yes",
     "want_box_counts": "yes",
     "rounding": "0.1",
+    "include_painting": "no",
     "batch_variation_buffer": "0",
     "reorder_lead_time_buffer": "0",
     "always_flag": "waterproofing zones, trims in lineal metres",
@@ -376,6 +377,7 @@ def resolve_order_settings(prof: dict, job: dict) -> dict:
         "rounding": prof.get("rounding", "0.1"),
         "skirting_in_box": prof.get("skirting_in_order_box", "yes"),
         "want_boxes": prof.get("want_box_counts", "yes"),
+        "include_painting": prof.get("include_painting", "no"),
         "always_flag": prof.get("always_flag", ""),
         "confirmed": profile_is_confirmed(prof),
     }
@@ -400,6 +402,7 @@ def write_profile_report(job_dir: Path, prof: dict, job: dict, s: dict) -> Path:
          f"| Rounding | {s['rounding']} | profile |",
          f"| Skirting in the order box | {s['skirting_in_box']} | profile |",
          f"| Box counts wanted | {s['want_boxes']} | profile |",
+         f"| Painter quantities shown | {s['include_painting']} | profile |",
          f"| Always flag | {s['always_flag']} | profile |", "",
          "## This job", "",
          f"- **Tile size / format:** {job.get('tile_size') or '_not given - ask_'}",
@@ -514,6 +517,7 @@ Order settings (from order_settings.md - these change the ORDER only):
   Extra buffers : batch {batch_pct}%, lead time {lead_pct}%  -> {total_pct}% added in total
   Rounding      : {rounding}
   Skirting in the order box: {skirting_in_box}
+  Show painter quantities  : {include_painting}
   Tile size     : {tile_size}
   m2 per box    : {m2_per_box}
   Always flag   : {always_flag}
@@ -599,6 +603,7 @@ def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
         batch_pct=f"{s['batch_pct']:g}", lead_pct=f"{s['lead_pct']:g}",
         total_pct=f"{s['total_pct']:g}", rounding=s["rounding"],
         skirting_in_box=s["skirting_in_box"],
+        include_painting=s["include_painting"],
         tile_size=answers.get("tile_size") or "not given - ask",
         m2_per_box=answers.get("m2_per_box") or "not given - no boxes line",
         always_flag=s["always_flag"],
