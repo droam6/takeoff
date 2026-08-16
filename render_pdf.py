@@ -62,6 +62,35 @@ em        { color: #333; }
 
 PROMISE = "Answer the questions — we re-issue free within 24 hours."
 
+BRAND_FILE = Path(__file__).resolve().parent / "BRAND.md"
+
+
+def read_brand(path: Path = BRAND_FILE) -> tuple[str, str]:
+    """Company name and tagline, read from BRAND.md.
+
+    BRAND.md is the single source of truth for the name. Nothing here hardcodes
+    it, so a rename is one edit in one file rather than a grep across the repo.
+    """
+    name, tagline = "", ""
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"\*\*Name:\*\*\s*(.+?)\s*$", line)
+            if m and not name:
+                name = m.group(1).strip()
+            m = re.match(r"\*\*Tagline:\*\*\s*\*?(.+?)\*?\s*$", line)
+            if m and not tagline:
+                tagline = m.group(1).strip()
+            if name and tagline:
+                break
+    except OSError:
+        pass
+    return name or "CHALKLINE", tagline or "Measured, not guessed."
+
+
+def spaced(name: str) -> str:
+    """Wordmark letter-spacing, per BRAND.md."""
+    return " ".join(name.upper())
+
 
 def _text(page, x, y, s, size=8, color=INK, font="helv"):
     page.insert_text(fitz.Point(x, y), s, fontsize=size, color=color, fontname=font)
@@ -71,7 +100,7 @@ def draw_header(page, meta, first: bool, pw: float):
     """Header strip. Full control block on page 1, slim bar after that."""
     L, R, top = 54, pw - 54, 40
     if first:
-        _text(page, L, top, "C H A L K L I N E", 15, INK, "hebo")
+        _text(page, L, top, spaced(meta.get("name", "")), 15, INK, "hebo")
         page.draw_line(fitz.Point(L, top + 6), fitz.Point(L + 168, top + 6),
                        color=ACCENT, width=2)
         _text(page, L, top + 17, meta.get("tagline", "Measured, not guessed."), 8, GREY, "heit")
@@ -87,7 +116,7 @@ def draw_header(page, meta, first: bool, pw: float):
         base = max(top + 26, y)
         page.draw_line(fitz.Point(L, base), fitz.Point(R, base), color=ACCENT, width=1.4)
         return base + 16
-    _text(page, L, top, "C H A L K L I N E", 8.5, INK, "hebo")
+    _text(page, L, top, spaced(meta.get("name", "")), 8.5, INK, "hebo")
     tail = "   ·   ".join(x for x in (meta.get("job"), f"Takeoff {meta.get('rev')}"
                                       if meta.get("rev") else None) if x)
     if tail:
@@ -156,7 +185,8 @@ def main() -> None:
     ap.add_argument("src", type=Path)
     ap.add_argument("dst", type=Path)
     ap.add_argument("--title", default="")
-    ap.add_argument("--tagline", default="Measured, not guessed.")
+    ap.add_argument("--name", default=None, help="defaults to BRAND.md")
+    ap.add_argument("--tagline", default=None, help="defaults to BRAND.md")
     ap.add_argument("--job", default="")
     ap.add_argument("--rev", default="")
     ap.add_argument("--drawings", default="")
@@ -164,8 +194,10 @@ def main() -> None:
     ap.add_argument("--date", default="")
     ap.add_argument("--contact", default="hello@chalkline.example  ·  04XX XXX XXX")
     a = ap.parse_args()
+    brand_name, brand_tagline = read_brand()
     render(a.src, a.dst, {
-        "title": a.title, "tagline": a.tagline, "job": a.job, "rev": a.rev,
+        "title": a.title, "name": a.name or brand_name,
+        "tagline": a.tagline or brand_tagline, "job": a.job, "rev": a.rev,
         "drawings": a.drawings, "supersedes": a.supersedes, "date": a.date,
         "contact": a.contact,
     })

@@ -2,383 +2,223 @@
 
 **Measured, not guessed.**
 
-*Version 2 · 16 August 2026 · reviewed every Sunday*
+*Version 3 · 16 August 2026 · reviewed every Sunday*
+
+> Company name and tagline are read from `BRAND.md`. Rename there, and every document
+> follows — nothing in this repo hardcodes the name.
 
 ---
 
-## 1. What it is
+## 1. The company
 
-**A done-for-you plan-measurement service for trades.**
+**One brand. Four modules. One customer type: trade and local service businesses.**
 
-A tradie sends a plan set. He gets back a branded PDF the same day: room-by-room m², what to
-order, what to check, and every number's working. Nothing to install, nothing to learn, no
-seat licence, no onboarding call.
+The mistake would be to build a takeoff company. Takeoffs are the wedge — the thing that gets
+us in the ute, on the phone, and trusted with a job that matters. What the customer actually
+has is a *business* with holes in it, and measuring plans is only the first one we can plug.
 
-**It is a service they send plans to, not software they have to learn.** That distinction is
-the entire positioning. A solo tiler does not want a measurement tool. He wants the measuring
-to have already happened.
+So: four modules under one brand, sold to the same person. **Every trade has at least one
+entry door**, which matters because takeoffs only serve measuring trades. An electrician
+can't buy a takeoff — he can buy M2 on the same day, from the same person.
 
-What comes back:
+| | Module | What it is | Who it's for | Pricing shape | Status |
+|---|---|---|---|---|---|
+| **M1** | **TAKEOFFS** | Plans in, numbers back same day | Measuring trades — tilers, painters, flooring, waterproofers, renderers | Per job, or a monthly 10-pack | **LIVE — validation phase** |
+| **M2** | **NEVER MISS A JOB** | Missed-call text-back and automatic quote chasing, configured inside the ServiceM8 or Tradify they already own | **Every trade** — the entry door for counting trades like electricians and plumbers | Setup fee + monthly | Unlocks when the pain audit shows demand |
+| **M3** | **GET FOUND** | Website, Google Business Profile, reviews engine | Every trade | One-off build + small monthly | Unlocks when the owed client site ships and becomes the portfolio piece |
+| **M4** | **LOOK THE PART** | Branded quote templates, plus content cut from their own job photos | Every trade | Add-on | **Sold at takeoff delivery from day one** |
 
-- Floor m² per room, net of what he doesn't tile
-- Wall m² per wall, at true tiling heights — not assumed ceiling heights
-- Feature-tile zones priced separately, because they're a different SKU
-- Niches, skirting, linear metres
-- An **ANSWER PACK** — three pages: what to order, what to check, what to answer
-- **THE PROOF** behind a divider — every number's working, for checking not reading
+Two things make this a company rather than a list of services.
+
+**M2 is configured, not built.** We don't sell software. ServiceM8 and Tradify already have
+missed-call text-back and quote follow-up; most tradies have never turned them on, and won't,
+because the settings screen is one more evening job. We charge to make the tool they already
+pay for actually work. That is a setup fee and a monthly, with no product to maintain.
+
+**M4 sells itself at delivery.** The moment a tradie is holding a takeoff that looks better
+than anything else in his inbox, the natural next sentence is *"want your quotes to look like
+this?"* No new meeting, no new lead, no new trust to build.
 
 ---
 
-## 2. The model — three tiers, locked
+## 2. The tiers, restated
 
-Three tiers, in order. **We do not skip ahead**, and the last one is a maybe.
+Unchanged and still locked. **We do not skip ahead**, and the last one is a maybe.
 
-### Tier 1 — operator-run service. Now, and for as long as it works.
+**Tier 1 — the operator-run service IS the business.** Plans in by text, email or WhatsApp; a
+person runs the pipeline, reviews the output, sends a branded PDF back the same day; priced
+per job. Human sign-off on every job is what makes the accuracy claim keepable.
 
-Plans arrive by **text, email or WhatsApp**. A person runs the pipeline, reviews the output,
-and sends a **branded PDF back the same day**. **Priced per job.** No login, no dashboard, no
-account to create.
+**Tier 2 — a front door, when volume demands it.** A dedicated number and a simple page
+feeding the same queue. Plumbing, not a product. Triggered by volume, not ambition.
 
-Every job is read by a human before it goes out. That is what makes the accuracy claim
-keepable, and it is how we keep learning from drawings we didn't choose. The tradie's entire
-experience is *send plans, get numbers* — the same as sending them to an estimator, at a
-price and speed that works for a $6k bathroom.
+**Tier 3 — hosted subscription, only if demand pulls it.** Seats for larger outfits who want
+to manage their own queue. Built only when customers ask and the per-job model is straining —
+never because it looks like a better multiple. It trades away human sign-off, so it gets its
+own accuracy bar first.
 
-**The software is private machinery. It is never sold.**
-Not as a licence, not white-labelled, not on-prem, not as an API for someone else's app, and
-never as a one-time download. The pipeline is what makes the service possible; selling it
-turns us into a software vendor competing with Groundplan on their terms, with their support
-burden and none of their distribution. This will be asked for. The answer is *we'll do the
+**The software itself is never sold.** Not licensed, not white-labelled, not on-prem, not as
+an API, and never as a one-time exe. It will be asked for. The answer is *we'll do the
 takeoff*.
 
-### Tier 2 — a front door, when volume demands it.
+---
 
-A dedicated number and a simple one-page site that feeds the same queue, plus an
-auto-acknowledgement that asks the three job questions.
+## 3. Pricing and bundles
 
-This is plumbing, not a product. It removes the operator from the *receiving* of work, never
-from the checking of it. **Triggered by volume, not by ambition** — specifically, when intake
-admin exceeds roughly a quarter of the time spent measuring.
+**Enquiry-based and negotiable by design at this stage.** The site shows **"from" prices
+only.** That is a deliberate choice, not indecision: we have five discovery conversations to
+run before we know what any of this is worth, and a published price list would freeze the
+answer before we've heard it. It also keeps every enquiry a conversation, which is where the
+other three modules get sold.
 
-### Tier 3 — hosted subscription, only if demand pulls it.
+Indicative, to be replaced by discovery:
 
-Seats for larger outfits — builders and multi-crew operations sending several jobs a week —
-who want to upload their own plans and manage their own queue.
+| | Product | From | Notes |
+|---|---|---|---|
+| M1 | Takeoff — **wet-areas pack** | **$30–50** | One to three wet areas: floors, walls, niches, skirting |
+| M1 | Takeoff — **whole-house interior** | **$80–150** | Every room, one trade |
+| — | **Any single module, standalone** | — | Nobody is forced into a bundle |
+| **Bundle** | **TRADE PACK** — takeoff quota + M2 | **~$200–250/mo** | The measuring trades' default |
+| **Bundle** | **WHOLE KIT** — all four modules | **setup + ~$350/mo** | The full business, one supplier |
 
-Built **only** when customers are actively asking for it and the per-job model is straining.
-Never because it looks like a better multiple. It trades away the human sign-off (§5.6), so
-it is a genuinely different product and gets its own accuracy bar before it ships.
+**Bundles get discounts.** The whole point of four modules is that the second one costs us
+almost nothing to deliver to someone we're already serving, and the discount should say so.
 
-**Never a one-time exe.** Subscription seats or nothing. A perpetual licence is the same
-mistake as selling the program, with a version-support tail attached.
+**Final numbers set by discovery.** Anchor between the hour he saves and the **$200+** a human
+estimator charges for one takeoff — which is roughly what a whole month of the TRADE PACK
+costs.
 
 ---
 
-## 3. The problem
+## 4. The revenue math
 
-**Solo tradies lose 45+ minutes per quote measuring plans at night.**
+**30 clients at an average of $250/month = $7,500/month recurring — before a single per-job
+takeoff is invoiced.**
 
-The quoting happens after the tools go down. Six on site, then dinner, then a set of PDFs on
-a laptop at the kitchen table with a scale rule and a calculator. It's the least enjoyable
-hour of the day and it's unpaid.
+That is the number this plan turns on, and the reason it's worth writing down is the size of
+it: **30 tradies is one suburb's worth.** Not a market, not a category, not a funnel — thirty
+people, most of whom can be met face to face inside a month of ordinary work.
 
-And it's high-stakes:
+| Clients | Avg/month | Recurring/month | Recurring/year |
+|---|---|---|---|
+| 10 | $250 | **$2,500** | $30,000 |
+| **30** | **$250** | **$7,500** | **$90,000** |
+| 50 | $250 | $12,500 | $150,000 |
 
-- **One wrong wall eats the job's margin.** Measure a 2700 ceiling where the drawing calls a
-  450 splashback and you've quoted 29 m² of tiling that doesn't exist — or the reverse, and
-  you wear it.
-- **A bounding-box read of a non-rectangular room is catastrophic.** In the sample set, the
-  master ensuite measures **19.9 m² as a rectangle and 10.7 m² as a tiled floor** — a 9 m²
-  over-order, which at typical porcelain prices is well over a thousand dollars of tile
-  before the labour hours quoted against floor that isn't there.
-- **The error is invisible until the tiles run out.** By then he's on site, short, and
-  eating it.
+Per-job takeoffs sit **on top** of that, and so does every M4 add-on sold at delivery.
 
-Angus, customer #1, a North Shore tiler and the source of the sample set in this repo:
-
-> **"It's a pain in the arse for all tradies."**
-
-*All tradies.* Not "for me." He volunteered the market size in the same breath as the
-complaint. That is the sentence this business is built on.
-
-He is not looking for a tool. He has been offered tools. He wants the problem to go away.
+The $10K/month mission is therefore not a growth-hacking problem. It's **thirty relationships
+and a Sunday review**, which is a completely different kind of work and one that suits the
+distribution we actually have.
 
 ---
 
-## 4. Why it wins
-
-The market splits into two camps and neither serves a solo tradie well.
-
-**Camp 1 — DIY takeoff software** (Groundplan, Metres.ai, Bluebeam, PlanSwift). Genuinely
-good products. They ask the tradie to learn software, set up a project, calibrate a scale,
-trace areas with a mouse, and maintain a subscription. That is a *new evening task* replacing
-an old one. They sell to the tradie who wants to become an estimator. Most don't.
-
-**Camp 2 — human estimating services.** Accurate, trusted, and priced for builders —
-typically **$200+** and multi-day turnaround. Structurally unable to serve a $6k bathroom
-quote where the tradie needs an answer tonight.
-
-**CHALKLINE sits in the gap: the outcome of camp 2, at a price and speed that works for camp
-1's customer.**
-
-### 4.1 Marginal cost is near zero
-
-Deterministic extraction (PyMuPDF) plus a model doing the one thing models are good at here —
-associating printed dimensions with the elements they describe — running on a subscription
-that is already paid for. That is what makes **per-job pricing at $30–150** viable. A human
-estimator cannot get there. A software company charging per seat has no reason to try.
-
-### 4.2 Distribution nobody else has
-
-**Face-to-face trade contact, six days a week.**
-
-This is the moat on the demand side. Trades don't answer cold email, don't read LinkedIn,
-don't attend webinars, and don't trust software companies. They trust the person standing in
-front of them who knows what a nib wall is.
-
-An incumbent with 50× the funding still has to buy ads against "tile takeoff software" and
-convert a stranger. We get a warm conversation on a job site and the ability to hand back a
-finished takeoff for a job he's quoting this week.
-
-### 4.3 We compete on accuracy, and we can prove it
-
-Everyone claims accuracy. We are the only ones who hand over the working, list what we
-weren't sure about, and refuse jobs we can't measure properly.
-
----
-
-## 5. The accuracy doctrine (the moat)
-
-Accuracy is the product. If the numbers are wrong nothing else matters; if they're reliably
-right, nothing else has to be perfect.
-
-**5.1 Intake requirements, enforced.** Every job passes an automated gate before any
-analysis: vector PDF with a real text layer, printed mm dimensions, elevations if walls are
-wanted. Fail → a polite `REJECTED_<job>.md` saying what's missing and what to send. Turning
-work away is the cheapest quality control that exists.
-
-**5.2 Deterministic extraction and deterministic math.** The model never does arithmetic that
-matters and never reads a number off a picture. **We measure from stated dimensions only. We
-never scale off the drawing.**
-
-**5.3 AI does exactly one thing** — associating a printed dimension with the element it
-describes. Not arithmetic, not inventing missing numbers.
-
-**5.4 A cross-check engine, not a spot check.** Six checks on every job, logged pass/fail in
-the delivered document. The strongest: wall runs must reconcile with the floor perimeter,
-tying two independently drawn sheets together. On the sample set that came back at **0 mm on
-three rooms and 11 mm on a 12-sided cross-shaped ensuite**.
-
-**5.5 Never guess — ask.** Every inferred value becomes a numbered question with **what it's
-worth in m²**, so he spends his time on the two that matter and ignores the eight that don't.
-
-**5.6 Human sign-off before delivery.** Nothing goes out unread.
-
-**5.7 Accuracy benchmarked by customer red-pen rounds.**
-
-```
-accuracy = 1 − (corrected m² ÷ total m² delivered)
-```
-
-Target: **≥98% after one correction round by pilot #5.** Published to customers.
-
-**We already stress-test ourselves.** Nine plan sets we didn't choose, pulled off council DA
-trackers and published sample sets, run through the gate cold — and the write-up
-(`STRESS_REPORT.md`) leads with our own failures, not the passes. That document is a sales
-asset as much as a QA one. Nobody else in this market publishes what broke.
-
----
-
-## 6. Scale rings — measure the house once, sell the answer N times
+## 5. Scale rings — measure the house once, sell the answer N times
 
 **The product is measured geometry.** Once a house is measured, the geometry is done and it
-never changes. What changes is which surfaces a given trade cares about, and how the numbers
-are re-cut.
+never changes. What changes is which surfaces a trade cares about and how the numbers are
+re-cut. The expensive part happens once; the answer sells N times.
 
-That is the whole leverage in this business: **the expensive part happens once, and the
-answer sells N times.** A second trade on the same house is a re-cut of numbers we already
-hold — minutes of work, not another takeoff.
-
-### Ring 1 — adjacent trades, same maths
+### Ring 1 — adjacent measuring trades
 
 Already measured. No new method, no new drawings, no new intake.
 
 | Trade | What they get | Where it comes from |
 |---|---|---|
-| **Flooring installers** | Floor m² per room + **skirting in lineal metres** | The floor polygons and room perimeters, already computed |
-| **Waterproofers** | **Wet zones, priced** — shower areas, hobs, upturns, floor extents | The shower alcoves and bath platforms already deducted from the tiler's floor |
-| **Renderers / plasterers** | Wall m² + ceiling m² | The wall runs and gross floor polygons, already computed as the painter's balance |
+| **Flooring** | Floor m² per room + skirting in lineal metres | The floor polygons and room perimeters |
+| **Waterproofing** | Wet zones — shower areas, hobs, upturns, floor extents | The shower alcoves and bath platforms already deducted from the tiler's floor |
+| **Rendering / plastering** | Wall m² + ceiling m² | The wall runs and gross floor polygons |
 
 Sold as a **re-cut add-on**: *"I've already measured this house for the tiler — want the
-render quantities for $X?"* Near-zero marginal cost, and it makes the first sale worth more
-without another customer conversation.
+render quantities?"* Near-zero marginal cost, and it raises the value of a sale we already
+made.
 
 ### Ring 2 — upstream
 
 Where one relationship buys many jobs.
 
-**Small builders.** A whole-house **measured pack** that all their subs price from — floors,
-walls, ceilings, wet zones, skirting, split by room and by trade. The builder's benefit is
-that every quote he receives is priced off the *same* numbers, so he can compare subs on rate
-rather than on who measured optimistically. That is worth real money to him, and it is a
-recurring relationship rather than a job.
+**Small builders** buy a **whole-house measured pack** that all their subs price from. The
+benefit to the builder is that every quote he receives is priced off the *same* numbers, so
+he compares subs on rate rather than on who measured optimistically. Recurring, not a job.
 
-**Interior designers.** Bundle a takeoff with every drawing issue. The designer looks more
-professional, the trades quoting off their drawings get consistent numbers, and the designer
-finds out where their own set is under-dimensioned before a builder does. Our questions
-section is genuinely useful to them — a free QA pass on their documentation.
+**Interior designers** bundle a takeoff with every drawing issue. It makes their set look more
+professional, gives the trades quoting off it consistent numbers, and — because our questions
+section lists every undimensioned opening — hands them a free QA pass on their own
+documentation before a builder finds the gaps.
 
 ### Ring 3 — channels
 
-Where volume arrives without us selling one job at a time.
+**Tile and flooring showrooms.** Counter customers arrive holding plans and ask *"how much do
+I need?"* Today the staff eyeball it or send them away. Instead: the shop sends the plans in,
+a **co-branded takeoff** comes back the same day, and the customer buys the right quantity
+**from them**.
 
-**Tile and flooring showrooms.** Counter customers walk in holding plans and ask *"how much
-do I need?"* Right now the counter staff eyeball it or send the customer away. Instead: the
-shop sends the plans in, a **co-branded takeoff** comes back the same day, and the customer
-buys the right quantity **from them**.
+Why a showroom says yes: a browsing customer becomes a confident same-day order; correct
+quantities mean fewer returns and fewer short-supply callbacks; it's a service the shop down
+the road doesn't offer. One showroom can be worth more monthly volume than ten individual
+tradies, and it arrives with a supplier's endorsement attached.
 
-Why a showroom says yes:
+### Parked — count-based takeoffs for electrical and plumbing
 
-- They convert a browsing customer into a confident order, same day.
-- Correct quantities mean fewer returns and fewer "I've run short" callbacks.
-- It's a service they offer that the shop down the road doesn't.
-- It costs them nothing per job if priced as a wholesale rate or a monthly retainer.
-
-One showroom relationship can be worth more monthly volume than ten individual tradies, and
-it comes with implicit endorsement — the tradie hears about us from a supplier he already
-trusts.
-
-### Parked — electricians and plumbers
-
-Their takeoffs are **count-based**, not area-based: points, fittings, fixtures, runs. That is
-a different method, a different verification layer and a different set of sanity ranges.
-Genuinely adjacent, genuinely not the same product. **Revisit after Ring 1 is proven.**
-Naming it as parked is deliberate — it is the most tempting distraction on this list.
+Points, fittings, fixtures, runs: a different method, a different verification layer, a
+different set of sanity ranges. **Revisit on demand, not on enthusiasm.** Note that these
+trades are not locked out of the company — **M2 is their entry door**, and it's live for them
+before any takeoff product exists.
 
 ---
 
-## 7. Getting the name out
+## 6. Go-to-market
 
-Four channels, all cheap, all consistent with a business whose product is proof.
+### Portfolio-first
 
-### 7.1 Every anonymised job becomes a 30-second video
+Nothing sells this like a finished document. **Every delivered PDF is the portfolio.**
 
-The content writes itself, because every takeoff contains a number that surprises a tradie.
+The give-away rules, and they are rules because free work is where service businesses quietly
+die:
 
-> *"This ensuite looks like 20 square metres. It's actually 10.7. Here's over a thousand
-> dollars of tile you'd have ordered and never laid."*
+- **Free takeoffs: capped at 5.** Named as pilots, with a job to do — marked-up corrections
+  and a testimonial.
+- **Free audits and demos for M2: yes.** The audit *is* the sales call. Showing a tradie how
+  many calls he missed last month costs us twenty minutes and sells itself.
+- **Free website builds: never.** M3 is real hours with no marginal-cost story behind it.
+  Discount it inside a bundle if you must; never zero it.
 
-Format: the plan on screen, the naive rectangle measurement, then the real polygon. Thirty
-seconds, no music, no face required. Australian trade audiences.
+### Distribution
 
-It works because it isn't advertising — it's a useful fact with our name at the end. And we
-generate one for free with every job we do. **Anonymised always**: no address, no client
-name, no title block.
+1. **Daily face-to-face trade relationships.** The channel nobody can copy, and the reason the
+   30-client number is realistic rather than aspirational.
+2. **Instagram, Facebook and TikTok**, plus **Australian tradie Facebook groups** — offer,
+   never spam. Answer the measuring questions people are already posting. One salesy post gets
+   you banned from the only room your customers are standing in.
+3. **A referral line in every delivery**, in the PDF footer rather than as a campaign:
+   *"Know another tradie who hates measuring plans at night? Send them my way — their first
+   one's on me."* Trades are a referral market; this is the only distribution that compounds.
+4. **The content engine.** Every anonymised job is a 30-second before/after video:
 
-### 7.2 Australian trade Facebook groups
+   > *"This ensuite looks like 20 square metres. It's actually 10.7. Here's over a thousand
+   > dollars of tile you'd have ordered and never laid."*
 
-Tiling, renovation and building groups where tradies already ask each other measuring
-questions.
+   The plan on screen, the naive rectangle, then the real polygon. No music, no face required.
+   It isn't advertising — it's a useful fact with our name on the end, and we generate one for
+   free with every job. **Anonymised always**: no address, no client name, no title block.
 
-**Offer, never spam.** Answer the measuring questions people are already posting, with actual
-numbers and working. Post the free-first-job offer where group rules allow it and nowhere
-else. One salesy post gets you banned from the only room your customers are standing in.
+### The website
 
-### 7.3 A referral line in every delivered PDF
-
-Baked into the footer of the takeoff, not run as a campaign:
-
-> *"Know another tradie who hates measuring plans at night? Send them my way — their first
-> one's on me."*
-
-Trades are a referral market. This is the only distribution that compounds.
-
-### 7.4 Face-to-face, six days a week
-
-The channel nobody can copy. See §4.2.
-
----
-
-## 8. The sales ladder
-
-Lowest friction first. Each rung earns the next.
-
-### Rung 1 — the free-first-job wedge
-
-The whole pitch, one message:
-
-> **"Send me any plan set you're quoting this week. First one's free, same-day, mark up
-> anything wrong."**
-
-Every objection is answered before it's raised: no cost, no commitment, no software, no
-delay, and he is explicitly invited to find fault. **Ask for the mark-up, not the sale** —
-mark-ups tell us whether the product works; "looks good mate" tells us nothing.
-
-### Rung 2 — customer #1 plus two referrals
-
-Angus, plus the two names he gives us. A referral from him is worth more than fifty cold
-messages, and asking for two is the natural close on a job we did for free.
-
-### Rung 3 — 5 pilots with testimonials
-
-Free, in exchange for marked-up corrections and a testimonial if the numbers stand up. Five
-is enough to find the systematic errors and few enough that it stays a pilot rather than a
-habit.
-
-### Rung 4 — pricing on, referral ask in every delivery
-
-Trigger: **accuracy ≥98% after one correction round, across at least 3 pilots.** Go back to
-the pilots first — a pilot who converts is the real pricing validation.
-
-### Rung 5 — showroom partnership pitch
-
-Only once there are testimonials and a rejection-rate number to quote. Walk in with five
-completed takeoffs and a tiler who'll vouch. Pitch the co-branded counter service (§6,
-Ring 3).
-
-### Rung 6 — content engine live
-
-Once there's a steady job flow to draw material from. Content without a body of real jobs
-behind it is just claims.
+**One website, four products, enquire-for-pricing.** Built **in one evening on the existing
+pipeline, the day Gate 1 passes** — not before. A site for a business with no proven customer
+is procrastination with a domain name attached.
 
 ---
 
-## 9. Pricing hypothesis
+## 7. What it costs to open the doors
 
-**Final numbers are set by discovery.** These are anchors to test, not decisions.
-
-The anchor sits between two real reference points: **the hour he saves**, and **the $200+ a
-human estimator charges**. Price below the hour and it reads as unreliable; price near the
-estimator and we've lost the reason we exist.
-
-| Product | Hypothesis | What it covers |
-|---|---|---|
-| **Wet-areas pack** | **$30–50** | One to three wet areas — floors, walls, niches, skirting |
-| **Whole-house interior** | **$80–150** | Every room, one trade, full measured pack |
-| **Multi-trade re-cut** | **add-on** | Same house, second trade. Priced as an add-on because the geometry is already done (§6, Ring 1) |
-| **Subscriptions** | later | Tier 3 only, and only if demand pulls |
-
-Principles:
-
-- **Per job, not per seat.** He pays when he quotes.
-- **Anchor against the alternative** — 45 minutes of his evening plus the risk of a wrong
-  wall — not against software seat prices.
-- **Never price below the value of the risk removed.** Cheap signals unreliable in trades.
-- **Re-issue after answered questions is free.** Charging for the second pass would punish
-  the exact behaviour the accuracy doctrine depends on.
-- **First 5 customers free.** Not a discount — a named pilot, with a job to do.
-
----
-
-## 10. What it costs to open the doors
-
-**Under $200.** That is the whole barrier, and it is why the kill criteria in §13 can be
-honoured without flinching.
+**Under $200.** That is the whole barrier, and it is why the gates in §8 can be honoured
+without flinching.
 
 | Item | Cost | Note |
 |---|---|---|
 | ABN | **$0** | Free from the ABR |
-| Business name registration (ASIC) | **~$45–100** | ~$44 for one year, ~$102 for three — verify current fee |
+| Business name (ASIC) | **~$45–100** | ~$44 for one year, ~$102 for three — verify current fee |
 | `.com.au` domain | **~$20/yr** | Requires the ABN |
 | One-page site | **$0** | Built in-house |
 | WhatsApp Business | **$0** | |
@@ -391,210 +231,129 @@ honoured without flinching.
 | **Professional indemnity insurance** | **~$40–70/month** | We supply numbers people quote off |
 | **Properly worded terms** | one-off | Scope, limits, and what a takeoff is and isn't |
 
-**Why PI matters here, specifically.** A tradie quotes off our number. If it's wrong he wears
-the difference, and he will look at us. That risk is real and it is the price of being useful.
-
+A tradie quotes off our number. If it's wrong he wears the difference, and he will look at us.
 Two lines of defence, in order:
 
-1. **The confirm-before-quoting checklist** at the end of every takeoff, plus the questions
+1. **The confirm-before-quoting checklist** at the end of every takeoff — plus the questions
    section, the ⚠ marks, and the rule that anything unresolved is *excluded from the order
-   total* rather than quietly included. This is the first line because it prevents the loss
-   rather than paying for it. It is also why every takeoff states in plain words what it does
-   **not** cover.
-2. **PI insurance**, for when the first line fails.
+   total* rather than quietly included. First, because it prevents the loss rather than paying
+   for it.
+2. **Professional indemnity**, for when the first line fails.
 
-Deliberately staged: **no insurance until money changes hands.** Free pilots are explicitly
-framed as pilots, and the exposure is a testimonial rather than a claim. The month the first
-invoice is paid, PI goes on.
-
----
-
-## 11. The unit economics ladder
-
-Four rungs. Each is a real decision point, not a projection.
-
-| Rung | Volume | Monthly revenue | What it proves |
-|---|---|---|---|
-| **0** | 5 free pilots | **$0** | The numbers are right, and tradies will send plans |
-| **1** | **10 paid jobs/month** | **$500–1,000** | People pay. Covers PI, domain and costs with room over |
-| **2** | **30 paid jobs/month** | **$1,500–3,000** | A real side income. Forces the Tier 2 front door |
-| **3** | Showroom channel + multi-trade re-cuts | beyond | Volume arrives without selling one job at a time |
-
-**Marginal cost is near zero** on the existing Claude subscription. At volume, compute becomes
-a small per-job line — and at $30–150 a job it stays a rounding error against price. The
-binding constraint is not cost. It is **operator time**, because of the human sign-off rule in
-§5.6.
-
-### The three numbers that decide it
-
-1. **Effective hourly rate** — monthly gross profit ÷ hours worked. Below what he earns on
-   the tools, this is a hobby regardless of revenue.
-2. **Break-even jobs/month** — fixed costs ÷ (price − variable cost). At ~$60/month of fixed
-   costs that is **one or two jobs**. The downside is genuinely small.
-3. **Capacity ceiling** — the point where human sign-off has to change. Know it before
-   hitting it.
-
-### To fill in after pilots
-
-| `P` price | `J` jobs/wk | Monthly revenue | Monthly hours | Effective $/h |
-|---|---|---|---|---|
-| `$__` | `__` | | | |
-| `$__` | `__` | | | |
+Deliberately staged: **no insurance until money changes hands.** Free pilots are framed as
+pilots and the exposure is a testimonial, not a claim. The month the first invoice is paid, PI
+goes on.
 
 ---
 
-## 12. Milestone gates
+## 8. Milestone gates
 
-**Reviewed Sundays. Anything that fails a gate dies without ceremony.**
+**Reviewed Sundays. Module-aware. Any module that fails its gate dies without ceremony.**
 
 ### Gate 1 — customer #1
 
-**Pass:** Angus returns a marked-up takeoff **and names a price he'd have paid.** Accuracy
-after one correction round is the number that matters.
+**Pass:** Angus returns a marked-up takeoff **and names a price he'd have paid.**
 
-**Fail:** he can't find the errors *and* won't name a price — meaning it is neither accurate
-enough to trust nor valuable enough to buy. A polite "looks good mate" with no price is a
-fail, not a pass.
+**Unlocks: the site goes up.** One evening, four products, enquire-for-pricing.
+
+**Fail:** he can't find the errors *and* won't name a price — neither accurate enough to trust
+nor valuable enough to buy. A polite "looks good mate" with no price is a fail.
 
 ### Gate 2 — two weeks out
 
 **Pass: 5 pilots run, 2 converted to paid.**
 
-**Fail:** fewer than 2 convert within 30 days of pricing going live. Pilots who love it and
-go quiet at the invoice are the clearest signal there is.
+**Unlocks: M2 gets built — if the pain audit demands it.** Not automatically. We ask the five
+pilots how many calls they missed last week and whether they chase quotes. If the answer is a
+shrug, M2 waits, whatever the plan says.
+
+**Fail:** fewer than 2 convert within 30 days of pricing going live.
 
 ### Gate 3 — month two
 
 **Pass: 10 paid jobs.** On passing, and not before:
 
 - register the business name with ASIC
-- professional indemnity insurance on
+- professional indemnity on
 - content engine live
 
-Note the sequencing — **the money comes before the paperwork and the marketing.** Registering
-a business name and filming content for a business with no paying customers is procrastination
-with a receipt.
+**The money comes before the paperwork and the marketing.** Registering a name and filming
+content for a business with no paying customers is procrastination with a receipt.
 
----
+### Kill criteria
 
-## 13. Risks and kill criteria
+- **Accuracy** below 95% after one correction round on 3 of the first 5 pilots → M1 dies.
+- **Conversion** below 2 of 5 within 30 days of pricing → the paid model dies.
+- **Intake** — more than 60% of genuinely submitted sets unmeasurable, and tradies can't get
+  better files → M1 narrows to floors-only or dies.
 
-Written in advance, because the point of a kill criterion is that it is decided while you are
-still objective.
-
-### Risk 1 — Accuracy fails after one correction round
-
-A pilot marks up a takeoff, we fix it and re-issue, and he *still* finds material errors — or
-the errors are idiosyncratic rather than systematic, meaning there is no rule to learn.
-
-> **KILL: accuracy below 95% after one correction round on 3 of the first 5 pilots.**
-
-**Mitigation first:** narrow the scope. Floors only, rectangular rooms only, one trade. A
-small guarantee kept beats a broad one broken.
-
-### Risk 2 — Tradies won't pay
-
-Pilots love it, use it, praise it — and go quiet when pricing turns on. The pain is real but
-intermittent; a tradie quoting two jobs a month may absorb 90 minutes rather than open his
-wallet.
-
-> **KILL: fewer than 2 of the first 5 pilots pay for a second job within 30 days of pricing
-> going live.** (Same as Gate 2.)
-
-**Mitigation first:** ask "what would you pay?" at pilot #2, not pilot #5. Test per-job
-against a small retainer for high-volume quoters.
-
-### Risk 3 — Real-world plans are too poor for intake
-
-**The most likely failure mode, and we are now collecting data on it.** Nine plan sets pulled
-off the open web — real lodged NSW DAs, published working-drawing samples, an ABCB reference
-set — have been run through the gate, and the results are in `STRESS_REPORT.md`.
-
-The early read is that the binding constraint is more likely to be *sets without internal
-elevations* — so, floors only — than sets we cannot read at all. **Floors-only is still a
-sellable product**, which softens this risk considerably.
-
-> **KILL: more than 60% of genuinely-submitted sets fail intake, and tradies can't get better
-> files from their designers.**
-
-**Mitigation first:** sell floors-only where elevations are missing. Then go upstream to the
-designers and builders who *produce* the sets (§6, Ring 2) — a different business, but a real
-one, and this failure mode points straight at it.
-
-### Risk 4 — Platform dependency (watch, not kill)
-
-The pipeline runs on a third-party model subscription. **Watch:** cost per job, monthly.
-**Mitigate:** extraction is already deterministic and portable; only the association step is
-model-dependent, and it is model-agnostic in principle.
+On intake we now have data rather than a guess: of nine plan sets pulled off the open web,
+**one was genuinely unreadable** and **six could be measured for floors but not walls**
+(`STRESS_REPORT.md`). The addressable failure isn't unreadability — it's missing internal
+elevations, and **floors-only is still a sellable product.** That materially softens the risk.
 
 ### The Sunday gate
 
-**Every Sunday, one hour.** Four questions, in order:
+One hour. Four questions: what did the metrics do; did any kill criterion trigger; what did
+customers actually say, quoted not paraphrased; what is the single most important thing next
+week.
 
-1. What did the metrics do this week?
-2. Did any kill criterion trigger?
-3. What did customers actually say — quoted, not paraphrased?
-4. What is the single most important thing to do next week?
-
-**If a kill criterion has triggered, it dies without ceremony.** No pivot in the same meeting,
-no "let's give it two more weeks." The criterion was set when we were objective; honour it.
-
-*If it can't hold numbers, it doesn't deserve to exist* — true of the product and true of the
-business.
+**If a kill criterion has triggered, it dies without ceremony.** No pivot in the same meeting.
+The criterion was set when we were objective; honour it.
 
 ---
 
-## 14. The first 30 days
+## 9. The first 30 days
 
 Weekday evening blocks, roughly 90 minutes after the tools, plus a Sunday review.
 
-### Week 1 — prove it on real plans
+### Week 1 — prove M1 on real plans
 
 | Day | Block |
 |---|---|
-| **Mon** | Finalise the sample takeoff. Read it as a tiler would. |
+| **Mon** | Finalise the sample takeoff. Read it as a tiler would, not as a builder. |
 | **Tue** | **Send to Angus.** Two questions: mark the errors, name your price. |
 | **Wed** | Draft the intake message and the three job questions. |
-| **Thu** | List 15 tradies in the existing network. Names, trade, how you know them. |
+| **Thu** | List 15 tradies in the existing network — name, trade, how you know them. |
 | **Fri** | Chase Angus gently if quiet. Prep the in-person ask. |
 | **Sat** | On-site conversations. Ask the 45-minute question. Say nothing about software. |
-| **☉ Sun** | **Gate 1.** Did a marked-up takeoff come back? Could he name a price? |
+| **☉ Sun** | **GATE 1.** Marked-up takeoff back? Price named? If yes → the site goes up Monday. |
 
-### Week 2 — pilots 1–3
-
-| Day | Block |
-|---|---|
-| **Mon** | Fix every correction from Angus. Re-issue free. Log each as a test case. |
-| **Tue** | Send 8 messages from the list of 15. Free-first-job wedge, verbatim. |
-| **Wed** | Run pilot #2 end to end. Time it — that is the real turnaround number. |
-| **Thu** | Deliver #2 with the red-pen ask. Follow up the 8 messages once. |
-| **Fri** | Run and deliver pilot #3. |
-| **Sat** | Face-to-face. Two more pilots booked. Ask each what they'd pay. |
-| **☉ Sun** | Accuracy so far? Turnaround? Any kill criterion triggered? |
-
-### Week 3 — pilots 4–5 and pricing discovery
+### Week 2 — the site, and pilots 1–3
 
 | Day | Block |
 |---|---|
-| **Mon** | Fold week-2 corrections into `TAKEOFF_METHOD.md`. This is the compounding asset. |
+| **Mon** | **Build the site.** One evening. Four products, "from" prices, enquire. |
+| **Tue** | Fix every correction from Angus, re-issue free, log each as a test case. |
+| **Wed** | Send 8 messages from the list of 15 — free-first-job wedge, verbatim. |
+| **Thu** | Run and deliver pilot #2. Time it: that's the real turnaround number. |
+| **Fri** | Run and deliver pilot #3. Offer M4 at delivery on both. |
+| **Sat** | Face-to-face. Two more pilots booked. **Run the M2 pain audit on each** — how many calls did you miss last week? |
+| **☉ Sun** | Accuracy? Turnaround? What did the pain audits say? |
+
+### Week 3 — pilots 4–5, pricing discovery, first content
+
+| Day | Block |
+|---|---|
+| **Mon** | Fold week-2 corrections into `TAKEOFF_METHOD.md`. The compounding asset. |
 | **Tue** | Run pilot #4. |
 | **Wed** | Deliver #4. Explicit pricing conversation: *"what's this worth to you?"* |
 | **Thu** | Run and deliver pilot #5. |
-| **Fri** | Collect all five pricing answers. Take the **median**, not the top. Set the tiers. |
-| **Sat** | Ask the two happiest pilots for a testimonial and one referral each. |
-| **☉ Sun** | **Gate 2.** 5 pilots run? Accuracy ≥98%? If yes, pricing goes live Monday. |
+| **Fri** | Collect all five pricing answers. Take the **median**, not the top. Set the tiers and the two bundles. |
+| **Sat** | Testimonial and one referral each from the two happiest pilots. |
+| **☉ Sun** | **GATE 2.** 5 pilots run, 2 converted? Does the pain audit justify building M2? |
 
-### Week 4 — switch pricing on
+### Week 4 — pricing on, M2 if earned
 
 | Day | Block |
 |---|---|
 | **Mon** | **Pricing live.** Message all five: *"it's $X a job now — want me to keep doing yours?"* |
-| **Tue** | Add the referral line to the delivery template. Work week-3 referrals. |
-| **Wed** | First paid job, start to finish. Time it. Record the true cost. |
-| **Thu** | Fill in §11 with real numbers. Compute the effective hourly rate. |
+| **Tue** | Referral line into the delivery template. Work the week-3 referrals. |
+| **Wed** | **Build M2 for the first customer who asked for it** — missed-call text-back and quote chasing, configured in their ServiceM8/Tradify. |
+| **Thu** | First paid job start to finish. Time it. Record the true cost. Fill in §4 with real numbers. |
 | **Fri** | Film the first 30-second video from an anonymised job. |
 | **Sat** | Face-to-face on whatever channel actually produced pilots. |
-| **☉ Sun** | **30-day verdict.** 2 of 5 converted? Effective $/h clears the bar? |
+| **☉ Sun** | **30-day verdict**, then Gate 3 in month two: 10 paid jobs → name registered, PI on, content engine live. |
 
 ### The 30-day verdict
 
@@ -604,9 +363,7 @@ Weekday evening blocks, roughly 90 minutes after the tools, plus a Sunday review
 | **Pilot → paid** within 30 days | ≥ 2 of 5 | < 2 of 5 |
 | **Effective hourly rate** | > on-the-tools rate | < it, with no path up |
 
-Month two is Gate 3: **10 paid jobs**, then register the name, PI on, content engine live.
-
 ---
 
-*CHALKLINE measures from stated dimensions only. It never scales off the drawing, and it
-never guesses. That rule is the product, it is the tagline, and it is the business.*
+*CHALKLINE measures from stated dimensions only. It never scales off the drawing, and it never
+guesses. That rule is the product, it is the tagline, and it is the business.*
