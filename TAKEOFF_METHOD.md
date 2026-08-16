@@ -8,10 +8,17 @@ scale off the drawing, and we never silently assume.*
 
 ---
 
-## 0. Before anything — the intake gate
+## 0. Before anything — the intake gate and the customer profile
 
 Run the checks in `INTAKE.md` §C. If any hard check fails, write `REJECTED_<job>.md` and
 stop. Do not produce a partial takeoff off a failed set.
+
+Then load the customer profile from `customers/<name>.md` (`PROFILE_QUESTIONS.md`). A
+missing or unconfirmed profile never blocks a job — it means trade-standard defaults, said
+out loud on the order box and re-asked at the bottom of the document. What it must never do
+is pass silently as though it were the customer's choice.
+
+The profile governs the **order** only. It cannot touch a measured area — see §7.7.
 
 ---
 
@@ -261,15 +268,80 @@ Reported as both a count and an area. Missing depth → question, not a default.
 Deducted from the wall they sit in. Undimensioned opening heights get a clearly-labelled
 provisional value (AU standard door leaf 2040 mm) **and** a question. Never a silent one.
 
-### 7.7 Wastage
+### 7.7 Measured area vs order quantity — keep them apart
+
+**This is a hard boundary, not a presentation choice.**
 
 ```
-+10%  = measured × 1.10          [default: straight lay, rectangular rooms]
-+15%  = measured × 1.15          [raked ceilings, diagonal/herringbone, large format]
+   PLANS  ──►  MEASURED AREAS  ──►  [ CUSTOMER PROFILE + JOB SETTINGS ]  ──►  ORDER
+               the plans' truth                                                what to buy
+               same for everybody                                              personal
 ```
 
-Presented as columns beside the measured figure. The measured figure is always the
-headline; the adjusted figures never replace it.
+A measured area is what the drawings say. It is identical for every tradie who ever receives
+that plan set, and **nothing in a customer profile may change it.** If a preference could
+move a measured number, that number was a guess, not a measurement.
+
+An order quantity is a measured area with somebody's settings applied. It is personal, it is
+re-derivable in seconds, and it changes the moment they tell us they lay herringbone.
+
+Both appear in every takeoff, labelled, and never blended:
+
+- **ORDER quantities** go in the box at the top (§10.1) and in the room lines (§10.3).
+- **MEASURED areas** go under HOW WE GOT THESE NUMBERS (§10.5), at full precision, with the
+  conversion shown.
+
+The practical payoff: when a tradie disputes the allowance — and they will — we change one
+line of his profile and re-cut the order without re-opening the measurement. He can disagree
+with our 10% and still trust our 33.022 m².
+
+### 7.8 The conversion
+
+Applied in this order. Each step is its own visible line; they are never folded into one
+percentage.
+
+```
+1.  measured                                          the plans' truth
+2.  + cut allowance     from the lay pattern          straight 10%, herringbone 15%, etc.
+3.  + batch buffer      from the profile, if set      added percentage points, not compounded
+4.  + lead-time buffer  from the profile, if set      added percentage points, not compounded
+5.  rounding            0.1 m², or up to whole m²     per room, then total the rounded rooms
+6.  boxes               ceil(order m² ÷ m² per box)   only if m² per box was given
+```
+
+Buffers are **added percentage points**, not multiplied: 10% cuts + 5% batch = 115% of
+measured, not 115.5%. Simpler to explain, simpler for the tradie to check, and the
+difference is noise.
+
+Precedence when settings conflict, highest first:
+
+```
+explicit per-job wastage  →  this job's lay pattern  →  profile default pattern  →  10%
+```
+
+Whichever won, the order box says which (§10.1) in plain words.
+
+### 7.9 Rounding
+
+| Setting | Rule |
+|---|---|
+| `0.1` *(default)* | Round each room to 0.1 m², then total the rounded rooms |
+| `whole` | Round each room **up** to the next whole m², then total |
+
+Whole-m² always rounds **up**, never to nearest. A tradie asking for whole metres is asking
+for a buying number, and rounding a buying number down puts him short on site.
+
+Round the rooms first and total the rounded rooms, so the room lines visibly add to the
+total (§10.1).
+
+### 7.10 Box counts
+
+```
+boxes = ceiling( order m² ÷ m² per box )
+```
+
+Up, never to nearest. Report the boxes **and** the coverage they give, so the packaging gap
+is visible rather than hidden inside the allowance.
 
 ---
 
@@ -372,7 +444,28 @@ says so in words.
   Feature tiles ..............  12.0 m²
   Tile skirting ..............   7.3 m
 ==================================================
-  Includes 10% extra for cuts and breakage.
+  Straight lay, 10% extra for cuts — your usual.
+  Different pattern this job? Tell us and we'll re-cut it.
+```
+
+**The settings line is mandatory.** One plain sentence under the rule, saying what was
+applied and where it came from, then an invitation to change it. It is the difference
+between a number handed down and a number he owns.
+
+| Situation | The line reads |
+|---|---|
+| Profile confirmed, job matches | *Straight lay, 10% extra for cuts — your usual. Different pattern this job? Tell us and we'll re-cut it.* |
+| Profile confirmed, job overrides it | *Herringbone this job, 15% extra for cuts — not your usual straight 10%. Say the word if that's wrong.* |
+| Buffers set in the profile | *Straight lay, 10% for cuts plus your standing 5% batch buffer. Drop the buffer any time and we'll re-cut it.* |
+| No profile yet | *Straight lay, 10% extra for cuts — trade standard, not your settings yet. Tell us how you actually work and we'll re-cut every number.* |
+| Box counts available | add: *Boxes worked out at 1.44 m² per box, rounded up.* |
+
+Where m² per box was given, add a boxes line **under** the m² line for that material, with
+the coverage shown so the packaging gap is visible:
+
+```
+  Floor tiles ................  36.4 m²
+     boxes to buy ............  26 boxes   (1.44 m²/box = 37.4 m²)
 ```
 
 Rules:
@@ -448,8 +541,10 @@ Same shape, kept short. Painters get walls and ceilings.
 
 Everything else, below a clear divider, in this order:
 
-1. **The straight measurements** — the same table without the extra for cuts, at full
-   precision, so anyone can apply their own percentage.
+1. **The measured areas, and how they became the order** — the full-precision measured
+   figures (the plans' truth, §7.7), then the conversion shown as its own visible steps:
+   cut allowance, any buffers, rounding, boxes. State plainly that the measured column
+   never changes with anyone's settings and the order column always does.
 2. **Room-by-room working** — every `×` and every subtraction, per §8.
 3. **What we double-checked** — the §5 checks, written as plain statements with ✅/⚠️,
    *not* as a pass/fail matrix. e.g. *"We added up the four wall drawings and compared them

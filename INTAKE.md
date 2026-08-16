@@ -94,6 +94,75 @@ handing you a number for a room you didn't want.
 We always report the measured quantity **and** the adjusted quantity side by side. This
 just tells us which one to headline.
 
+On a customer with a stored profile this is normally answered already — it comes from their
+lay pattern (see `PROFILE_QUESTIONS.md` Q1). Ask it here only to override for this job.
+
+---
+
+## B-extra. Three more per-job questions — the order, not the measurement
+
+These change how we convert measured area into an order. They **cannot** change a measured
+area. Ask them per job, because the answer changes job to job.
+
+### B4. Lay pattern for **this** job, if it's different from your usual
+
+`straight` / `brick bond` / `diagonal` / `herringbone` — or "same as usual".
+
+Most jobs are the customer's default and this takes one word. But a client who's specified
+herringbone in the ensuite and straight everywhere else changes the order materially, and
+it's the sort of thing that gets mentioned on site and never written down.
+
+The cut allowance follows the pattern, using the percentages in their profile:
+
+| Pattern | Their profile says | Applied to |
+|---|---|---|
+| straight | e.g. 10% | this job, unless overridden |
+| brick bond | e.g. 10% | |
+| diagonal | e.g. 15% | |
+| herringbone | e.g. 15% | |
+
+Per-room patterns are fine — tell us which room. We'll apply the right percentage to each
+and show them separately.
+
+### B5. Tile size / format
+
+e.g. *"600 × 600 porcelain"*, *"300 × 100 subway"*, *"1200 × 600 large format"*.
+
+Two reasons we ask:
+
+- Large format (anything over 600) generally justifies a higher cut allowance than the
+  pattern alone suggests, and we'll say so rather than quietly bumping it.
+- It tells us whether a stated pattern is even sensible — herringbone in 1200 × 600 is a
+  different conversation from herringbone in 600 × 100.
+
+If the tile isn't chosen yet, say so. We'll deliver on the profile default and flag that the
+allowance may move once it is.
+
+### B6. m² per box  *(optional — but it's the number you buy in)*
+
+If you give it to us, the **ORDER THIS** box gains a **"boxes to buy"** line, rounded **up**
+to whole boxes:
+
+```
+boxes = ceiling( order m² ÷ m² per box )
+```
+
+Rounded up, never to nearest — you cannot buy 0.4 of a box, and rounding down puts you short
+on site.
+
+We show the boxes, and the coverage those boxes actually give you, so the gap is visible:
+
+```
+  Floor tiles ....  36.4 m²
+  Boxes to buy ...  31 boxes  (1.44 m²/box = 44.6 m² — 8.2 m² over)
+```
+
+That 8.2 m² is not waste we invented; it's the granularity of the supplier's packaging. Seen
+plainly, it's often the moment a tradie decides to drop to a smaller allowance, or to keep
+the spare deliberately.
+
+Different tile per room? Give us the m² per box for each and we'll do them separately.
+
 ---
 
 ## C. The automated gate — what `takeoff.py` actually checks
@@ -111,6 +180,7 @@ Run before any analysis. Machine-checkable subset of the above.
 | 7 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
 | 8 | **Encryption** | PDF not password-locked against extraction | Locked file |
 | 9 | **Intake answers** | trade / rooms / wastage supplied | Recorded as questions, never blocks the run |
+| 10 | **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Missing or unconfirmed → trade-standard defaults, stated on the order box, never blocks the run |
 
 Checks 1–5 and 7–8 are **hard**. Any hard failure writes `REJECTED_<job>.md` and stops.
 Check 6 is **conditional** — hard when the tradie asked for wall areas.
