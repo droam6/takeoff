@@ -13,8 +13,24 @@
   Feature tiles ............   12.0 m²
   Tile skirting ............    7.3 m
 ==================================================
-  Includes 10% extra for cuts and breakage.
+  Straight lay, 10% extra for cuts and breakage —
+  trade standard, not your settings yet. Tell us how
+  you actually work and we'll re-cut every number.
 ```
+
+**Want box counts?** Send us the tile and the m² per box and we'll add a *boxes to buy* line,
+rounded up to whole boxes — that's the number you read out at the counter, not 36.4 m².
+
+### Two sets of numbers in this document
+
+- **Measured areas** are what the plans say. They're the same for every tiler alive, and
+  nothing about how you work can change them. They're at the bottom, at full precision.
+- **Order quantities** are those measured areas with your settings applied — lay pattern,
+  extra for cuts, rounding. Those are the numbers above.
+
+So if you tell us you lay herringbone, or that you always buy 5% over for batch variation,
+we re-cut the order in about a minute and **the measured areas don't move at all.** You can
+disagree with our 10% and still trust our 33.022 m².
 
 ### Not in that total — 2 things we can't finish yet
 
@@ -112,6 +128,41 @@ sheet 3.01.
 
 ---
 
+## Things we flag by default
+
+You haven't set your account up yet, so we're flagging the two things most tilers want
+flagged. Question 6 at the bottom changes this list to whatever you actually want.
+
+### Mitred corners — about 12.1 m of them
+
+The notes on every sheet say *"All wall tiles & niches to be mitred at corner junctions to
+achieve a clean, continuous finish. No trims to be used unless noted otherwise."* That's a
+labour item, not a material one, and it's easy to leave out of a quote.
+
+- **Main bathroom — 8.9 m.** The step in the west wall (2.7 m full height), the shower nib
+  (2 corners at 1200 = 2.4 m), and both niches (1.8 m + 2.0 m).
+- **Guest ensuite — 3.2 m.** Both niches (2.0 m + 1.2 m).
+- **Master ensuite — not counted.** Its walls aren't finished, so neither is this.
+
+One actual trim in the whole set: the laundry splashback gets a **nickel or stainless strip
+trim to the top edge, 2.5 m** (sheet 4.02).
+
+### Waterproofing zones
+
+Not priced — that's the waterproofer's scope, and the membrane extent and upturn heights
+aren't on these drawings. But here's where the wet zones are, so you can check somebody's
+covering them:
+
+- **Master ensuite** — enclosed shower alcove, floor **2.2 m²**, plus the 400 × 1200 shower
+  seat, plus the bath platform.
+- **Guest ensuite** — walk-in shower, floor about **1.3 m²** (depends on question 8 below).
+- **Main bathroom** — shower zone in the south-east corner behind the nib and screen, plus
+  the bath platform. The plan doesn't bound the shower zone separately, so we haven't put a
+  number on it.
+- **Laundry** — floor waste shown; no shower.
+
+---
+
 ## If you're also quoting the painting
 
 - **Walls to paint — 45.6 m²**  · powder room 15.8, laundry 29.8
@@ -131,7 +182,11 @@ here so you can check anything you want to.*
 
 ---
 
-## 1. Straight measurements, before the extra for cuts
+## 1. The measured areas, and how they became the order
+
+**These are the measured areas — what the plans say.** They are the same for every tiler who
+ever gets this set. Nothing in your profile, and nothing about how you lay tile, can move
+them by a millimetre.
 
 | | Floor | Wall | Feature | Skirting |
 |---|---|---|---|---|
@@ -141,9 +196,31 @@ here so you can check anything you want to.*
 | Guest ensuite | 8.440 | 25.272 | *5.413* | — |
 | Master ensuite | 10.693 | *46.180* | *10.356* | — |
 | **Ready to order** | **33.022** | **53.333** | **10.867** | **6.680 m** |
-| **+10% for cuts** | **36.4** | **58.6** | **12.0** | **7.3 m** |
 
 *Italics = not ready to order, waiting on a question.*
+
+### Then your settings turn those into an order
+
+Applied in steps, so you can see and change any one of them:
+
+```
+  1. Measured                                    the plans' truth
+  2. + 10% extra for cuts     straight lay       trade standard - not confirmed by you yet
+  3. + 0% batch buffer        not set            question 5 at the bottom
+  4. + 0% lead-time buffer    not set            question 5 at the bottom
+  5. Rounded to 0.1 m²        per room, then the rooms added up
+  6. Boxes                    not worked out - we don't know your tile yet
+```
+
+| | Measured | Order |
+|---|---|---|
+| Floor tiles | 33.022 m² | **36.4 m²** |
+| Wall tiles | 53.333 m² | **58.6 m²** |
+| Feature tiles | 10.867 m² | **12.0 m²** |
+| Tile skirting | 6.680 m | **7.3 m** |
+
+If you lay these floors herringbone instead, the order becomes 38.0 / 61.3 / 12.5 m² at 15%,
+and the measured column doesn't change. That's the whole idea.
 
 The bottom row is a touch higher than 10% on the row above it. That's deliberate: we round
 each room to 0.1 first and then add the rooms up, so the room figures you're quoting from
@@ -459,7 +536,42 @@ job scales that sheet out of habit, they'll be 25% wrong on the biggest room in 
 
 ---
 
-## 6. Before you quote
+## 6. Six quick questions — so we only ask once
+
+These aren't about your plans. They're about **you**, and once you answer them we apply them
+to every job you send us without asking again. Right now we're running trade standards, and
+this document says so wherever it matters.
+
+None of these can change a measured area. They only change how we turn measured area into
+an order.
+
+**1. What do you normally lay, and what do you allow for cuts?**
+Straight, brick bond, diagonal, herringbone? We've run **straight at 10%**. Most run 15% for
+diagonal or herringbone. If your numbers are different, yours win.
+
+**2. Do you want tile skirting in the main order list, or off to the side?**
+We've put it in.
+
+**3. Want box counts as well as m²?**
+Tell us the m² per box on each job and we'll give you whole boxes, rounded up.
+
+**4. Decimals or whole metres?**
+We've used 36.4 m². Some prefer 37 m². We always round whole metres **up**, never down.
+
+**5. Any supplier quirks we should always allow for?**
+Ever been caught by a batch or dye-lot change mid-job? Anything you use where a reorder takes
+six weeks? We can add a standing buffer on top of the cut allowance — shown as its own line,
+so you can see it and drop it whenever you want. Right now it's zero.
+
+**6. Anything you always want flagged?**
+We've defaulted to waterproofing zones and trims in lineal metres. Falls and floor wastes,
+movement joints, substrate notes — say the word and they're on every job.
+
+Answer in one line each and we'll re-issue this takeoff with your settings on it, free.
+
+---
+
+## 7. Before you quote
 
 ```
 [ ] The sheet numbers and dates above match the drawings you were given (Rev L, 01/09/25)
