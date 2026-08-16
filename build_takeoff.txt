@@ -1,0 +1,13 @@
+Build TAKEOFF v1 in this repository: an AI plan-measurement service for tradies. sample_plans.pdf in the repo root is a real architectural joinery set (bathrooms/laundry, mm dimensions) from our first customer, a tiler.
+
+1. Read sample_plans.pdf thoroughly - render every page as an image AND extract all text/dimensions (PyMuPDF).
+
+2. Write SPEC.md: what a tiler needs from a takeoff (floor m2 per room; wall tile m2 per wall using true tiling heights, not assumed ceiling heights; feature-tile zones measured separately; niches; minus door/window/shower-screen openings; +10% wastage toggle) and what a painter needs (wall + ceiling m2).
+
+3. Write TAKEOFF_METHOD.md - the analysis protocol: identify each room; pair printed dimensions to plan extents and elevation runs; sum segment chains and cross-check against stated totals (e.g. 100+840+790 must equal 1730); compute floor areas from plan dims and wall areas from elevation width x height; handle raked ceilings as trapezoids; subtract dimensioned openings; NEVER silently assume - every unlabelled height or inferred number goes in an ASSUMPTIONS list phrased as a question to the tradie; show all working; end with a CONFIRM BEFORE QUOTING checklist.
+
+4. Build takeoff.py for use on machines with Claude Code installed: takes a PDF path, renders pages + extracts dimension text into a job folder, then invokes the claude CLI headless (subprocess: claude -p "<instruction>" --dangerously-skip-permissions with cwd set to the job folder; resolve the binary with shutil.which and wrap .cmd files with cmd.exe /c on Windows) against TAKEOFF_METHOD.md to produce TAKEOFF_<jobname>.md - per-room tables, totals per material, wastage-adjusted totals, assumptions, confidence notes. Verify with py_compile.
+
+5. ACCEPTANCE TEST: perform the full takeoff of sample_plans.pdf yourself following TAKEOFF_METHOD.md and write TAKEOFF_sample.md. State the main bathroom floor area and master ensuite floor area in your summary (expected ballpark ~7.1 m2 and ~19.9 m2). If time permits, also run takeoff.py end-to-end on sample_plans.pdf to verify the subprocess pipeline works here.
+
+6. Write QUICKSTART.md with exact usage for both Mac and Windows PowerShell. Commit everything with clear messages and push to origin main.

@@ -1,0 +1,7 @@
+# Generated output - recreate with:  python3 takeoff.py <plans.pdf>
+jobs/
+work/
+
+__pycache__/
+*.pyc
+.DS_Store
