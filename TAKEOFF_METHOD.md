@@ -163,9 +163,9 @@ loud flag, not a quiet number.
 
 ---
 
-## 6. Confidence rating — every room gets one
+## 6. Confidence rating — internal, expressed as a tick or a flag
 
-Assigned mechanically from the checks in §5.
+Every room gets a rating, assigned mechanically from the checks in §5.
 
 | Rating | Criteria |
 |---|---|
@@ -173,8 +173,27 @@ Assigned mechanically from the checks in §5.
 | **MED** | Plan and elevations present, but one of: a chain discrepancy 26–200 mm; ≤2 undimensioned openings; a niche depth missing; a fixture dimension conflict. Numbers are usable after the questions are answered. |
 | **LOW** | A required sheet is missing; a wall height is undimensioned; a chain discrepancy >200 mm; a raked ceiling with no section; §5.3 FAIL. **Numbers are provisional and must not be quoted from until the questions are answered.** |
 
-The rating is printed next to the room heading, and every LOW room is repeated in
-QUESTIONS FOR YOU.
+### The rating is never printed as HIGH / MED / LOW
+
+The words HIGH, MED and LOW are working vocabulary. They do not appear in the delivered
+document, and neither does any confidence percentage or score. A tradie reading a number on
+a phone needs to know one thing: *can I use this or not?* A three-band score makes him do
+arithmetic on our uncertainty, which is our job, not his.
+
+It is expressed customer-facing as exactly two marks, and nothing else:
+
+| Mark | Means | Comes from |
+|---|---|---|
+| ✅ | **Ready to order.** Use this number. | HIGH |
+| ⚠️ | **Confirm this first.** | MED and LOW |
+
+A ⚠️ always sits next to a matching tick-box question in §10.2 — never on its own. If we
+flag something, we say what to do about it in the same breath.
+
+Where a LOW room cannot produce a usable number at all (missing sheet, undimensioned
+ceiling), its quantity is **kept out of the order total** and shown separately as "not in
+that total" — see §10.1. A number a tradie must not order from does not belong in the
+number he orders from.
 
 ---
 
@@ -271,17 +290,182 @@ defend on site.
 
 ---
 
-## 9. ASSUMPTIONS — every one phrased as a question
+---
 
-Any value that is inferred, scaled, standard-practice, or carried over from another room
-goes here. Numbered, and written as a question a busy tradie can answer with one word.
+## 9. Write it for a phone screen in a ute
 
-Format:
+Everything up to here is how we get the numbers right. This section is how we stop that
+work being wasted.
+
+**A correct number the tradie can't find, can't read, or doesn't trust is worth nothing.**
+He is reading this on a phone, one-handed, in a ute, between jobs — or at the kitchen table
+at 9pm with the answer needed tonight. Readability is not presentation polish sitting on
+top of the accuracy work. It is part of the accuracy work, because a number that gets
+misread is exactly as wrong as a number that was miscalculated.
+
+Three rules, applied to every word that faces a customer:
+
+### 9.1 The answer comes first. The working comes last.
+
+He opens the document and sees what to order. Not a summary, not a sheet register, not a
+methodology note — the quantity, in a box, at the top.
+
+Everything that explains, proves or qualifies that number lives **below**, under
+**HOW WE GOT THESE NUMBERS**. It is there in full for whoever wants it, and invisible to
+whoever doesn't. Nobody is made to scroll past our workings to reach their answer.
+
+### 9.2 No jargon, anywhere customer-facing
+
+If a word exists to make the writer sound like an estimator, it goes. Use the word the
+tradie would use standing in the room.
+
+| Never write | Write |
+|---|---|
+| trapezoid / raked plane | **sloped ceiling wall** |
+| reconciliation / cross-check passed | **double-checked against the plan totals** |
+| wastage factor / wastage allowance | **extra for cuts** (or *extra for cuts and breakage*) |
+| deduction / deduct | **taken off** |
+| opening | **door hole / window hole** |
+| perimeter | **all the walls added up** |
+| rectilinear decomposition / polygon | **measured in strips** |
+| net of fixtures | **after taking off the bath and the cupboards** |
+| elevation | **wall drawing** (say *wall drawings (elevations)* once, then drop it) |
+| AFF / above finished floor | **off the floor** |
+| provisional / indicative | **we've guessed this — please confirm** |
+| confidence: MED | **⚠️ confirm this** |
+| nominal / notional | **about** |
+
+Keep the words a tradie already owns: *niche, splashback, skirting, hob, nib wall, screen,
+m², linear metres, setout*. Stripping those is its own kind of talking down.
+
+Sentence rules: short. One idea per line. Numbers rounded to **0.1 m²** everywhere
+customer-facing — three decimal places on a phone screen is noise pretending to be rigour.
+The full-precision figures live in the working section.
+
+### 9.3 Two marks, no scores
+
+The only status marks in the whole document are **✅** and **⚠️** (see §6). No HIGH/MED/LOW,
+no percentages, no confidence scores, no star ratings, no colour coding that dies in
+greyscale. A tradie should never have to interpret our uncertainty — he should be told
+either *use this* or *check this first*.
+
+Every ⚠️ has a matching tick-box question. Nothing is flagged without being asked.
+
+---
+
+## 10. The output template
+
+Every `TAKEOFF_<job>.md` follows this exact order. Do not reorder it, and do not let any
+part of §10.5 leak upward.
+
+### 10.1 — ORDER THIS  *(the totals box, first thing on the page)*
+
+A single box with the order quantities. **Extra for cuts is already added**, and the box
+says so in words.
 
 ```
-A1. The main bath north-wall window is 1000 wide on plan but its height isn't
-    dimensioned on sheet 7.02. I've used 1360 (scaled, for reference only) and deducted
-    1.36 m² from that wall. What's the actual opening height?
+==================================================
+  ORDER THIS
+==================================================
+  Floor tiles ................  36.4 m²
+  Wall tiles .................  58.6 m²
+  Feature tiles ..............  12.0 m²
+  Tile skirting ..............   7.3 m
+==================================================
+  Includes 10% extra for cuts and breakage.
+```
+
+Rules:
+
+- **Round to 0.1.** Round each room first, then make the total the sum of the rounded room
+  figures — so the rooms visibly add up to the total. A total that doesn't match the lines
+  above it destroys trust in every other number on the page.
+- **One material per line.** Different tile = different line, because it's a different
+  order.
+- Anything that is not safe to order (a LOW room, per §6) is **excluded from the box** and
+  listed immediately underneath:
+
+```
+  NOT IN THAT TOTAL — 2 things we can't finish yet
+  • Master ensuite walls — about 50.8 m² more. We need the ceiling
+    height first (question 1).
+  • Powder room floor — about 3.1 m². The floor plan sheet isn't in
+    the set (question 2).
+```
+
+### 10.2 — CHECK THESE *n* THINGS BEFORE YOU QUOTE
+
+Immediately below the box. Tick-boxes, plain questions, no numbering scheme beyond 1, 2, 3.
+
+```
+⚠️ CHECK THESE 4 THINGS BEFORE YOU QUOTE
+
+[ ] 1. How high are the master ensuite walls, and is the ceiling sloped?
+       Every other room says 2700. The master ensuite drawings don't say,
+       anywhere. Until you tell us we can't give you a wall number for
+       that room. The floor is fine.
+```
+
+Rules:
+
+- **Only what changes a number materially.** Aim for three to five. If everything is
+  urgent, nothing is.
+- Each one: the question in bold as a single line, then two or three plain lines saying
+  what's missing and what it moves. Never more.
+- State the size of the exposure in m² where you can — that's how he decides what to chase.
+- Smaller items do **not** get promoted here. They go in §10.5 under *What we had to fill
+  in*, with a one-line pointer from this section so nothing is hidden:
+  *"There are 8 smaller things we filled in — they're listed at the bottom."*
+
+### 10.3 — ROOM BY ROOM
+
+One block per room. **Order quantities** (extra for cuts already in), one number per line,
+rounded to 0.1.
+
+```
+MAIN BATHROOM  ✅
+  Floor tiles ................   9.0 m²
+  Wall tiles .................  29.6 m²   (includes 2 niches)
+  Feature tiles ..............   6.0 m²   behind the vanity
+```
+
+Rules:
+
+- ✅ or ⚠️ against the room name, and against any individual line that needs confirming.
+- A short plain note in the right-hand column where the number needs context
+  (*behind the vanity*, *splashback only*, *tiles run under the vanity*).
+- **No arithmetic in this section.** Not one `×`. It all lives in §10.5.
+- Where a room's tiling is unusual, say so in one plain line, because that's the line that
+  stops him quoting the wrong thing:
+  *"The laundry is not a tiled room — it's a 450 high splashback over the bench, nothing
+  else."*
+
+### 10.4 — Other trades  *(only if in scope)*
+
+Same shape, kept short. Painters get walls and ceilings.
+
+### 10.5 — HOW WE GOT THESE NUMBERS
+
+Everything else, below a clear divider, in this order:
+
+1. **The straight measurements** — the same table without the extra for cuts, at full
+   precision, so anyone can apply their own percentage.
+2. **Room-by-room working** — every `×` and every subtraction, per §8.
+3. **What we double-checked** — the §5 checks, written as plain statements with ✅/⚠️,
+   *not* as a pass/fail matrix. e.g. *"We added up the four wall drawings and compared them
+   to the walls on the floor plan. Both come to 13,330 mm — dead on."*
+4. **What we had to fill in** — every assumption, each phrased as a question (§10.6).
+5. **The drawings we read** — sheet numbers, titles, scale, revision.
+6. **Before you quote** — the closing checklist (§11).
+
+### 10.6 — Every assumption is a question
+
+Any value inferred, scaled, taken as standard practice, or carried over from another room
+is written as a question a busy tradie can answer in one word.
+
+```
+The main bath window is 1000 wide on the plan, but no sheet says how tall it is.
+We used 1360 and took 1.4 m² off that wall. What's the real height?
 ```
 
 Never:
@@ -290,31 +474,24 @@ Never:
 Assumed window height 1360mm.
 ```
 
-The first can be answered. The second can only be discovered on site, too late.
+The first can be answered before the quote goes out. The second can only be discovered on
+site, too late.
 
 ---
 
-## 10. Output order
+## 11. Before you quote — the closing checklist
 
-As specified in `SPEC.md` §3. **QUESTIONS FOR YOU leads the document, always** — before
-the summary, before the tables, before the totals. Asking beats assuming; put the asking
-where it cannot be missed.
-
----
-
-## 11. CONFIRM BEFORE QUOTING — the closing checklist
-
-Every takeoff ends with this, unticked:
+Every takeoff ends with this, unticked, in plain language:
 
 ```
-[ ] Sheet revisions match the set you were given (this takeoff read Rev L, 01/09/25)
-[ ] Every question in QUESTIONS FOR YOU has been answered
-[ ] Rooms rated LOW have been resolved or excluded from the quote
-[ ] Tiling heights confirmed on site or with the designer
-[ ] Openings confirmed — door and window sizes, screen positions
-[ ] Deductions match your scope (do you tile under the vanity? behind the bath?)
-[ ] Tile format and lay direction confirmed — this drives your wastage %
-[ ] Wastage % selected and applied
-[ ] Substrate, waterproofing and screed scope agreed — not in this takeoff
-[ ] You have re-checked at least two numbers by hand against the plan
+[ ] The sheet numbers and dates above match the drawings you were given
+[ ] You've answered the questions at the top
+[ ] Anything marked ⚠️ is sorted, or left out of your quote
+[ ] Tiling heights confirmed with the designer or on site
+[ ] Door and window sizes confirmed
+[ ] You agree with what we took off and what we left in (under the vanity? behind the bath?)
+[ ] Tile size and lay direction confirmed — that's what drives the extra for cuts
+[ ] You're happy with 10% extra for cuts, or you've told us to change it
+[ ] Waterproofing, screed and floor prep are NOT in these numbers
+[ ] You've re-checked at least two numbers by hand against the plan
 ```

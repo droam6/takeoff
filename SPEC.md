@@ -133,20 +133,29 @@ those areas are reported as their own line because they carry a different rate.
 
 ## 3. Output format (every job)
 
-Every `TAKEOFF_<job>.md` is delivered in this order:
+**Readability is part of accuracy.** A correct number the tradie can't find, can't read, or
+doesn't trust is worth nothing. He is reading this on a phone, one-handed, in a ute. A
+number that gets misread is exactly as wrong as one that was miscalculated.
 
-1. **QUESTIONS FOR YOU** — the intake answers we are missing plus every assumption
-   needing confirmation, phrased as plain questions. This leads the document. Always.
-2. **Job summary** — sheets read, scale, date, trade, rooms covered.
-3. **Per-room tables** — floor, then wall-by-wall, then niches, with the arithmetic shown
-   inline (`2570 × 3895 = 10.010 m²`), plus a **confidence rating** (HIGH / MED / LOW).
-4. **Totals per material** — floor tile, wall tile, feature tile, skirting, painted wall,
-   painted ceiling.
-5. **Wastage-adjusted totals** — measured / +10% / +15% side by side.
-6. **Assumptions register** — numbered, each phrased as a question to the tradie.
-7. **Cross-check log** — every verification from `TAKEOFF_METHOD.md` §5 with pass/fail.
-8. **CONFIRM BEFORE QUOTING** — the checklist the tradie ticks before the number leaves
-   their hands.
+So the answer comes first and the working comes last. The full template is defined in
+`TAKEOFF_METHOD.md` §9–§11; the shape is:
+
+| | Section | |
+|---|---|---|
+| 1 | **ORDER THIS** | The totals box. Quantities to order, extra for cuts already added, rounded to 0.1. First thing on the page. |
+| 2 | **CHECK THESE *n* THINGS BEFORE YOU QUOTE** | Three to five plain tick-box questions — only what changes a number materially. |
+| 3 | **ROOM BY ROOM** | One number per line, plain English, no arithmetic. |
+| 4 | *Other trades* | Only if in scope. |
+| 5 | **HOW WE GOT THESE NUMBERS** | Straight measurements, all working, what we double-checked, what we filled in, drawings read, and the closing checklist. |
+
+Three rules govern everything above the divider:
+
+- **No jargon.** "Sloped ceiling wall", not trapezoid. "Double-checked against the plan
+  totals", not reconciliation. "Extra for cuts", not wastage factor.
+- **Two marks only** — ✅ *ready to order* and ⚠️ *confirm this first*. Never a confidence
+  rating, a percentage or a score. Every ⚠️ has a matching tick-box question.
+- **Nothing unsafe to order sits in the order total.** A room we can't finish is excluded
+  from the box and listed underneath as "not in that total".
 
 ## 4. What we deliberately do **not** do
 
