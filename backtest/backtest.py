@@ -49,108 +49,90 @@ import fitz  # noqa: E402
 from takeoff import (  # noqa: E402
     run_intake, write_rejection, write_intake_report, extract, analyse,
     load_profile, resolve_order_settings, write_profile_report,
-    _dimension_tokens, _sheet_title,
+    WET_RE, SHEET_PLAN_RE, SHEET_ELEV_RE,
 )
 
 HERE = Path(__file__).resolve().parent
 INBOX = HERE / "inbox"
 RESULTS = HERE / "results"
 
-ROOM_WORDS = [
-    "bath", "ensuite", "powder", "laundry", "kitchen", "wc", "toilet",
-    "shower", "butler", "pantry", "mudroom", "wet area",
-]
-PLAN_RE = re.compile(r"(FLOOR|CEILING|SETOUT|TILE)\s+PLAN\b", re.I)
-ELEV_RE = re.compile(r"\bELEVATIONS?\b", re.I)
-SECT_RE = re.compile(r"\bSECTIONS?\b", re.I)
-SCALE_RE = re.compile(r"1\s*:\s*(\d+)")
+SECT_RE = re.compile(r"\bsections?\b", re.I)
+ROOM_WORDS = ["bath", "ensuite", "powder", "laundry", "kitchen", "wc", "toilet",
+              "shower", "butler", "pantry", "mudroom"]
 
 
 # --------------------------------------------------------------------------
-# Deterministic structure probe - no model involved
+# Structure probe - reads the gate's own classification rather than repeating
+# it. The gate decides pass/fail; the probe says what a reviewer should look at.
 # --------------------------------------------------------------------------
 
-def probe(pdf: Path) -> dict:
-    """Read the set's structure: rooms, sheet mix, scales, dimension density.
+def probe(facts: dict) -> dict:
+    pages = facts.get("per_page", [])
 
-    This is the cheap question the gate can't answer on its own: the gate says
-    "there are plans and there are elevations"; the probe says "are they for the
-    SAME room", which is what decides whether a wall area can be measured at all.
-    """
-    doc = fitz.open(pdf)
-    sheets, scales = [], set()
-    for i, page in enumerate(doc):
-        text = page.get_text() or ""
-        title = _sheet_title(text)
-        sheets.append({
-            "page": i + 1,
-            "title": title,
-            "dims": len(_dimension_tokens(text)),
-            "is_plan": bool(PLAN_RE.search(title)),
-            "is_elev": bool(ELEV_RE.search(title)),
-            "is_sect": bool(SECT_RE.search(title)),
-        })
-        for m in SCALE_RE.finditer(text):
-            scales.add(f"1:{m.group(1)}")
-    doc.close()
-
-    def room_of(title: str) -> str | None:
-        t = title.lower()
+    def room_of(title):
+        t = (title or "").lower()
         for w in ROOM_WORDS:
             if w in t:
-                return re.sub(r"\s+(floor plan|elevations?|3d|sections?)\s*$", "",
-                              title, flags=re.I).strip().title()
+                return re.sub(r"\s+(floor plan|elevations?|3d|sections?|sht\.?\s*\d*)\s*$",
+                              "", title, flags=re.I).strip().title()
         return None
 
-    rooms: dict[str, dict] = {}
-    for sh in sheets:
+    rooms = {}
+    for sh in pages:
         r = room_of(sh["title"])
         if not r:
             continue
-        e = rooms.setdefault(r, {"plan": 0, "elev": 0, "dims": 0})
-        e["plan"] += sh["is_plan"]
-        e["elev"] += sh["is_elev"]
-        e["dims"] += sh["dims"]
-
-    measurable = {r: v for r, v in rooms.items() if v["plan"] and v["elev"]}
-    floors_only = {r: v for r, v in rooms.items() if v["plan"] and not v["elev"]}
+        e = rooms.setdefault(r, {"plan": 0, "elev": 0})
+        e["plan"] += bool(sh["is_plan"])
+        e["elev"] += bool(sh["is_elev"])
 
     return {
-        "pages": len(sheets),
-        "sheets": sheets,
-        "scales": sorted(scales),
-        "plan_sheets": sum(s["is_plan"] for s in sheets),
-        "elev_sheets": sum(s["is_elev"] for s in sheets),
-        "sect_sheets": sum(s["is_sect"] for s in sheets),
-        "total_dims": sum(s["dims"] for s in sheets),
+        "pages": len(pages),
+        "scales": facts.get("scales", []),
+        "plan_sheets": facts.get("plan_pages", 0),
+        "elev_sheets": facts.get("elev_pages", 0),
+        "wet_elev_sheets": facts.get("wet_elev_pages", 0),
+        "sect_sheets": sum(1 for p in pages if SECT_RE.search(p["title"] or "")),
+        "named_pages": facts.get("named_pages", 0),
+        "total_dims": facts.get("total_dims", 0),
+        "total_chains": facts.get("total_chains", 0),
+        "chains_per_page": facts.get("chains_per_page", 0),
+        "clean_ratio": facts.get("clean_ratio", 0),
+        "word_hit": facts.get("word_hit", 0),
         "wet_rooms": rooms,
-        "measurable_rooms": measurable,
-        "floors_only_rooms": floors_only,
+        "measurable_rooms": {r: v for r, v in rooms.items() if v["plan"] and v["elev"]},
+        "floors_only_rooms": {r: v for r, v in rooms.items() if v["plan"] and not v["elev"]},
     }
 
 
 def probe_flags(pr: dict, checks) -> list[str]:
-    """Things a human reviewer should look at. Not failures - suspicions."""
+    """Things a reviewer should look at, ranked by whether they can move a number.
+
+    Only raised when they are actually true of this set - a flag list that cries
+    wolf gets skimmed, and the real one goes with it.
+    """
     f = []
     if len(pr["scales"]) > 1:
-        f.append(f"mixed scales in one set ({', '.join(pr['scales'])}) - scaling risk")
-    if not pr["scales"]:
-        f.append("no scale printed on any sheet")
+        f.append(f"mixed drawing scales in one set ({', '.join(pr['scales'])})"
+                 " - anyone who scales off it will be wrong on some sheets")
     if pr["plan_sheets"] and not pr["elev_sheets"]:
-        f.append("plans but no elevations - floors only, no wall areas")
+        f.append("floor plans but no elevations - floors only, no wall areas")
     if pr["elev_sheets"] and not pr["plan_sheets"]:
         f.append("elevations but no floor plan - no floor areas")
+    if pr["elev_sheets"] and not pr["wet_elev_sheets"]:
+        f.append("elevations are external only - no dimensioned internal wet-area "
+                 "elevations found")
     if pr["floors_only_rooms"]:
         f.append("wet rooms with a plan but no elevations: "
                  + ", ".join(sorted(pr["floors_only_rooms"])))
-    if not pr["wet_rooms"]:
-        f.append("no wet areas identified by sheet title")
+    if pr["named_pages"] < pr["pages"] * 0.5:
+        f.append(f"sheet names read on only {pr['named_pages']} of {pr['pages']} sheets"
+                 " - the room map may be incomplete")
+    if pr["wet_elev_sheets"] and pr["sect_sheets"] == 0:
+        f.append("no section sheets - a raked ceiling could not be resolved from this set")
     if pr["pages"] and pr["total_dims"] / pr["pages"] < 10:
         f.append(f"thin dimensioning ({pr['total_dims'] / pr['pages']:.0f} tokens/page)")
-    if pr["sect_sheets"] == 0:
-        f.append("no sections - raked ceilings could not be resolved")
-    warn = [c for c in checks if not c.ok and not c.hard]
-    for c in warn:
+    for c in [c for c in checks if not c.ok and not c.hard]:
         f.append(f"gate warning: {c.detail}")
     return f
 
@@ -181,7 +163,7 @@ def run_one(pdf: Path, args) -> dict:
     t0 = time.time()
 
     try:
-        checks, facts = run_intake(pdf, want_walls=True)
+        checks, facts = run_intake(pdf, want_walls=not args.no_walls)
     except Exception as exc:  # a PDF so broken the gate itself throws
         row.update(intake="ERROR", why=f"gate crashed: {exc}", pages="?",
                    rooms="—", areas="—", flags=["harness caught an exception"],
@@ -207,7 +189,7 @@ def run_one(pdf: Path, args) -> dict:
         )
         return row
 
-    pr = probe(pdf)
+    pr = probe(facts)
     (out_dir / "probe.json").write_text(json.dumps(pr, indent=2))
 
     extract(pdf, out_dir, dpi=args.dpi)
@@ -223,7 +205,8 @@ def run_one(pdf: Path, args) -> dict:
             if (ROOT / src).exists():
                 shutil.copyfile(ROOT / src, out_dir / dst)
         takeoff_md = analyse(out_dir, name,
-                             {"trade": "tiler", "rooms": "all wet areas",
+                             {"trade": "tiler",
+                              "rooms": "floors only" if args.no_walls else "all wet areas",
                               "wastage": None, "tile_size": None,
                               "m2_per_box": None, "lay_pattern": None},
                              prof, settings, timeout=args.timeout)
@@ -231,8 +214,8 @@ def run_one(pdf: Path, args) -> dict:
     rooms = sorted(pr["measurable_rooms"]) or sorted(pr["wet_rooms"])
     row.update(
         intake="PASS",
-        why=f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev sheets, "
-            f"{pr['total_dims']} dim tokens",
+        why=f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev "
+            f"({pr['wet_elev_sheets']} internal wet) · {pr['total_chains']} chains",
         rooms=", ".join(rooms) if rooms else "none identified",
         n_measurable=len(pr["measurable_rooms"]),
         areas=headline_areas(takeoff_md),
@@ -300,6 +283,8 @@ def main(argv=None) -> int:
                     help="also run the real headless takeoff on every set that passes")
     ap.add_argument("--only", help="substring filter on the filename")
     ap.add_argument("--customer", default="angus")
+    ap.add_argument("--no-walls", action="store_true",
+                    help="floors only - missing wet-area elevations warn instead of failing")
     ap.add_argument("--dpi", type=int, default=150)
     ap.add_argument("--timeout", type=int, default=5400)
     a = ap.parse_args(argv)

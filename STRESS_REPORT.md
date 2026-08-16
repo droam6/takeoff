@@ -250,3 +250,147 @@ the scale regex to sheets' title blocks rather than the whole page.
 - **Sample size is nine.** Enough to find structural weaknesses. Not enough to estimate a
   rejection rate, which is a number `BUSINESS_PLAN.md` §8 Risk 3 needs and this run cannot
   provide.
+
+
+---
+---
+
+# ROUND 2 — after the fixes
+
+**Re-run:** 16 August 2026, same nine sets, same harness.
+**Result: 2 passed, 7 rejected — every verdict right, and every stated reason true.**
+
+The pass count went *down*, which is the point. Round 1 passed five sets; two of those three
+new rejections are sets that genuinely cannot support a wall takeoff, and the third is a scan.
+
+## Before and after
+
+| Plan set | Round 1 | Round 2 | Reason stated in round 2 | True? |
+|---|---|---|---|---|
+| `sample_plans.pdf` | ✅ PASS | ✅ **PASS** | 4 plan / 13 elev (6 internal wet) · 144 chains | ✅ |
+| `derbyshire-construction-sample.pdf` | ✅ PASS, "no wet areas" *(false)* | ✅ **PASS** | 4 plan / 6 elev (**4 internal wet**) · 494 chains | ✅ |
+| `ncc-building-plans-example.pdf` | ✅ PASS *(should have failed)* | 🛑 **FAIL** | *"6 dimension chains check out (0.12 per page)"* → **text present but not reliably readable** | ✅ |
+| `ssc-da220327-architectural.pdf` | 🛑 "0 floor plan sheets" *(false)* | 🛑 **FAIL** | *"**5 floor plan(s)** and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area"* | ✅ |
+| `ssc-da181440-architectural.pdf` | 🛑 "0 floor plan sheets" *(false)* | 🛑 **FAIL** | *"**4 floor plan(s)** and 2 elevation sheet(s) found, but none is an internal wet-area elevation"* | ✅ |
+| `housedesigners-working-drawings.pdf` | 🛑 "0 floor plan sheets" *(false)* | 🛑 **FAIL** | *"**3 floor plan(s)** and 2 elevation sheet(s) found, but none is an internal wet-area elevation"* | ✅ |
+| `creativehomeplans-sample.pdf` | ✅ PASS | 🛑 **FAIL** | *"4 floor plan(s) and 1 elevation sheet found, but none is an internal wet-area elevation"* | ✅ |
+| `eastcoast-sample-plan-set.pdf` | ✅ PASS | 🛑 **FAIL** | *"2 floor plan(s) and 4 elevation sheet(s) found, but none is an internal wet-area elevation"* | ✅ |
+| `phone-scan-of-da-plans.pdf` | 🛑 FAIL | 🛑 **FAIL** | 0 extractable characters | ✅ |
+
+**Nine for nine on truthfulness.** Every rejection now names what we *did* find before saying
+what we didn't — which is the difference between a letter that builds trust and one that tells
+a tradie his floor plan doesn't exist.
+
+## What changed
+
+### Fix 1 — readability, not existence
+
+Two new checks sit between "there is text" and "there are numbers".
+
+**Dimension chains that check out.** A chain is a run of two or more labels lying along one
+line whose values sum to another printed value within 5 mm — `100 + 840 + 790 = 1730`. Real
+drawings are full of them, because that is how a chain is dimensioned. **OCR noise is not:**
+random integers do not sum to other random integers on the same axis, within 5 mm, except by
+accident.
+
+The separation is not close:
+
+| Set | Chains/page | |
+|---|---|---|
+| derbyshire | **21.5** | real |
+| ssc-da220327 | **9.7** | real |
+| housedesigners | **7.2** | real |
+| sample_plans | **5.8** | real |
+| eastcoast | **3.3** | real |
+| creativehomeplans | **1.6** | real |
+| **ncc (OCR'd scan)** | **0.12** | **noise** |
+
+Threshold set at 5 chains total and 0.4/page — an order of magnitude below the weakest real
+set, and three times above the scan.
+
+**A text-quality score** — the share of characters that belong on a drawing sheet, and the
+share of alphabetic tokens that are real words, scored against an embedded vocabulary rather
+than a system dictionary (so the verdict doesn't depend on which machine it ran on).
+
+**Honest finding: the word-hit rate did not do the work.** The OCR'd set scored 0.315 and a
+perfectly good set (`eastcoast`) scored 0.307 — the score cannot separate them. It is kept as
+a cheap catch for badly garbled text and reported in the intake record, but **the chain check
+is what actually caught the scan.** Reporting the opposite would have been easy and wrong.
+
+### Fix 2 — sheet titles from the title block
+
+The round-1 root cause was **not** the copyright boilerplate. It was that the old heuristic
+required ALL CAPS, and the sets it failed on set their sheet names in **mixed case** —
+`Ground Floor Plan`, `Floor Plan - Lower`, `First Floor Plan`. The boilerplate only won
+because nothing else was eligible.
+
+Titles are now **scored, not guessed**, on the three signals a real title block always has:
+
+1. the line is large relative to the rest of the page,
+2. it hugs a page edge, where title blocks live,
+3. a sheet number sits within ~220 pt of it.
+
+Plus: case-insensitive matching, boilerplate excluded by phrase, sentences excluded (a line
+ending in "." with more than three words is prose, not a name), and **wrapped names joined** —
+so derbyshire's `PLAN DET. & INT. ELEV. -` / `BATH & BED 3` is read as one title instead of
+two fragments.
+
+Result on sheet-name recognition:
+
+| Set | Round 1 | Round 2 |
+|---|---|---|
+| `sample_plans` | 25/25 | 25/25 |
+| `ssc-da220327` | 0 named | 15/23, incl. 5 floor plans |
+| `ssc-da181440` | 0 named | 10/34, incl. 4 floor plans |
+| `housedesigners` | 0 named | 8/12, incl. 3 floor plans |
+| `derbyshire` | wet areas missed | 4 internal wet-area elevation sheets found |
+
+### Fix 3 — only verifiable facts, and a new honest reason
+
+Rejection messages now state what was established and nothing stronger:
+
+- Sheets were named and none is a plan → *"no floor plan among the 15 sheets we could name"*
+- No sheet could be named at all → *"couldn't confidently identify any sheet names across 23
+  sheets — that may be our end, not yours"*
+- Never *"0 floor plan sheets detected"* off a failed guess.
+
+And the check that legitimately rejects a DA set now exists: **wet-area elevations.** An
+elevation sheet counts as an internal wet-area elevation when it carries at least four
+distinct wet-area terms including at least one *fitting* (basin, vanity, shower, mixer,
+splashback, niche, hob, screen) and at least five dimension tokens.
+
+That threshold came from the data, not from taste:
+
+| Sheet | Wet terms found | |
+|---|---|---|
+| derbyshire internal elevations | basin, bath, ens, laundry, mixer, shower, splashback, tile, toilet (**9**) | internal ✅ |
+| derbyshire *external* elevations | powder, shower (**2**) | external ✅ |
+| ssc-da220327 elevations | laundry, wc (**2**) | external ✅ |
+| ssc-da181440 elevations | bath, toilet (**2**) | external ✅ |
+
+The 2-vs-9 gap is the difference between a room label leaking onto an external elevation and
+a sheet that actually draws the bathroom wall.
+
+### Fix 4 — the flags stopped crying wolf
+
+The scale flag now requires **scale context** — `1:100 @ A3`, or the word *scale* within 18
+characters — so it no longer fires on `1:3` mortar mixes, `1:100` floor falls or roof pitches.
+`eastcoast` went from nine bogus "scales" to none. `sample_plans` still correctly reports its
+real 1:20 / 1:25 mix, and `derbyshire` reports a genuine 1:1 / 1:50 / 1:100 / 1:200 spread.
+
+Flags are also now only raised when true of that set: "no sections" only fires where there
+are wet-area elevations that might be raked, and a new flag reports when sheet names were
+read on fewer than half the sheets, so an incomplete room map announces itself.
+
+## What this run cost us, honestly
+
+**Two sets that previously passed now fail** — `creativehomeplans` and `eastcoast`. Both are
+DA-level sample sets with external elevations only. Rejecting them is correct *for a wall
+quote*, and the letter says so and offers floors-only instead. But it is worth stating plainly
+that the gate is now stricter, and that the right commercial answer to most of these
+rejections is **"we can still do your floors"** rather than "no".
+
+That reframes Risk 3 in the business plan: of nine sets, **one was genuinely unreadable** and
+**six could be measured for floors but not walls.** The addressable failure isn't
+unreadability — it's missing internal elevations, and there's a product on the other side of
+it.

@@ -2,47 +2,89 @@
 
 **Run:** 2026-08-16 · **Depth:** structure probe (gate + extract, no model) · **Plans:** 9
 
-**5 passed the gate · 4 rejected · 0 errored**
+**2 passed the gate · 7 rejected · 0 errored**
 
 | File | Pages | Intake | Why | Rooms found | Headline areas | Flags | Runtime |
 |---|---|---|---|---|---|---|---|
-| `creativehomeplans-sample.pdf` | 8 | ✅ PASS | 1 plan / 1 elev sheets, 205 dim tokens | none identified | — | ⚠️ mixed scales in one set (1:100, 1:200) - scaling risk<br>⚠️ no wet areas identified by sheet title | 2.1s |
-| `derbyshire-construction-sample.pdf` | 23 | ✅ PASS | 3 plan / 7 elev sheets, 1721 dim tokens | none identified | — | ⚠️ mixed scales in one set (1:1, 1:100, 1:200, 1:50) - scaling risk<br>⚠️ no wet areas identified by sheet title<br>⚠️ no sections - raked ceilings could not be resolved | 5.5s |
-| `eastcoast-sample-plan-set.pdf` | 30 | ✅ PASS | 2 plan / 1 elev sheets, 1013 dim tokens | none identified | — | ⚠️ mixed scales in one set (1:1, 1:10, 1:100, 1:20, 1:200, 1:3, 1:4, 1:6, 1:8) - scaling risk<br>⚠️ no wet areas identified by sheet title | 10.7s |
-| `housedesigners-working-drawings.pdf` | 12 | 🛑 FAIL | 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected | — | — | ⚠️ rejected: plan_pages<br>⚠️ rejected: elevation_pages | 0.2s |
-| `ncc-building-plans-example.pdf` | 50 | ✅ PASS | 3 plan / 5 elev sheets, 578 dim tokens | none identified | — | ⚠️ mixed scales in one set (1:1, 1:10, 1:100, 1:200, 1:50) - scaling risk<br>⚠️ no wet areas identified by sheet title | 12.2s |
-| `phone-scan-of-da-plans.pdf` | 6 | 🛑 FAIL | 0 extractable characters (need 200); 0 characters per page (need 20); 0 mm dimension tokens found (need 30); 0 sheet(s) carry a real dimension chain; 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected | — | — | ⚠️ rejected: text_layer<br>⚠️ rejected: text_density<br>⚠️ rejected: dimension_tokens<br>⚠️ rejected: dimensioned_pages<br>⚠️ rejected: plan_pages<br>⚠️ rejected: elevation_pages | 0.0s |
-| `sample_plans.pdf` | 25 | ✅ PASS | 4 plan / 13 elev sheets, 567 dim tokens | Guest Bed Ensuite, Laundry, Main Bath, Master Ensuite | — | ⚠️ mixed scales in one set (1:20, 1:25) - scaling risk<br>⚠️ no sections - raked ceilings could not be resolved | 7.2s |
-| `ssc-da181440-architectural.pdf` | 34 | 🛑 FAIL | 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected | — | — | ⚠️ rejected: plan_pages<br>⚠️ rejected: elevation_pages | 0.4s |
-| `ssc-da220327-architectural.pdf` | 23 | 🛑 FAIL | 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected | — | — | ⚠️ rejected: plan_pages<br>⚠️ rejected: elevation_pages | 0.2s |
+| `creativehomeplans-sample.pdf` | 8 | 🛑 FAIL | 4 floor plan(s) and 1 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 0.3s |
+| `derbyshire-construction-sample.pdf` | 23 | ✅ PASS | 4 plan / 6 elev (4 internal wet) · 494 chains | none identified | — | ⚠️ mixed drawing scales in one set (1:1 @ A3, 1:100 @ A3, 1:200 @ A3, 1:50 @ A3) - anyone who scales off it will be wrong on some sheets | 3.9s |
+| `eastcoast-sample-plan-set.pdf` | 30 | 🛑 FAIL | 2 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 1.2s |
+| `housedesigners-working-drawings.pdf` | 12 | 🛑 FAIL | 3 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 0.6s |
+| `ncc-building-plans-example.pdf` | 50 | 🛑 FAIL | 6 dimension chains check out (0.12 per page, need 5 and 0.4/page); 4 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: dimension_chains<br>⚠️ rejected: wet_area_elevations | 3.2s |
+| `phone-scan-of-da-plans.pdf` | 6 | 🛑 FAIL | 0 extractable characters (need 200); 0 characters per page (need 20); text quality: 0.0% of characters usable, 0% of words recognised (need 90% / 15%); 0 mm dimension tokens found (need 30); 0 dimension chains check out (0.00 per page, need 5 and 0.4/page); 0 sheet(s) carry a real dimension chain; couldn't confidently identify any sheet names across 6 sheets; couldn't confidently identify sheet names; 0 floor plan(s) and 0 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: text_layer<br>⚠️ rejected: text_density<br>⚠️ rejected: text_quality<br>⚠️ rejected: dimension_tokens<br>⚠️ rejected: dimension_chains<br>⚠️ rejected: dimensioned_pages<br>⚠️ rejected: plan_pages<br>⚠️ rejected: elevation_pages<br>⚠️ rejected: wet_area_elevations | 0.8s |
+| `sample_plans.pdf` | 25 | ✅ PASS | 4 plan / 13 elev (6 internal wet) · 144 chains | Guest Bed Ensuite, Laundry, Main Bath, Master Ensuite | — | ⚠️ mixed drawing scales in one set (1 : 20@A3, 1 : 25@A3) - anyone who scales off it will be wrong on some sheets<br>⚠️ no section sheets - a raked ceiling could not be resolved from this set | 5.2s |
+| `ssc-da181440-architectural.pdf` | 34 | 🛑 FAIL | 4 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 13.2s |
+| `ssc-da220327-architectural.pdf` | 23 | 🛑 FAIL | 5 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 3.1s |
 
 ---
 
 ## Rejections in full
 
-### `housedesigners-working-drawings.pdf`
+### `creativehomeplans-sample.pdf`
 
-**Gate said:** 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected
+**Gate said:** 4 floor plan(s) and 1 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
 The letter we would actually send:
 
 ```
-### ✗ 0 floor plan sheet(s) detected
+### ✗ 4 floor plan(s) and 1 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
-**What this means:** Without a floor plan we cannot measure floor area.
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
 
-**What to send:** Include the floor plan sheet for every room you want quoted.
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
+```
 
-### ✗ 0 elevation sheet(s) detected
+### `eastcoast-sample-plan-set.pdf`
 
-**What this means:** Wall tiling heights only appear on elevations. Without them we can give you floor area only.
+**Gate said:** 2 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
-**What to send:** Include the elevation sheets for each room you want wall areas on.
+The letter we would actually send:
+
+```
+### ✗ 2 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
+
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
+
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
+```
+
+### `housedesigners-working-drawings.pdf`
+
+**Gate said:** 3 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
+
+The letter we would actually send:
+
+```
+### ✗ 3 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
+
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
+
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
+```
+
+### `ncc-building-plans-example.pdf`
+
+**Gate said:** 6 dimension chains check out (0.12 per page, need 5 and 0.4/page); 4 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
+
+The letter we would actually send:
+
+```
+### ✗ 6 dimension chains check out (0.12 per page, need 5 and 0.4/page)
+
+**What this means:** Text is present but not reliably readable. On a real drawing the numbers in a chain add up to the total printed beside them - 100 + 840 + 790 = 1730. We can't find enough of those here, which is what OCR'd scans look like: numbers that are individually plausible and never add up.
+
+**What to send:** Send the original vector PDF from the drawing software. If this is already the original, let us know and we'll look at it by hand.
+
+### ✗ 4 floor plan(s) and 4 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
+
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
+
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
 ```
 
 ### `phone-scan-of-da-plans.pdf`
 
-**Gate said:** 0 extractable characters (need 200); 0 characters per page (need 20); 0 mm dimension tokens found (need 30); 0 sheet(s) carry a real dimension chain; 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected
+**Gate said:** 0 extractable characters (need 200); 0 characters per page (need 20); text quality: 0.0% of characters usable, 0% of words recognised (need 90% / 15%); 0 mm dimension tokens found (need 30); 0 dimension chains check out (0.00 per page, need 5 and 0.4/page); 0 sheet(s) carry a real dimension chain; couldn't confidently identify any sheet names across 6 sheets; couldn't confidently identify sheet names; 0 floor plan(s) and 0 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
 The letter we would actually send:
 
@@ -59,121 +101,75 @@ The letter we would actually send:
 
 **What to send:** Re-export the full set as vector PDF from the drawing software.
 
+### ✗ text quality: 0.0% of characters usable, 0% of words recognised (need 90% / 15%)
+
+**What this means:** There is text in this file, but it doesn't read like a drawing sheet - which is what a scan looks like after OCR has been run over it.
+
+**What to send:** Send the original PDF exported from the drawing software, not a scan.
+
 ### ✗ 0 mm dimension tokens found (need 30)
 
 **What this means:** We can read text but can't find printed millimetre dimensions. We measure from stated dimensions only - we never scale off the drawing.
 
 **What to send:** Send drawings with the dimension strings printed on them, in mm.
 
+### ✗ 0 dimension chains check out (0.00 per page, need 5 and 0.4/page)
+
+**What this means:** Text is present but not reliably readable. On a real drawing the numbers in a chain add up to the total printed beside them - 100 + 840 + 790 = 1730. We can't find enough of those here, which is what OCR'd scans look like: numbers that are individually plausible and never add up.
+
+**What to send:** Send the original vector PDF from the drawing software. If this is already the original, let us know and we'll look at it by hand.
+
 ### ✗ 0 sheet(s) carry a real dimension chain
 
-**What this means:** The set looks like cover sheets, 3D views or renders only.
-
-**What to send:** Include the dimensioned floor plans and elevations.
-
-### ✗ 0 floor plan sheet(s) detected
-
-**What this means:** Without a floor plan we cannot measure floor area.
-
-**What to send:** Include the floor plan sheet for every room you want quoted.
-
-### ✗ 0 elevation sheet(s) detected
-
-**What this means:** Wall tiling heights only appear on elevations. Without them we can give you floor area only.
-
-**What to send:** Include the elevation sheets for each room you want wall areas on.
+**What this means:** The set looks like cover sheets,
 ```
 
 ### `ssc-da181440-architectural.pdf`
 
-**Gate said:** 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected
+**Gate said:** 4 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
 The letter we would actually send:
 
 ```
-### ✗ 0 floor plan sheet(s) detected
+### ✗ 4 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
-**What this means:** Without a floor plan we cannot measure floor area.
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
 
-**What to send:** Include the floor plan sheet for every room you want quoted.
-
-### ✗ 0 elevation sheet(s) detected
-
-**What this means:** Wall tiling heights only appear on elevations. Without them we can give you floor area only.
-
-**What to send:** Include the elevation sheets for each room you want wall areas on.
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
 ```
 
 ### `ssc-da220327-architectural.pdf`
 
-**Gate said:** 0 floor plan sheet(s) detected; 0 elevation sheet(s) detected
+**Gate said:** 5 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
 The letter we would actually send:
 
 ```
-### ✗ 0 floor plan sheet(s) detected
+### ✗ 5 floor plan(s) and 2 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area
 
-**What this means:** Without a floor plan we cannot measure floor area.
+**What this means:** The elevations in this set look like external elevations - the outside of the building. Wall tile quantities come from internal elevations: the wall drawings of each bathroom, ensuite and laundry, with tiling heights on them.
 
-**What to send:** Include the floor plan sheet for every room you want quoted.
-
-### ✗ 0 elevation sheet(s) detected
-
-**What this means:** Wall tiling heights only appear on elevations. Without them we can give you floor area only.
-
-**What to send:** Include the elevation sheets for each room you want wall areas on.
+**What to send:** Ask for the internal elevations / joinery sheets for each wet area. If they don't exist, we can still do floor areas - just say the word.
 ```
 
 
 ## Per-plan detail
 
-### `creativehomeplans-sample.pdf`
-
-- Sheets: 1 plan / 1 elev sheets, 205 dim tokens
-- Scales: 1:100, 1:200
-- Wet rooms with plan **and** elevations: **0**
-- Rooms: none identified
-- Headline: —
-- ⚠️ mixed scales in one set (1:100, 1:200) - scaling risk
-- ⚠️ no wet areas identified by sheet title
-
 ### `derbyshire-construction-sample.pdf`
 
-- Sheets: 3 plan / 7 elev sheets, 1721 dim tokens
-- Scales: 1:1, 1:100, 1:200, 1:50
+- Sheets: 4 plan / 6 elev (4 internal wet) · 494 chains
+- Scales: 1:1 @ A3, 1:100 @ A3, 1:200 @ A3, 1:50 @ A3
 - Wet rooms with plan **and** elevations: **0**
 - Rooms: none identified
 - Headline: —
-- ⚠️ mixed scales in one set (1:1, 1:100, 1:200, 1:50) - scaling risk
-- ⚠️ no wet areas identified by sheet title
-- ⚠️ no sections - raked ceilings could not be resolved
-
-### `eastcoast-sample-plan-set.pdf`
-
-- Sheets: 2 plan / 1 elev sheets, 1013 dim tokens
-- Scales: 1:1, 1:10, 1:100, 1:20, 1:200, 1:3, 1:4, 1:6, 1:8
-- Wet rooms with plan **and** elevations: **0**
-- Rooms: none identified
-- Headline: —
-- ⚠️ mixed scales in one set (1:1, 1:10, 1:100, 1:20, 1:200, 1:3, 1:4, 1:6, 1:8) - scaling risk
-- ⚠️ no wet areas identified by sheet title
-
-### `ncc-building-plans-example.pdf`
-
-- Sheets: 3 plan / 5 elev sheets, 578 dim tokens
-- Scales: 1:1, 1:10, 1:100, 1:200, 1:50
-- Wet rooms with plan **and** elevations: **0**
-- Rooms: none identified
-- Headline: —
-- ⚠️ mixed scales in one set (1:1, 1:10, 1:100, 1:200, 1:50) - scaling risk
-- ⚠️ no wet areas identified by sheet title
+- ⚠️ mixed drawing scales in one set (1:1 @ A3, 1:100 @ A3, 1:200 @ A3, 1:50 @ A3) - anyone who scales off it will be wrong on some sheets
 
 ### `sample_plans.pdf`
 
-- Sheets: 4 plan / 13 elev sheets, 567 dim tokens
-- Scales: 1:20, 1:25
+- Sheets: 4 plan / 13 elev (6 internal wet) · 144 chains
+- Scales: 1 : 20@A3, 1 : 25@A3
 - Wet rooms with plan **and** elevations: **4**
 - Rooms: Guest Bed Ensuite, Laundry, Main Bath, Master Ensuite
 - Headline: —
-- ⚠️ mixed scales in one set (1:20, 1:25) - scaling risk
-- ⚠️ no sections - raked ceilings could not be resolved
+- ⚠️ mixed drawing scales in one set (1 : 20@A3, 1 : 25@A3) - anyone who scales off it will be wrong on some sheets
+- ⚠️ no section sheets - a raked ceiling could not be resolved from this set

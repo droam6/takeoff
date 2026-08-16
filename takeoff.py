@@ -56,13 +56,8 @@ MIN_TOKENS_FOR_DIM_PAGE = 8
 MIN_DIM_PAGES = 1          # check 4  at least one properly dimensioned sheet
 MAX_PAGES = 300            # check 7
 
-DIM_RE = re.compile(r"\b(\d{2,5})\b")
-PLAN_RE = re.compile(r"\bPLAN\b", re.I)
-ELEV_RE = re.compile(r"\bELEVATION", re.I)
-
-
 class Check:
-    """One intake check: a verdict plus the plain-English fix."""
+    """One intake check: a verdict, and the plain-English fix."""
 
     def __init__(self, key, ok, hard, detail, means="", send=""):
         self.key, self.ok, self.hard = key, ok, hard
@@ -73,55 +68,261 @@ class Check:
         return "PASS" if self.ok else ("FAIL" if self.hard else "WARN")
 
 
-def _dimension_tokens(text: str) -> list[int]:
-    """Integers that look like millimetre dimensions on an architectural sheet."""
+DIM_RE = re.compile(r"\b(\d{2,5})\b")
+PLAN_RE = re.compile(r"\bPLAN\b", re.I)
+ELEV_RE = re.compile(r"\bELEVATION", re.I)
+
+# --------------------------------------------------------------------------
+# Readability - is this a text layer, or OCR spray dressed up as one?
+#
+# The gate used to ask "is there text" and "are there integers". An OCR'd scan
+# satisfies both with noise. These checks ask whether the text can actually be
+# READ, which is the premise everything downstream stands on.
+# --------------------------------------------------------------------------
+
+# Words that appear on real architectural sheets, plus enough plain English to
+# score a notes block. Deliberately small and embedded: a system dictionary
+# would make the gate's verdict depend on which machine it ran on.
+VOCAB = set("""
+plan plans elevation elevations section sections detail details drawing drawings sheet
+floor ground first upper lower roof site slab setout ceiling wall walls door doors window
+windows schedule legend notes note scale rev revision date drawn checked project client
+address lot number title north level levels existing proposed demolition new area areas
+bathroom bath ensuite powder laundry kitchen pantry living dining bedroom robe garage
+porch deck balcony stair stairs hall entry study office toilet shower vanity basin sink
+bench tiles tile tiled tiling render rendered paint painted finish finishes
+timber steel concrete brick brickwork glass glazing frame framed frames stud studs
+insulation waterproof waterproofing membrane fall falls waste screed hob niche
+skirting joinery cabinet cabinets cupboard drawer drawers shelf shelves splashback
+mirror tapware taps spout rail hooks holder seat screen alcove surround
+all any and are for from has have its may must not the this that with use used using
+unless otherwise dimensions dimension high wide deep long height width depth length
+overall internal external face faces centre center line lines above below between
+construction building builder architect designer copyright property permission
+verify verified confirm confirmed works work prior commencing commencement
+""".split())
+
+CLEAN_CHARS = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                  " .,-:;/()&%'\"#@+=\n\t")
+WORD_RE = re.compile(r"[A-Za-z]{3,}")
+
+
+def text_quality(text: str) -> tuple[float, float]:
+    """(clean_ratio, word_hit_rate).
+
+    clean_ratio - share of characters that belong on a drawing sheet at all.
+                  OCR of line-work sprays glyphs the sheet never contained.
+    word_hit    - share of alphabetic tokens that are real words.
+    """
+    if not text.strip():
+        return 0.0, 0.0
+    body = text.strip()
+    clean = sum(1 for c in body if c in CLEAN_CHARS) / len(body)
+    words = WORD_RE.findall(body)
+    hit = (sum(1 for w in words if w.lower() in VOCAB) / len(words)) if words else 0.0
+    return clean, hit
+
+
+def _dimension_tokens(text: str) -> list:
+    """Millimetre-looking integers in a block of text."""
+    return [int(t) for t in DIM_RE.findall(text) if 20 <= int(t) <= 20000]
+
+
+def _dim_tokens_xy(page):
+    """Dimension tokens with position and orientation. (value, x, y, vertical)"""
     out = []
-    for tok in DIM_RE.findall(text):
-        val = int(tok)
-        if 20 <= val <= 20000:
-            out.append(val)
+    for blk in page.get_text("dict")["blocks"]:
+        for line in blk.get("lines", []):
+            d = line.get("dir", (1, 0))
+            vertical = abs(d[1]) > abs(d[0])
+            s = "".join(sp["text"] for sp in line.get("spans", [])).strip()
+            x, y = line["bbox"][0], line["bbox"][1]
+            for tok in DIM_RE.findall(s):
+                v = int(tok)
+                if 20 <= v <= 20000:
+                    out.append((v, x, y, vertical))
     return out
 
 
-# Ordered most- to least-diagnostic of a sheet name. A sheet is named for the
-# drawing it holds, so those keywords beat words that merely appear in annotations.
-TITLE_PATTERNS = [
-    re.compile(p, re.I) for p in (
-        r"(FLOOR|CEILING|SETOUT|TILE)\s+PLAN\b",
-        r"\bELEVATIONS?\b",
-        r"\bSECTIONS?\b",
-        r"\b3D\b",
-        r"\bRCP\b",
-        r"\bSCHEDULE\b",
-    )
-]
-TITLE_HINT = re.compile("|".join(p.pattern for p in TITLE_PATTERNS), re.I)
+def verify_chains(tokens, tol: int = 5, min_total: int = 400) -> int:
+    """Count dimension chains that actually check out.
+
+    A chain is a run of two or more labels lying along one line whose values sum
+    to another printed value within `tol` mm - "100 + 840 + 790 = 1730". Real
+    drawings are full of these, because that is how a chain is dimensioned.
+    OCR noise is not: random integers do not sum to other random integers on the
+    same axis within 5 mm except by accident.
+
+    This is the one check OCR cannot fake, so it is the one that decides whether
+    the text layer is trustworthy.
+    """
+    if len(tokens) < 3:
+        return 0
+    totals = {v for v, _, _, _ in tokens}
+    verified, seen = 0, set()
+
+    for vertical in (False, True):
+        group = [t for t in tokens if t[3] == vertical]
+        buckets = {}
+        for v, x, y, _ in group:
+            key = round((x if vertical else y) / 6.0)
+            buckets.setdefault(key, []).append((v, y if vertical else x))
+        for key, members in buckets.items():
+            if len(members) < 2:
+                continue
+            members.sort(key=lambda m: m[1])
+            vals = [m[0] for m in members]
+            n = len(vals)
+            for i in range(n):
+                run = 0
+                for j in range(i, min(n, i + 8)):
+                    run += vals[j]
+                    if j == i or run < min_total:
+                        continue
+                    for t in totals:
+                        if abs(t - run) <= tol and t not in vals[i:j + 1]:
+                            sig = (vertical, key, i, j)
+                            if sig not in seen:
+                                seen.add(sig)
+                                verified += 1
+                            break
+    return verified
+
+
+# --------------------------------------------------------------------------
+# Sheet titles - from the title block, with a sheet number beside them
+# --------------------------------------------------------------------------
+
+TITLE_KW = re.compile(
+    r"(floor\s*plan|ceiling\s*plan|setout\s*plan|tile\s*plan|site\s*plan|roof\s*plan"
+    r"|elevations?\b|elev\.|sections?\b|\b3d\b|\brcp\b|demolition\s*plan"
+    r"|landscape\s*plan|schedule|cover\s*sheet)", re.I)
+
+# Mentions drawing words but is never a sheet name.
+BOILER_RE = re.compile(
+    r"(copyright|property of|no liability|accepts no|permission|must not be|may not be"
+    r"|shall be|should be|in accordance|australian standard|\bAS ?\d{3,}|do not scale"
+    r"|verify all|notify|subject to|drawings are|this drawing|refer to)", re.I)
+
+SHEETNO_RE = re.compile(r"\b([A-Z]{0,3}-?\d{1,3}[./]\d{1,3}|[A-Z]{1,3}-?\d{2,3})\b")
+
+
+def sheet_title(page):
+    """Best sheet title for a page, and how confident we are (0-1).
+
+    Scored, not guessed, on three signals a real title block always has: the
+    line is big relative to the page, it hugs an edge where title blocks live,
+    and a sheet number sits next to it. Case-insensitive, because plenty of
+    practices set sheet names in mixed case.
+
+    Returns ("", 0.0) when nothing scores. Callers must then say "couldn't
+    confidently identify", never invent a count from a guess.
+    """
+    lines = []
+    for blk in page.get_text("dict")["blocks"]:
+        prev = None
+        for ln in blk.get("lines", []):
+            s = "".join(sp["text"] for sp in ln.get("spans", [])).strip()
+            if not s:
+                continue
+            size = max((sp["size"] for sp in ln.get("spans", [])), default=0.0)
+            bb = ln["bbox"]
+            lines.append((s, size, bb))
+            # Sheet names wrap. Offer the joined pair as a candidate too, so
+            # "PLAN DET. & INT. ELEV -" / "BATH & BED 3" is read as one title.
+            if prev and 0 <= bb[1] - prev[2][3] < 8 and abs(bb[0] - prev[2][0]) < 40:
+                lines.append((f"{prev[0]} {s}".strip(),
+                              max(size, prev[1]), prev[2]))
+            prev = (s, size, bb)
+    if not lines:
+        return "", 0.0
+
+    mb = page.mediabox
+    maxsize = max(l[1] for l in lines) or 1.0
+    numbers = []
+    for s, _, bb in lines:
+        m = SHEETNO_RE.search(s)
+        if m:
+            numbers.append(bb)
+
+    best, best_score = "", 0.0
+    for s, size, bb in lines:
+        if not (3 <= len(s) <= 60) or not TITLE_KW.search(s) or BOILER_RE.search(s):
+            continue
+        if s.rstrip().endswith(".") and len(s.split()) > 3:
+            continue                      # a sentence that mentions a drawing word
+        x0, y0 = bb[0], bb[1]
+        edge = min(x0, y0, abs(mb.width - x0), abs(mb.height - y0))
+        score = 0.55 * (size / maxsize) + 0.25 * (1.0 - min(edge, 260) / 260.0)
+        if any(abs(nb[0] - x0) < 220 and abs(nb[1] - y0) < 60 for nb in numbers):
+            score += 0.20
+        if score > best_score:
+            best, best_score = s, score
+    return best, round(best_score, 3)
 
 
 def _sheet_title(text: str) -> str:
-    """Sheet title from the title block.
+    """Text-only fallback, used by the extractor's sheet register."""
+    cands = [ln.strip() for ln in text.split("\n")
+             if 3 <= len(ln.strip()) <= 60 and not BOILER_RE.search(ln)]
+    hits = [ln for ln in cands if TITLE_KW.search(ln)]
+    return min(hits, key=len) if hits else ""
 
-    Architectural title blocks put the sheet name on its own line, so prefer the
-    shortest all-caps line that carries a drawing-type keyword (FLOOR PLAN,
-    ELEVATIONS, 3D...). Falls back to the longest all-caps line only if nothing
-    matches, which keeps busy annotation text out of the register.
+
+WET_RE = re.compile(
+    r"\b(bath|bathroom|ensuite|ens|shower|vanity|basin|laundry|powder|wc|toilet|tile|"
+    r"tiled|tiling|splashback|niche|tapware|mixer|waterproof|hob|screen)\b", re.I)
+FITTING_RE = re.compile(
+    r"\b(basin|vanity|shower|mixer|tapware|splashback|niche|hob|waterproof|screen)\b",
+    re.I)
+SHEET_PLAN_RE = re.compile(
+    r"(floor|ground|first|second|upper|lower|roof|site|demolition|setout|tile|ceiling)"
+    r"\s*plan", re.I)
+SHEET_ELEV_RE = re.compile(r"(elevations?\b|elev\.)", re.I)
+# A scale only counts as a scale when it is written like one.
+SCALE_RE = re.compile(r"(1\s*:\s*\d{1,4}\s*@?\s*A\d|scale[^\n]{0,18}?1\s*:\s*\d{1,4})", re.I)
+
+TITLE_CONF = 0.30       # below this we say we couldn't identify it, not that it's absent
+MIN_CHAINS = 5          # total verified chains across the document
+MIN_CHAINS_PER_PAGE = 0.4
+MIN_CLEAN_RATIO = 0.90
+MIN_WORD_HIT = 0.15
+MIN_WET_KEYWORDS = 4    # on one elevation sheet, incl. at least one fitting
+
+
+def classify_pages(doc):
+    """Per-page: title, confidence, class, dimension tokens, wet-area evidence."""
+    pages = []
+    for i, page in enumerate(doc):
+        text = page.get_text() or ""
+        title, conf = sheet_title(page)
+        toks = _dim_tokens_xy(page)
+        kws = {m.group(0).lower() for m in WET_RE.finditer(text)}
+        pages.append({
+            "page": i + 1,
+            "title": title,
+            "conf": conf,
+            "named": conf >= TITLE_CONF,
+            "is_plan": conf >= TITLE_CONF and bool(SHEET_PLAN_RE.search(title)),
+            "is_elev": conf >= TITLE_CONF and bool(SHEET_ELEV_RE.search(title)),
+            "chars": len(text.strip()),
+            "dims": len(toks),
+            "chains": verify_chains(toks),
+            "wet_kw": len(kws),
+            "has_fitting": bool(FITTING_RE.search(text)),
+            "scales": sorted({m.group(0) for m in SCALE_RE.finditer(text)}),
+        })
+    return pages
+
+
+def run_intake(pdf_path: Path, want_walls: bool = True):
+    """Deterministic gate. Returns (checks, facts). Runs before any analysis.
+
+    Every failure message states only what was actually established. Where a
+    signal is merely absent, the wording says we could not identify it - never
+    a count asserting the customer's drawings lack something they contain.
     """
-    caps = [ln.strip() for ln in text.split("\n")
-            if 3 <= len(ln.strip()) <= 60
-            and ln.strip() == ln.strip().upper()
-            and any(c.isalpha() for c in ln)]
-    for pat in TITLE_PATTERNS:
-        hits = [ln for ln in caps if pat.search(ln)]
-        if hits:
-            # shortest hit == the bare sheet name, not a sentence that mentions it
-            return min(hits, key=len)
-    return max(caps, key=len) if caps else ""
-
-
-def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], dict]:
-    """Deterministic gate. Returns (checks, facts). Runs before any analysis."""
-    checks: list[Check] = []
-    facts: dict = {}
+    checks, facts = [], {}
 
     try:
         doc = fitz.open(pdf_path)
@@ -132,7 +333,6 @@ def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], di
             "Re-export the drawing set as a PDF and send it again."))
         return checks, facts
 
-    # check 8 - encryption
     encrypted = bool(doc.is_encrypted and doc.needs_pass)
     checks.append(Check(
         "encryption", not encrypted, True,
@@ -141,37 +341,36 @@ def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], di
         "A locked PDF blocks us from reading the dimension text.",
         "Send an unlocked copy, or the password."))
 
-    # check 7 - page count
     n = doc.page_count
     facts["pages"] = n
     checks.append(Check(
-        "page_count", 1 <= n <= MAX_PAGES, True,
-        f"{n} page(s)",
+        "page_count", 1 <= n <= MAX_PAGES, True, f"{n} page(s)",
         "The file is empty or implausibly large.",
         "Send the drawing set as a single PDF of the relevant sheets."))
 
-    per_page = []
-    for i, page in enumerate(doc):
-        text = page.get_text() or ""
-        toks = _dimension_tokens(text)
-        title = _sheet_title(text)
-        per_page.append({
-            "page": i + 1, "chars": len(text.strip()),
-            "dims": len(toks), "title": title,
-        })
+    pages = classify_pages(doc)
+    all_text = "\n".join((p.get_text() or "") for p in doc)
+    clean, word_hit = text_quality(all_text)
 
-    facts["per_page"] = per_page
-    total_chars = sum(p["chars"] for p in per_page)
-    total_dims = sum(p["dims"] for p in per_page)
-    dim_pages = [p for p in per_page if p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE]
-    plan_pages = [p for p in per_page if PLAN_RE.search(p["title"])]
-    elev_pages = [p for p in per_page if ELEV_RE.search(p["title"])]
+    total_chars = sum(p["chars"] for p in pages)
+    total_dims = sum(p["dims"] for p in pages)
+    total_chains = sum(p["chains"] for p in pages)
+    chains_pp = total_chains / max(n, 1)
+    dim_pages = [p for p in pages if p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE]
+    plan_pages = [p for p in pages if p["is_plan"]]
+    elev_pages = [p for p in pages if p["is_elev"]]
+    named = [p for p in pages if p["named"]]
+    wet_elev = [p for p in elev_pages
+                if p["wet_kw"] >= MIN_WET_KEYWORDS and p["has_fitting"] and p["dims"] >= 5]
+    scales = sorted({s for p in pages for s in p["scales"]})
 
-    facts.update(total_chars=total_chars, total_dims=total_dims,
+    facts.update(per_page=pages, total_chars=total_chars, total_dims=total_dims,
+                 total_chains=total_chains, chains_per_page=round(chains_pp, 2),
+                 clean_ratio=round(clean, 3), word_hit=round(word_hit, 3),
                  dim_pages=len(dim_pages), plan_pages=len(plan_pages),
-                 elev_pages=len(elev_pages))
+                 elev_pages=len(elev_pages), named_pages=len(named),
+                 wet_elev_pages=len(wet_elev), scales=scales)
 
-    # check 1 - text layer
     checks.append(Check(
         "text_layer", total_chars >= MIN_TOTAL_CHARS, True,
         f"{total_chars} extractable characters (need {MIN_TOTAL_CHARS})",
@@ -180,7 +379,6 @@ def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], di
         "Ask your designer to re-export the PDF straight out of their drawing "
         "software - not printed and scanned."))
 
-    # check 2 - density
     density = total_chars / max(n, 1)
     checks.append(Check(
         "text_density", density >= MIN_CHARS_PER_PAGE, True,
@@ -188,7 +386,16 @@ def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], di
         "Most pages carry no readable text - likely images with a text title block.",
         "Re-export the full set as vector PDF from the drawing software."))
 
-    # check 3 - dimension tokens
+    # ---- readability, not existence -------------------------------------
+    quality_ok = clean >= MIN_CLEAN_RATIO and word_hit >= MIN_WORD_HIT
+    checks.append(Check(
+        "text_quality", quality_ok, True,
+        f"text quality: {clean:.1%} of characters usable, {word_hit:.0%} of words "
+        f"recognised (need {MIN_CLEAN_RATIO:.0%} / {MIN_WORD_HIT:.0%})",
+        "There is text in this file, but it doesn't read like a drawing sheet - "
+        "which is what a scan looks like after OCR has been run over it.",
+        "Send the original PDF exported from the drawing software, not a scan."))
+
     checks.append(Check(
         "dimension_tokens", total_dims >= MIN_DIM_TOKENS, True,
         f"{total_dims} mm dimension tokens found (need {MIN_DIM_TOKENS})",
@@ -196,27 +403,64 @@ def run_intake(pdf_path: Path, want_walls: bool = True) -> tuple[list[Check], di
         "from stated dimensions only - we never scale off the drawing.",
         "Send drawings with the dimension strings printed on them, in mm."))
 
-    # check 4 - properly dimensioned sheets
+    chains_ok = total_chains >= MIN_CHAINS and chains_pp >= MIN_CHAINS_PER_PAGE
+    checks.append(Check(
+        "dimension_chains", chains_ok, True,
+        f"{total_chains} dimension chains check out ({chains_pp:.2f} per page, "
+        f"need {MIN_CHAINS} and {MIN_CHAINS_PER_PAGE}/page)",
+        "Text is present but not reliably readable. On a real drawing the numbers "
+        "in a chain add up to the total printed beside them - 100 + 840 + 790 = "
+        "1730. We can't find enough of those here, which is what OCR'd scans look "
+        "like: numbers that are individually plausible and never add up.",
+        "Send the original vector PDF from the drawing software. If this is already "
+        "the original, let us know and we'll look at it by hand."))
+
     checks.append(Check(
         "dimensioned_pages", len(dim_pages) >= MIN_DIM_PAGES, True,
         f"{len(dim_pages)} sheet(s) carry a real dimension chain",
         "The set looks like cover sheets, 3D views or renders only.",
         "Include the dimensioned floor plans and elevations."))
 
-    # check 5 - plan sheets
+    # ---- sheet identification: never assert absence from a failed guess --
+    if named:
+        plan_detail = (f"{len(plan_pages)} floor plan sheet(s) identified"
+                       if plan_pages else
+                       f"no floor plan among the {len(named)} sheet(s) we could name")
+        plan_means = ("Without a floor plan we cannot measure floor area."
+                      if plan_pages else
+                      f"We read sheet names on {len(named)} of {n} sheets and none of "
+                      "them is a floor plan.")
+    else:
+        plan_detail = f"couldn't confidently identify any sheet names across {n} sheets"
+        plan_means = ("We couldn't read the title blocks, so we can't tell which sheet "
+                      "is which. That may be our end, not yours.")
     checks.append(Check(
-        "plan_pages", len(plan_pages) >= 1, True,
-        f"{len(plan_pages)} floor plan sheet(s) detected",
-        "Without a floor plan we cannot measure floor area.",
-        "Include the floor plan sheet for every room you want quoted."))
+        "plan_pages", len(plan_pages) >= 1, True, plan_detail, plan_means,
+        "Send the floor plan sheet for every room you want quoted, or tell us which "
+        "sheet number it is and we'll work from that."))
 
-    # check 6 - elevations (hard only if walls are in scope)
+    elev_detail = (f"{len(elev_pages)} elevation sheet(s) identified" if elev_pages
+                   else (f"no elevation sheet among the {len(named)} sheet(s) we could "
+                         f"name" if named else "couldn't confidently identify sheet names"))
     checks.append(Check(
-        "elevation_pages", len(elev_pages) >= 1, want_walls,
-        f"{len(elev_pages)} elevation sheet(s) detected",
+        "elevation_pages", len(elev_pages) >= 1, want_walls, elev_detail,
         "Wall tiling heights only appear on elevations. Without them we can give you "
         "floor area only.",
         "Include the elevation sheets for each room you want wall areas on."))
+
+    # ---- the check that legitimately rejects a DA set --------------------
+    wet_detail = (f"{len(wet_elev)} internal elevation sheet(s) of wet areas"
+                  if wet_elev else
+                  (f"{len(plan_pages)} floor plan(s) and {len(elev_pages)} elevation "
+                   f"sheet(s) found, but none of the elevations is a dimensioned "
+                   f"internal elevation of a wet area"))
+    checks.append(Check(
+        "wet_area_elevations", len(wet_elev) >= 1, want_walls, wet_detail,
+        "The elevations in this set look like external elevations - the outside of "
+        "the building. Wall tile quantities come from internal elevations: the wall "
+        "drawings of each bathroom, ensuite and laundry, with tiling heights on them.",
+        "Ask for the internal elevations / joinery sheets for each wet area. If they "
+        "don't exist, we can still do floor areas - just say the word."))
 
     doc.close()
     return checks, facts
