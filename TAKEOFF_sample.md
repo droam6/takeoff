@@ -1,610 +1,484 @@
-# TAKEOFF — 5 Ellalong Road, Cremorne 2090
+# TAKEOFF — 5 Ellalong Road, Cremorne
 
-**Job:** sample · **Project no:** 24107 (Harper Lane Design)
-**Drawings read:** `sample_plans.pdf`, 25 sheets, Rev **L**, dated **01/09/25**
-**Scales:** 1:20 @ A3 (all sheets) except sheet 12.01 which is **1:25 @ A3**
-**Trade:** tiler (painter quantities also given) · **Wastage shown:** measured / +10% / +15%
-**Method:** `TAKEOFF_METHOD.md` · **Measured:** 2026-08-16
+**Tile quantities · 5 rooms · drawings dated 01/09/25 (Rev L) · measured 16 Aug 2026**
 
 ---
 
-# ⚠ QUESTIONS FOR YOU
-
-Nothing below is guessed. These are the things I could not read off the drawings, and each
-one changes a number. Answer these and I'll re-issue with everything at HIGH confidence.
-
-### Blocking — I can't finish these rooms without you
-
-**Q1. The Powder Room floor plan isn't in the set.**
-Sheets 3.02, 3.03 and 3.04 are here (two elevation sheets and a 3D) but **3.01 is missing**.
-I've derived the floor at 1730 × 1610 from the four elevation runs, which gives **2.79 m²**,
-but that's back-calculated, not measured. Can you send sheet 3.01? Or confirm 1730 × 1610.
-
-**Q2. What is the ceiling height in the Master Ensuite, and is the ceiling raked?**
-Every other room prints 2700. Sheets 12.02–12.05 print **no overall wall height at all** —
-only partial chains (2100, 2200, 1300+500). Sheets 12.02 and 12.04 also show clear **angled
-lines** above the bath alcove and over the vanity, which read as a rake or a gable.
-I've priced the master walls at a flat 2700 and marked the whole room **LOW**. I need:
-  - the finished ceiling height at the low point and the high point, and
-  - a section, or the rake angle.
-Until then, **do not quote the master ensuite walls off this document.** The exposure is
-roughly ±8 m² on that room alone.
-
-### Chain conflicts — two dimensions on the drawings disagree
-
-**Q3. Guest Ensuite: where does the shower screen actually sit?**
-Sheet 10.05 gives two chains along the same north wall and they don't agree:
 ```
-  1920 + 960 + 20  = 2900   → screen at 2900 from the west wall, shower 1100 wide
-  2005 + 730       = 2735   → screen at 2735 from the west wall, shower 1260 wide
+==================================================
+          ORDER THIS
+==================================================
+  Floor tiles ..............   36.4 m²
+  Wall tiles ...............   58.6 m²
+  Feature tiles ............   12.0 m²
+  Tile skirting ............    7.3 m
+==================================================
+  Includes 10% extra for cuts and breakage.
 ```
-165 mm apart. Which is right? It moves ~0.45 m² of wall tile between the standard and the
-feature zone, and it moves your shower setout.
 
-**Q4. Main Bath: where is the step in the west wall?**
-The left-hand chain on sheet 7.01 reads 2020 + 240 = 2260 from the north wall to the step.
-The drawn geometry puts it at about 2110. I've used the printed 2260. 150 mm.
-Which is correct?
+### Not in that total — 2 things we can't finish yet
 
-### Undimensioned openings — I've used a provisional and deducted it
-
-**Q5. Main Bath north window (sheet 7.02, Elevation 02).** 1000 wide on plan, **height not
-dimensioned**. I've used 1360 and deducted 1.36 m². What's the actual opening height?
-
-**Q6. Guest Ensuite north window (sheet 10.06, Elevation 01).** 730 wide, **height not
-dimensioned**. Used 1590, deducted 1.16 m². Actual height?
-
-**Q7. Master Ensuite gable windows (sheet 12.03, Elevation 02).** Two windows, 600 wide
-each, **heights not dimensioned**. Used 780 each. Actual?
-
-**Q8. Door opening heights.** No door height is dimensioned anywhere in the set. I've used
-2040 (standard AU leaf) for all four doors — Main Bath 820, Guest Ensuite 820, Master
-Ensuite 820, Laundry 820. Confirm, or give me the real heights.
-
-### Niche depths
-
-**Q9. Niche depths aren't given except one.** Sheet 7.03 tells me the nib-wall niche is
-600w × **70d** × 300h. The others just say "STORAGE NICHE IN SAME TILE AS WALL" with a
-width and height. I've used 70 mm depth throughout for consistency. Right, or are the
-shower niches deeper (100? 150?)
-
-Niches I've measured, all needing a depth confirmed:
-| Sheet | Room | Size | Depth used |
-|---|---|---|---|
-| 7.03 | Main Bath — nib wall | 600 × 300 | **70 (stated)** |
-| 7.03 | Main Bath — shower | 700 × 300 @ 1200 AFF | 70 (assumed) |
-| 10.06 | Guest Ensuite — shower | 700 × 300 @ 1200 AFF | 70 (assumed) |
-| 10.07 | Guest Ensuite — over vanity | 300 × ? | 70 (assumed), **height also missing** |
-| 12.03 | Master Ensuite — shower | not dimensioned | not measured |
-| 12.03 / 12.05 | Master Ensuite — over vanity | 300 × ? | not measured |
-
-### Feature tile extents
-
-**Q10. How far does the feature tile run?** Five sheets call up "FEATURE TILE LAID
-VERTICALLY" but only Main Bath Elevation 01 has a dimension I can tie it to (the 2020
-vanity zone). For the Guest and Master ensuites the callout has no boundary dimension.
-I've given provisional extents (marked PROV in the tables) — please mark up the actual
-extents on the elevations, since feature tile is a different rate and a different SKU.
-
-### Scope questions
-
-**Q11. Do you tile under the wall-hung vanities?** All three vanities (Main Bath, Guest,
-Master) are called up **WALL MOUNTED** with 300 mm clear to the floor, so I've run the floor
-tile straight through underneath and **not** deducted them. The Laundry joinery is
-floor-standing, so I **have** deducted it (700 × 2525). Confirm this matches your scope.
-
-**Q12. Do you tile behind the built-in baths?** I've deducted the bath surround footprints
-from the floor (they're tiled platforms, not floor) and measured the wall above the rim
-only. Main Bath: tiling starts at 550 AFF (the rim). Confirm.
-
-**Q13. There's a hand-drawn red mark-up on sheet 4.02 (Laundry Elevation 01)** — a freehand
-arrow pointing up at the splashback area. It isn't a CAD annotation, someone has drawn on
-it. Does that mean the splashback is changing? Right now I've measured it as drawn: 450 high
-over a 2525 bench.
-
-**Q14. Powder Room — the walls are not tiled.** Sheets 3.02/3.03 say "TEXTURED FINISH TO
-WALLS" with a **300 mm TILE SKIRTING** at the base. So your scope there is 6.68 lm of tile
-skirting and nothing else — the walls are the painter's. Is that right, or has the finish
-changed since Rev L?
-
-**Q15. Wastage.** You said 10%. Note the Master Ensuite likely wants **15%** if the rake is
-confirmed — raked walls generate a lot of cuts. Flag it once Q2 is answered.
+- **Master ensuite walls** — about **50.8 m²** more. We need the ceiling height before we
+  can give you a real number. See question 1.
+- **Powder room floor** — about **3.1 m²**. The floor plan sheet isn't in the set, so we
+  worked it backwards off the wall drawings. See question 2.
 
 ---
 
-# 1. Job summary
+## ⚠️ CHECK THESE 4 THINGS BEFORE YOU QUOTE
 
-| | |
-|---|---|
-| Address | 5 Ellalong Road, Cremorne NSW 2090 |
-| Designer | Harper Lane Design Pty Ltd |
-| Sheets read | 25 (4 floor plans, 11 elevation sheets, 10 × 3D) |
-| Rooms in set | Powder Room, Laundry, Main Bath, Guest Bed Ensuite, Master Ensuite |
-| Measurement convention | **"All dimensions are frame to frame"** (notes block, every sheet) |
-| Wall height | 2700 confirmed in Powder / Laundry / Main Bath / Guest. **Not dimensioned in Master.** |
+**[ ] 1. How high are the master ensuite walls, and is the ceiling sloped?**
+Every other room says 2700. The master ensuite sheets don't say, anywhere. Two of them also
+show a sloped line above the bath and over the vanity, which looks like a sloped ceiling.
+Until you tell us, we can't give you a wall number for that room — the floor is fine.
+**Worth about 50 m² of wall tile.**
 
-**Sheet register**
+**[ ] 2. Can you send the powder room floor plan?**
+Sheets 3.02, 3.03 and 3.04 are here, but 3.01 isn't. We worked the floor backwards off the
+four wall drawings and got about 1730 × 1610. Confirm that, or send the sheet.
+**Worth about 3 m² of floor tile.**
 
-| Sheet | Page | Title | Scale |
-|---|---|---|---|
-| 3.02 | 1 | Powder Room Elevations 01–02 | 1:20 |
-| 3.03 | 2 | Powder Room Elevations 03–04 | 1:20 |
-| 3.04 | 3 | Powder Room 3D | — |
-| 4.01 | 4 | **Laundry Floor Plan** | 1:20 |
-| 4.02–4.04 | 5–7 | Laundry Elevations 01–04 + internal | 1:20 |
-| 4.05 | 8 | Laundry 3D | — |
-| 7.01 | 9 | **Main Bath Floor Plan** | 1:20 |
-| 7.02–7.03 | 10–11 | Main Bath Elevations 01–04 | 1:20 |
-| 7.04–7.05 | 12–13 | Main Bath 3D | — |
-| 10.05 | 14 | **Guest Bed Ensuite Floor Plan** | 1:20 |
-| 10.06–10.07 | 15–16 | Guest Bed Ensuite Elevations 01–04 | 1:20 |
-| 10.08 | 17 | Guest Bed Ensuite 3D | — |
-| 12.01 | 18 | **Master Ensuite Floor Plan** | **1:25** |
-| 12.02–12.05 | 19–22 | Master Ensuite Elevations 01–04 | 1:20 |
-| 12.06–12.08 | 23–25 | Master Ensuite 3D | — |
+**[ ] 3. How tall are the doors and windows?**
+Not one door or window height is written on any sheet. We used 2040 for the four doors
+(standard) and read the windows off the drawings for reference only.
+**Worth up to 9 m² of wall tile across the job.**
 
-> **Note the scale change.** Sheet 12.01 is 1:25 while every other sheet is 1:20. If you or
-> anyone else scales off this set by habit, the Master Ensuite will come out 25% wrong.
-> (We don't scale — this is a warning for whoever else touches the drawings.)
+**[ ] 4. Do you tile under the wall-hung vanities, and behind the baths?**
+We ran the floor straight under all three wall-hung vanities — they sit 300 off the floor.
+We did **not** tile the two bath platforms. If your scope is different, tell us.
+**Under the vanities is 3.4 m². The bath platforms are 4.3 m².**
+
+*There are 10 smaller things we had to fill in — window sizes, niche depths, feature tile
+edges. They're all listed at the bottom under "What we had to fill in".*
 
 ---
 
-# 2. Room by room
+## Room by room
 
-## 2.1 POWDER ROOM — sheets 3.02–3.04 · confidence **LOW**
+Quantities below are **what to order** — the 10% extra for cuts is already in them.
 
-*Why LOW: floor plan sheet 3.01 is not in the set (see Q1). Floor area is back-calculated
-from the elevation runs, not measured from a plan.*
+### MAIN BATHROOM ✅
 
-### Floor — DERIVED, do not quote from without Q1 answered
+- **Floor tiles — 9.0 m²**
+- **Wall tiles — 29.6 m²**  · all four walls, includes 2 niches
+- **Feature tiles — 6.0 m²**  · behind the vanity, laid vertically
+
+Two things to know: the wall over the bath is only tiled from the bath rim up, not from the
+floor. And the shower nib is a half wall — tiled 1200 high, not to the ceiling.
+
+### GUEST ENSUITE ⚠️
+
+- **Floor tiles — 9.3 m²**  · tiles run under the vanity
+- **Wall tiles — 27.8 m²** ⚠️  · all four walls, includes 2 niches
+- **Feature tiles — 6.0 m²** ⚠️
+
+The two wall numbers add up to 33.8 m² and **that total is solid.** It's where the line
+between them sits that we've had to guess, because no sheet says where the feature tile
+stops. If you're buying both tiles off the same supplier on the same day, you're fine. If
+you're ordering the feature tile separately, get the edges marked up first.
+
+### LAUNDRY ✅
+
+- **Floor tiles — 6.3 m²**  · after taking off the cupboards
+- **Wall tiles — 1.2 m²**  · splashback only
+
+**The laundry is not a tiled room.** It's a 450 high splashback over the bench and nothing
+else — the other three walls are cupboards, a door and paint. If you were expecting to tile
+it floor to ceiling, that's about 30 m² you'd have quoted and never laid.
+
+### MASTER ENSUITE ⚠️
+
+- **Floor tiles — 11.8 m²** ✅  · ready to order
+- **Wall tiles — about 50.8 m²** ⚠️  · **not ready.** We need the ceiling height — question 1
+
+The floor is solid. We checked it two different ways and they agree. It's a cross-shaped
+room, not a rectangle: measured as one big rectangle it comes out at 19.9 m², which would
+over-order by about 9 m².
+
+### POWDER ROOM ⚠️
+
+- **Floor tiles — about 3.1 m²** ⚠️  · **not ready.** No floor plan in the set — question 2
+- **Tile skirting — 7.3 m** ✅  · 300 high
+- **Wall tiles — none**
+
+**The powder room walls aren't tiled.** The drawings call for a textured finish with a
+300 high tile skirting at the bottom. So your job in there is 7.3 m of skirting and the
+floor — the walls belong to the painter.
+
+The skirting is safe to order even though the floor isn't. The four wall lengths are printed
+on the wall drawings, so adding them up for the skirting is straightforward. The floor needs
+us to assume those four walls make a rectangle, and that's the bit we can't check without
+sheet 3.01.
+
+---
+
+## If you're also quoting the painting
+
+- **Walls to paint — 45.6 m²**  · powder room 15.8, laundry 29.8
+- **Ceilings — 46.7 m²**  · all five rooms
+
+The main bathroom, guest ensuite and master ensuite have no painted wall — they're tiled
+floor to ceiling. The powder room wall finish is textured, not standard paint, so price it
+separately. Add the slope allowance to the master ensuite ceiling once question 1 is
+answered.
+
+---
+
+# HOW WE GOT THESE NUMBERS
+
+*Everything below is the working. You don't need to read it to use the numbers above — it's
+here so you can check anything you want to.*
+
+---
+
+## 1. Straight measurements, before the extra for cuts
+
+| | Floor | Wall | Feature | Skirting |
+|---|---|---|---|---|
+| Powder room | *2.785* | — | — | 6.680 m |
+| Laundry | 5.684 | 1.136 | — | — |
+| Main bathroom | 8.205 | 26.925 | 5.454 | — |
+| Guest ensuite | 8.440 | 25.272 | *5.413* | — |
+| Master ensuite | 10.693 | *46.180* | *10.356* | — |
+| **Ready to order** | **33.022** | **53.333** | **10.867** | **6.680 m** |
+| **+10% for cuts** | **36.4** | **58.6** | **12.0** | **7.3 m** |
+
+*Italics = not ready to order, waiting on a question.*
+
+The bottom row is a touch higher than 10% on the row above it. That's deliberate: we round
+each room to 0.1 first and then add the rooms up, so the room figures you're quoting from
+visibly add to the total. Rounding the other way round would leave you with a total that
+doesn't match the lines above it.
+
+Painting, straight: walls 41.466 m², ceilings 42.400 m².
+
+If you want a different percentage: 15% instead of 10% gives floor 38.0 m², wall 61.3 m²,
+feature 12.5 m². We'd suggest 15% on the master ensuite if the sloped ceiling is confirmed —
+slopes make a lot of cuts.
+
+---
+
+## 2. Room by room working
+
+### Powder room — sheets 3.02, 3.03, 3.04
+
+No floor plan in the set, so the floor is worked backwards off the four wall runs.
 
 ```
-Elevation 02 run  1730          (checked: 100 + 840 + 790 = 1730  ✓ Elevation 04)
-Elevation 01 run  1605
-Elevation 03 run  1615          → mean 1610, 10 mm apart, acceptable
+Wall drawing 02 run   1730     checked:  100 + 840 + 790 = 1730  on wall drawing 04
+Wall drawing 01 run   1605
+Wall drawing 03 run   1615     10 mm off drawing 01 — fine
 
-Floor (derived)   1730 × 1610                              =  2.785 m²
+Floor   1730 × 1610                                    =  2.785 m²
 ```
 
-### Walls — **not tiled**
-
-Sheets 3.02 and 3.03 both call up **"TEXTURED FINISH TO WALLS"** with **"TILE SKIRTING"**
-at the base. Height chain on Elevation 02:
+Walls are a textured finish, not tile. Height chain on wall drawing 02:
+`300 + 40 + 310 + 250 + 200 + 1350 + 250 = 2700` — the 300 at the bottom is the tile
+skirting.
 
 ```
-300 + 40 + 310 + 250 + 200 + 1350 + 250 = 2700  ✓
-└─ tile skirting = 300 high
+Skirting   1730 + 1610 + 1730 + 1610                   =  6.680 m
 ```
 
-| Item | Working | Qty |
+That's the full way round — take your door width off it once sheet 3.01 turns up.
+
+### Laundry — sheets 4.01 to 4.05
+
+```
+Room is a true rectangle. Checked both ways:
+  across    700 + 1150 + 450                           = 2300   drawing says 2300
+  down      715 + 2525                                 = 3240   drawing says 3240
+
+Floor, whole room       2300 × 3240                    =  7.452 m²
+Cupboards taken off      700 × 2525                    = -1.768 m²
+Floor to tile                                             5.684 m²
+```
+
+The cupboards sit on the floor (135 kickboard), so tiles stop at them.
+
+```
+Splashback              2525 × 450                     =  1.136 m²
+```
+
+Sheet 4.02 says "450mm TILE SPLASH BACK" over the bench. Sheets 4.03 and 4.04 show no tile
+at all — cupboards, a bench seat and the door.
+
+### Main bathroom — sheets 7.01 to 7.05
+
+The west wall steps out 200 partway down, so we measured the floor in two strips.
+
+```
+North strip    2570 wide       (550 vanity + 1000 window + 1020 bath = 2570)
+South strip    2770 wide       (685 + 820 + 245 + 20 + 1000 = 2770)
+Step is 2260 down from the north wall.  Whole room is 3895 deep.
+
+Strip A        2570 × 3895                             = 10.010 m²
+Strip B          200 × 1635                            =  0.327 m²
+Floor, whole room                                        10.337 m²
+Bath platform taken off   1020 × 2090                  = -2.132 m²
+Floor to tile                                             8.205 m²
+```
+
+The vanity is wall hung with 300 clear underneath, so tiles run straight under it — nothing
+taken off for it.
+
+Walls, 2700 high (`300 + 540 + 60 + 250 + 1000 + 550 = 2700`):
+
+```
+West wall        3895 × 2700                           = 10.517 m²
+   of that, feature tile behind the vanity  2020 × 2700 = 5.454
+North wall       2770 × 2700 = 7.479, less window      =  6.119 m²
+East wall — three different heights on one wall:
+   over the bath    2000 × 2150   (2700 less the 550 bath rim)  = 4.300
+   shower nib end     90 × 1200   (half wall, tiled 1200 high)  = 0.108
+   shower            1805 × 2700                                = 4.874
+                                                         =  9.281 m²
+South wall       2770 × 2700 = 7.479, less the door    =  5.806 m²
+Niches — nib wall 600 × 300 × 70 deep                  =  0.306 m²
+       — shower   700 × 300 × 70 deep                  =  0.350 m²
+Wall tile, all                                           32.379 m²
+   less the feature tile                                 -5.454 m²
+Plain wall tile                                          26.925 m²
+```
+
+### Guest ensuite — sheets 10.05 to 10.08
+
+```
+Rectangle, checked four ways:
+  across, top     1920 + 960 + 20 + 1100               = 4000
+  across, bottom  1290 + 820 + 1890                    = 4000
+  down, left       600 + 1060 + 450                    = 2110
+  down, right     1200 + 910                           = 2110
+
+Floor    4000 × 2110                                   =  8.440 m²
+```
+
+Vanity is wall hung, 300 clear — tiles run under it.
+
+Walls, 2700 high, tiled floor to ceiling all round:
+
+```
+North wall     4000 × 2700 = 10.800, less window       =  9.639 m²
+Side wall      2110 × 2700                             =  5.697 m²
+South wall     4000 × 2700 = 10.800, less the door     =  9.127 m²
+Side wall      2110 × 2700                             =  5.697 m²
+Niches — shower 700 × 300, over vanity 300 × 300       =  0.524 m²
+Wall tile, all                                           30.685 m²
+   less the feature tile (edge not given — see below)   -5.413 m²
+Plain wall tile                                          25.272 m²
+```
+
+### Master ensuite — sheets 12.01 to 12.08
+
+Cross-shaped room. We measured it in four strips.
+
+```
+Checked all four ways round:
+  across, top     1835 + 495 + 2305 + 585  = 5220   drawing says 5215
+  across, bottom  1835 + 3380              = 5215   drawing says 5215
+  down, left       960 + 550 + 250 + 1270 + 815 = 3845  drawing says 3840
+  down, right      960 + 860 + 2000        = 3820   drawing says 3820
+
+Bath alcove       2305 × 1510                          =  3.481 m²
+Middle strip      2800 ×  310                          =  0.868 m²
+Main floor        3380 × 2020                          =  6.828 m²
+Shower alcove     1835 × 1204                          =  2.209 m²
+Floor, whole room                                        13.385 m²
+Bath platform taken off   2305 × 960                   = -2.213 m²
+Shower seat taken off      400 × 1200                  = -0.480 m²
+Floor to tile                                            10.693 m²
+```
+
+Measured as one big rectangle (5215 × 3820) this room comes out at 19.9 m². It isn't a
+rectangle. The difference is 9.2 m² of tile you'd order and never lay — roughly $1,400 of
+porcelain, plus the hours you'd have quoted for floor that doesn't exist.
+
+**Walls — not finished.** The four wall drawings give us the run lengths and they check out
+perfectly (see §3). What no sheet gives us is a wall height. Sheets 12.02 to 12.05 print
+2100, 2200, 1300+500 and 950+250+600+300 — all of those locate fittings, none of them is a
+wall height. Sheets 12.03 and 12.04 also show a sloped line above the bath and over the
+vanity.
+
+Priced at a flat 2700 purely as a placeholder:
+
+```
+Walls all round  18070 × 2700                          = 48.789 m²
+less the door and two windows                          = -2.609 m²
+Placeholder only                                         46.180 m²
+```
+
+If the ceiling is sloped, the right way to measure each wall is
+`run × (low height + high height) ÷ 2`. As a feel for the size of it: a slope running
+2400 up to 3000 across the gable wall moves that wall by about 1.5 m², and a flat 2400
+throughout would drop the whole room by about 5 m².
+
+---
+
+## 3. What we double-checked
+
+Six checks on every job. Here's how this set did.
+
+**✅ Every dimension chain adds up to the total printed next to it.**
+We added 27 chains across the five rooms. All of them landed within 5 mm of the stated
+total except two, both noted below. Highlights:
+
+```
+Powder room, wall drawing 04    100 + 840 + 790                    = 1730 ✅
+Main bathroom, north wall       550 + 1000 + 1020                  = 2570 ✅
+Main bathroom, south wall       685 + 820 + 245 + 20 + 1000        = 2770 ✅
+Main bathroom, east wall        2000 + 90 + 1805                   = 3895 ✅
+Laundry                         700 + 1150 + 450                   = 2300 ✅
+Guest ensuite, four ways round  all four come to 4000 / 2110       ✅
+Master ensuite, bottom          1835 + 3380                        = 5215 ✅
+Master ensuite, wall drawing 04 1980 + 500 + 900 + 1835            = 5215 ✅
+```
+
+**✅ Opposite walls of the same room are the same length.**
+Checked in all five rooms. The powder room's two side walls are 1605 and 1615 — 10 mm apart,
+which is nothing. Everything else is dead on.
+
+**✅ Double-checked against the plan totals — the strongest check we do.**
+We add up the wall drawings, then separately add up the walls on the floor plan. Two
+different sheets, drawn at different times. They have to agree.
+
+```
+Laundry          wall drawings  3240 + 2300 + 3240 + 2300           = 11,080
+                 floor plan     2 × (3240 + 2300)                   = 11,080   ✅ dead on
+
+Main bathroom    wall drawings  3895 + 2770 + 3895 + 2770           = 13,330
+                 floor plan     2570+2260+200+1635+2770+3895        = 13,330   ✅ dead on
+
+Guest ensuite    wall drawings  4000 + 2110 + 4000 + 2110           = 12,220
+                 floor plan     2 × (4000 + 2110)                   = 12,220   ✅ dead on
+
+Master ensuite   wall drawings  3820 + 5215 + 3820 + 5215           = 18,070
+                 floor plan     all 12 sides added up               = 18,081   ✅ 11 mm
+```
+
+That last one is worth a moment. The master ensuite floor plan is a 12-sided cross. We
+measured it side by side, then compared it to the four wall drawings, and the two came
+within 11 mm of each other. That's why we're confident in 11.8 m² of floor for that room
+even while the walls are still open.
+
+**✅ Wall heights add up inside each wall drawing.**
+Powder room, laundry, main bathroom and guest ensuite all come to 2700 exactly.
+
+**⚠️ Master ensuite — no height chain reaches a wall height on any of the four sheets.**
+That's question 1.
+
+**✅ The bath is the same bath on the floor plan and the wall drawing.**
+Checked seven fittings across the five rooms. Two are 20 mm out (the guest and master
+vanities) — not enough to change a tile order.
+
+**✅ Nothing looks silly.**
+Every floor between 2 and 25 m². Wall-to-floor ratios where you'd expect them, except the
+laundry, which is low because it's a splashback — and that's checked against sheet 4.02.
+
+---
+
+## 4. What we had to fill in
+
+Every one of these is a question. Answer them and we'll re-issue for free.
+
+**Bigger ones — these are questions 1 to 4 at the top:**
+
+1. Master ensuite ceiling height and whether it's sloped. We used a flat 2700.
+2. Powder room floor, worked backwards off the wall drawings. We used 1730 × 1610.
+3. Door and window heights. We used 2040 for the four doors.
+4. Whether you tile under the wall-hung vanities and behind the baths.
+
+**Smaller ones:**
+
+5. **Main bathroom window height.** 1000 wide on the plan, no height anywhere. We used 1360
+   and took 1.4 m² off that wall. What's the real height?
+
+6. **Guest ensuite window height.** 730 wide, no height. We used 1590 and took 1.2 m² off.
+   Real height?
+
+7. **Master ensuite gable windows.** Two of them, 600 wide each, no heights. We used 780
+   each.
+
+8. **Guest ensuite — where does the shower screen actually sit?** Sheet 10.05 gives two
+   chains along the same wall and they don't agree: `1920 + 960 + 20` puts it at 2900,
+   `2005 + 730` puts it at 2735. 165 mm apart. We went with 2900. It moves about 0.5 m²
+   between plain and feature tile, and it moves your shower setout.
+
+9. **Main bathroom — where's the step in the west wall?** The printed chain says 2260 down
+   from the north wall. The drawing looks more like 2110. We used the printed 2260. Changes
+   the floor by about 0.03 m², so it barely matters for tile — but worth knowing on site.
+
+10. **Niche depths.** Only one is given: the nib wall niche on sheet 7.03 is 70 deep. We
+    used 70 for the rest. Are the shower niches deeper — 100? 150? We didn't measure the two
+    master ensuite niches at all because they're not dimensioned.
+
+11. **Where does the feature tile stop?** Five sheets say "FEATURE TILE LAID VERTICALLY" but
+    only the main bathroom has a dimension we can tie it to (the 2020 vanity run). For the
+    guest and master ensuites there's no edge given, so we've estimated. Mark the edges on
+    the wall drawings and we'll redo it — it's a different tile at a different price.
+
+12. **There's a hand-drawn red mark on sheet 4.02** (laundry wall drawing 01) — a freehand
+    arrow pointing at the splashback. It's not part of the CAD drawing, someone's drawn on
+    it. Does that mean the splashback is changing? We measured it as drawn.
+
+13. **Powder room walls** — the drawings say textured finish with a 300 tile skirting, so
+    we've given you no wall tile in there. Still right, or has it changed since Rev L?
+
+14. **"All dimensions are frame to frame"** — that's on every sheet's notes. It means the
+    dimensions run to the timber, so the finished tiled face sits about 30–40 mm inside each
+    line. Everything we've given you is therefore very slightly generous, which is the safe
+    direction.
+
+---
+
+## 5. The drawings we read
+
+25 sheets, all 1:20 at A3 **except sheet 12.01, which is 1:25.**
+
+| Sheet | Room | What it is |
 |---|---|---|
-| Wall tile | — walls are a textured finish, not tiled | **0.000 m²** |
-| **Tile skirting** | perimeter 1730 + 1610 + 1730 + 1610 | **6.680 lm** |
-| Tile skirting (area) | 6.680 × 0.300 | 2.004 m² |
+| 3.02, 3.03 | Powder room | Wall drawings 01–04 |
+| 3.04 | Powder room | 3D |
+| **4.01** | Laundry | **Floor plan** |
+| 4.02, 4.03, 4.04 | Laundry | Wall drawings + cupboard internals |
+| 4.05 | Laundry | 3D |
+| **7.01** | Main bathroom | **Floor plan** |
+| 7.02, 7.03 | Main bathroom | Wall drawings 01–04 |
+| 7.04, 7.05 | Main bathroom | 3D |
+| **10.05** | Guest ensuite | **Floor plan** |
+| 10.06, 10.07 | Guest ensuite | Wall drawings 01–04 |
+| 10.08 | Guest ensuite | 3D |
+| **12.01** | Master ensuite | **Floor plan — 1:25, not 1:20** |
+| 12.02–12.05 | Master ensuite | Wall drawings 01–04 |
+| 12.06–12.08 | Master ensuite | 3D |
 
-> Door not shown on the elevations supplied — skirting length is **gross**, deduct your
-> door width once Q1 gives me sheet 3.01.
+Missing: **sheet 3.01, the powder room floor plan.**
 
----
-
-## 2.2 LAUNDRY — sheets 4.01–4.05 · confidence **HIGH**
-
-*Rectangular room, all chains close, all four elevations present, tiling height explicitly
-stated. This is what a clean room looks like.*
-
-### Floor
-
-```
-Room is a true rectangle (no step in any chain).
-Top chain     700 + 1150 + 450                             = 2300  ✓ stated 2300
-Left chain    715 + 2525                                   = 3240  ✓ stated 3240
-
-Gross floor   2300 × 3240                                  =  7.452 m²
-Less floor-standing joinery  700 × 2525                    = −1.768 m²   (Elev 01, base
-                                                              cabinets to floor + 135 kick)
-NET FLOOR TILE                                                5.684 m²
-```
-
-### Walls
-
-Wall height 2700 (chain: 135 + 725 + 40 + 700 + 900 + 200 = 2700 ✓).
-**But the laundry is not a tiled room.** Sheet 4.02 calls up
-**"450mm TILE SPLASH BACK. NICKEL OR STAINLESS STEEL STRIP TRIM TO FINISH TOP EDGE."**
-Sheets 4.03 and 4.04 show no tiling at all — joinery, bench seat and the door.
-
-| Wall | Run | True tiling height | Working | Wall tile |
-|---|---|---|---|---|
-| Elev 01 (west) | 3240 | **450 splashback over the 2525 bench only** | 2525 × 450 | **1.136 m²** |
-| Elev 02 | 2300 | not tiled — joinery and door | — | 0.000 |
-| Elev 03 (east) | 3240 | not tiled — joinery | — | 0.000 |
-| Elev 04 | 2300 | not tiled — door, joinery, hand towel rail | — | 0.000 |
-| | | | **WALL TILE** | **1.136 m²** |
-
-> An assumed-full-height read of this room gives 29.9 m² of wall tile. The real number is
-> **1.1 m²**. That's the whole point of measuring true tiling heights.
+One warning worth passing on: sheet 12.01 is drawn at 1:25 while everything else is 1:20.
+We don't scale off drawings — we only use the printed numbers — but if anyone else on the
+job scales that sheet out of habit, they'll be 25% wrong on the biggest room in the set.
 
 ---
 
-## 2.3 MAIN BATH — sheets 7.01–7.05 · confidence **MED**
-
-*MED because two openings are undimensioned (Q5, Q8) and the west-wall step position
-disagrees between the chain and the geometry by 150 mm (Q4). Everything else checks out —
-including a perfect perimeter reconciliation.*
-
-### Floor — **stepped room, measured as two bands**
-
-The west wall steps out 200 mm partway down. This is **not** a rectangle.
+## 6. Before you quote
 
 ```
-North portion   2570 wide (= 550 vanity + 1000 window + 1020 bath  ✓ = 2570)
-South portion   2770 wide (= 685 + 820 + 245 + 20 + 1000           ✓ = 2770)
-Step at 2260 from the north wall (= 2020 vanity + 240)             [see Q4]
-Overall depth   3895                                               ✓ stated
-
-Band A   2570 × 3895                                       = 10.010 m²
-Band B   step  200 × (3895 − 2260 = 1635)                  =  0.327 m²
-GROSS FLOOR                                                  10.337 m²
-
-Less built-in bath surround   1020 × (2000 + 90 hob)       = −2.132 m²
-Vanity NOT deducted — "WALL MOUNTED VANITY", 300 clear to floor (sheet 7.02)
-
-NET FLOOR TILE                                                8.205 m²
-```
-
-> A `2770 × 2570` bounding-box read gives 7.12 m² and a `2770 × 3895` read gives 10.79 m².
-> Neither is the tiled floor. The measured answer is **8.21 m²**.
-
-### Walls — height 2700 (chain 300+540+60+250+1000+550 = 2700 ✓)
-
-| Wall | Run | True tiling height | Working | Area |
-|---|---|---|---|---|
-| **Elev 01** west | 3895 | 2700 full height | 3895 × 2700 | **10.517 m²** |
-| ↳ of which **feature tile** | 2020 | 2700 | "FEATURE TILE LAID VERTICALLY" behind vanity | *5.454 m²* |
-| ↳ standard tile | 1875 | 2700 | | *5.063 m²* |
-| **Elev 02** north | 2770 | 2700 | 2770 × 2700 = 7.479 | |
-| ↳ less window | | | −1000 × 1360 **[PROV, Q5]** = −1.360 | **6.119 m²** |
-| **Elev 03** east | 3895 | **three different heights** | | **9.281 m²** |
-| ↳ over bath | 2000 | **2150** (2700 − 550 bath rim) | 2000 × 2150 = 4.300 | |
-| ↳ shower nib end | 90 | **1200** ("1200mm HIGH TILED WALL") | 90 × 1200 = 0.108 | |
-| ↳ shower zone | 1805 | 2700 | 1805 × 2700 = 4.874 | |
-| **Elev 04** south | 2770 | 2700 | 2770 × 2700 = 7.479 | |
-| ↳ less door | | | −820 × 2040 **[PROV, Q8]** = −1.673 | **5.806 m²** |
-| | | | **Sub-total** | **31.723 m²** |
-
-### Niches
-
-| Niche | Sheet | w × h × d | Back | Reveals | Total |
-|---|---|---|---|---|---|
-| Nib wall, 700 AFF | 7.03 | 600 × 300 × **70 stated** | 0.180 | 0.126 | **0.306 m²** |
-| Shower, 1200 AFF | 7.03 | 700 × 300 × 70 *(Q9)* | 0.210 | 0.140 | **0.350 m²** |
-
-### Main Bath totals
-
-| | m² |
-|---|---|
-| Floor tile | **8.205** |
-| Wall tile (standard) | 26.269 |
-| Wall tile (feature, vertical lay) | 5.454 |
-| Niches | 0.656 |
-| **Wall tile total** | **32.379** |
-
----
-
-## 2.4 GUEST BED ENSUITE — sheets 10.05–10.08 · confidence **MED**
-
-*MED because of the 165 mm chain conflict on the north wall (Q3), an undimensioned window
-(Q6) and an undimensioned niche height (Q9).*
-
-### Floor
-
-```
-Rectangular — confirmed from three independent chains:
-  top     1920 + 960 + 20 + 1100        = 4000  ✓
-  bottom  1290 + 820 + 1890             = 4000  ✓
-  left     600 + 1060 + 450             = 2110  ✓
-  right   1200 + 910                    = 2110  ✓
-
-GROSS FLOOR  4000 × 2110                                   =  8.440 m²
-Vanity (1920 × 600) NOT deducted — "WALL MOUNTED VANITY", 300 clear (sheet 10.06)
-NET FLOOR TILE                                                8.440 m²
-```
-
-### Walls — height 2700 (chain 300+540+60+250+1050+500 = 2700 ✓), fully tiled
-
-| Wall | Run | Height | Working | Area |
-|---|---|---|---|---|
-| **Elev 01** north | 4000 | 2700 | 10.800 − window 730 × 1590 **[PROV, Q6]** | **9.639 m²** |
-| ↳ feature tile zone | 2005 | 2700 | "FEATURE TILE LAID VERTICALLY, TILE LEVEL WITH SHOWER" | *5.413 m² **PROV, Q10*** |
-| **Elev 02** | 2110 | 2700 | 2110 × 2700 | **5.697 m²** |
-| **Elev 03** south | 4000 | 2700 | 10.800 − door 820 × 2040 **[PROV, Q8]** | **9.127 m²** |
-| **Elev 04** | 2110 | 2700 | 2110 × 2700 | **5.697 m²** |
-| Niche — shower | | | 700 × 300 × 70 | 0.350 m² |
-| Niche — over vanity | | | 300 × 300 × 70 *(height assumed, Q9)* | 0.174 m² |
-| | | | **WALL TILE TOTAL** | **30.685 m²** |
-
----
-
-## 2.5 MASTER ENSUITE — sheets 12.01–12.08 · confidence **LOW**
-
-> **⚠ Floors are solid. Walls are provisional — do not quote walls off this room until
-> Q2 (ceiling height + rake) is answered.**
-
-### Floor — **cross-shaped room, measured as four zones**
-
-This room is the reason bounding-box measuring is dangerous. It is a plus/cross plan with a
-bath alcove pushed north, a shower room pushed west, and a vanity bay pushed east.
-
-```
-X chain (top)     1835 + 495 + 2305 + 585  = 5220   vs stated 5215   (5 mm, OK)
-X chain (bottom)  1835 + 3380              = 5215   ✓
-Y chain (left)     960 + 550 + 250 + 1270 + 815 = 3845  vs stated 3840  (5 mm, OK)
-Y chain (right)    960 + 860 + 2000        = 3820   ✓
-
-Band 1  bath alcove       2305 × 1510                      =  3.481 m²
-Band 2  mid band          2800 ×  310                      =  0.868 m²
-Band 3  main body         3380 × 2020                      =  6.828 m²
-Band 4  shower alcove     1835 × 1204                      =  2.209 m²
-GROSS INTERNAL FLOOR                                         13.385 m²
-
-Less built-in bath surround   2305 × 960                   = −2.213 m²
-Less shower seat              400 × 1200   (sheet 12.03)   = −0.480 m²
-Vanity NOT deducted — "WALL MOUNTED VANITY", 300 clear (sheets 12.04, 12.05)
-
-NET FLOOR TILE                                               10.693 m²
-```
-
-> **The 5215 × 3820 bounding box is 19.92 m².** The room's actual internal footprint is
-> **13.39 m²** and the tiled floor is **10.69 m²**. Measuring this room as a rectangle
-> over-orders by 9.2 m² of tile — about $1,400 of material on a mid-range porcelain, before
-> the labour hours you'd have quoted for area that doesn't exist.
-
-### Walls — **PROVISIONAL**
-
-The four elevations give run lengths that reconcile perfectly with the floor perimeter
-(see §3, check 5.3). **What they do not give is a wall height.** Sheets 12.02–12.05 print
-2100, 2200, 1300+500 and 950+250+600+300 — all fixture chains, none of them a wall height.
-Sheets 12.03 and 12.04 also show angled ceiling lines above the bath alcove and the vanity.
-
-Priced below at a **flat 2700, assumed**, purely so you have a placeholder:
-
-| Wall | Run | Height | Working | Area |
-|---|---|---|---|---|
-| Elev 01 | 3820 | 2700 **assumed** | 3820 × 2700 | 10.314 m² |
-| Elev 02 (north, gable) | 5215 | 2700 **assumed — this is the raked one** | 5215 × 2700 | 14.081 m² |
-| Elev 03 (east, vanity) | 3820 | 2700 **assumed — also shows a rake** | 3820 × 2700 | 10.314 m² |
-| Elev 04 (south) | 5215 | 2700 **assumed** | 5215 × 2700 | 14.081 m² |
-| less door | | | 820 × 2040 **[PROV]** | −1.673 m² |
-| less 2 gable windows | | | 2 × (600 × 780) **[PROV, Q7]** | −0.936 m² |
-| | | | **WALL TILE (PROVISIONAL)** | **46.180 m²** |
-
-Feature tile called up on Elevation 02 ("above bath") and Elevation 03 ("laid vertically"),
-extents not dimensioned — provisionally 4.956 m² and 5.400 m² (**Q10**).
-
-**If the ceiling is raked, the correct method is** `run × (h_low + h_high) / 2` **per
-segment.** As an indication of the exposure: if the rake runs 2400 → 3000 across the gable
-wall, that wall alone changes by ±1.5 m²; if the low point is 2400 throughout, the room
-drops by roughly 5 m².
-
----
-
-# 3. Cross-check log
-
-Every check from `TAKEOFF_METHOD.md` §5. Nothing here is decorative — check 5.3 is what
-proves the plan and the elevations describe the same room.
-
-### 5.1 — Chains sum to stated totals
-
-| Sheet | Chain | Sum | Stated | Δ | |
-|---|---|---|---|---|---|
-| 3.03 | 100 + 840 + 790 | 1730 | 1730 | 0 | ✅ PASS |
-| 3.02 | 450 + 655 + 500 | 1605 | 1605 | 0 | ✅ PASS |
-| 3.02 | 300+40+310+250+200+1350+250 | 2700 | 2700 | 0 | ✅ PASS |
-| 4.01 | 700 + 1150 + 450 | 2300 | 2300 | 0 | ✅ PASS |
-| 4.01 | 715 + 2525 | 3240 | 3240 | 0 | ✅ PASS |
-| 4.01 | 1205 + 20 + 1000 + 1000 + 20 | 3245 | 3240 | 5 | ✅ PASS |
-| 4.02 | 135+725+40+700+900+200 | 2700 | 2700 | 0 | ✅ PASS |
-| 7.01 | 550 + 1000 + 1020 | 2570 | 2570 | 0 | ✅ PASS |
-| 7.01 | 685 + 820 + 245 + 20 + 1000 | 2770 | 2770 | 0 | ✅ PASS |
-| 7.01 | 2000 + 90 + 1805 | 3895 | 3895 | 0 | ✅ PASS |
-| 7.01 | 2020+240+230+300+650+450 | 3890 | 3895 | 5 | ✅ PASS |
-| 7.02 | 300+540+60+250+1000+550 | 2700 | 2700 | 0 | ✅ PASS |
-| 7.02 | 1875 + 2020 | 3895 | 3895 | 0 | ✅ PASS |
-| 7.03 | 200 + 300 + 700 (nib niche) | 1200 | 1200 | 0 | ✅ PASS |
-| 10.05 | 1920 + 960 + 20 + 1100 | 4000 | 4000 | 0 | ✅ PASS |
-| 10.05 | 1290 + 820 + 1890 | 4000 | 4000 | 0 | ✅ PASS |
-| 10.05 | 600 + 1060 + 450 | 2110 | 2110 | 0 | ✅ PASS |
-| 10.05 | 1200 + 910 | 2110 | 2110 | 0 | ✅ PASS |
-| 10.05 | **2005 + 730 + 1260** | **3995** | 4000 | 5 | ⚠️ **see Q3** — conflicts with the 1920/960/20/1100 chain by 165 mm at the screen |
-| 10.07 | 1190+300+400+820+540+750 | 4000 | 4000 | 0 | ✅ PASS |
-| 12.01 | 1835 + 3380 | 5215 | 5215 | 0 | ✅ PASS |
-| 12.01 | 1835 + 495 + 2305 + 585 | 5220 | 5215 | 5 | ✅ PASS |
-| 12.01 | 900 + 130 + 370 + 1400 + 580 | 3380 | 3380 | 0 | ✅ PASS |
-| 12.01 | 960 + 860 + 2000 | 3820 | 3820 | 0 | ✅ PASS |
-| 12.01 | 960+550+250+1270+815 | 3845 | 3840 | 5 | ✅ PASS |
-| 12.03 | 1980 + 500 + 900 + 1835 | 5215 | 5215 | 0 | ✅ PASS |
-| 12.03 | 515 + 2305 + 585 | 3405 | 3380 | 25 | ⚠️ PASS-with-note (at tolerance) |
-
-### 5.2 — Opposite elevations agree
-
-| Room | Pair | Δ | |
-|---|---|---|---|
-| Powder | E02 1730 / E04 1730 | 0 | ✅ PASS |
-| Powder | E01 1605 / E03 1615 | 10 | ✅ PASS-with-note |
-| Laundry | E01 3240 / E03 3240 · E02 2300 / E04 2300 | 0 | ✅ PASS |
-| Main Bath | E01 3895 / E03 3895 · E02 2770 / E04 2770 | 0 | ✅ PASS |
-| Guest | E01 4000 / E03 4000 · E02 2110 / E04 2110 | 0 | ✅ PASS |
-| Master | E01 3820 / E03 3820 · E02 5215 / E04 5215 | 0 | ✅ PASS |
-
-### 5.3 — Wall runs reconcile with the floor perimeter ⭐
-
-The strongest check in the method. Two independent sheets, same answer.
-
-```
-LAUNDRY      elevations  3240 + 2300 + 3240 + 2300              = 11 080
-             plan        2 × (3240 + 2300)                      = 11 080   ✅ 0 mm
-
-MAIN BATH    elevations  3895 + 2770 + 3895 + 2770              = 13 330
-             plan (stepped, 6 sides)
-                         2570 + 2260 + 200 + 1635 + 2770 + 3895 = 13 330   ✅ 0 mm
-
-GUEST ENS    elevations  4000 + 2110 + 4000 + 2110              = 12 220
-             plan        2 × (4000 + 2110)                      = 12 220   ✅ 0 mm
-
-MASTER ENS   elevations  3820 + 5215 + 3820 + 5215              = 18 070
-             plan (cross shape, 12 sides)
-                         2305+1821+583+2001+3382+860+1836
-                         +1204+1836+248+495+1510                = 18 081   ✅ 11 mm
-```
-
-All four PASS. The Master Ensuite result is worth pausing on: the 12-sided polygon I
-decomposed by hand comes back within 11 mm of the four elevation runs. That is strong
-evidence the floor shape is right — which is why I'm confident in 10.69 m² of floor even
-while the walls are LOW.
-
-### 5.4 — Heights reconcile within each elevation
-
-| Sheet | Chain | Sum | |
-|---|---|---|---|
-| 3.02 | 300+40+310+250+200+1350+250 | 2700 | ✅ |
-| 4.02 | 135+725+40+700+900+200 | 2700 | ✅ |
-| 7.02 | 300+540+60+250+1000+550 | 2700 | ✅ |
-| 7.03 | 2150 + 550 | 2700 | ✅ |
-| 7.03 | 1500 + 1200 | 2700 | ✅ |
-| 10.06 | 300+540+60+250+1050+500 | 2700 | ✅ |
-| 10.06 | 500 + 2200 | 2700 | ✅ |
-| **12.02–12.05** | 2100 / 2200 / 1300+500 / 950+250+600+300 | **no chain reaches a wall height** | ❌ **FAIL → Q2** |
-
-### 5.5 — Fixture dimensions agree between plan and elevation
-
-| Fixture | Plan | Elevation | |
-|---|---|---|---|
-| Main Bath bath alcove | 1020 × 2000 (7.01) | 1020 (7.02 E02) | ✅ |
-| Main Bath vanity | 550 × 2020 (7.01) | 2020 (7.02 E01) | ✅ |
-| Main Bath shower nib | 90 (7.01) | 90 @ 1200 high (7.03) | ✅ |
-| Guest vanity | 1920 × 600 (10.05) | 20+465+930+465+20 = 1900 (10.06) | ⚠️ 20 mm, note |
-| Master vanity | 580 × 2000 (12.01) | 20+750+465+750+35 = 2020 (12.04) | ⚠️ 20 mm, note |
-| Master bath surround | 2305 × 960 (12.01) | 2305 (12.03) | ✅ |
-| Laundry joinery | 700 × 2525 (4.01) | 2525 (4.02) | ✅ |
-
-### 5.6 — Sanity ranges
-
-| Room | Floor m² | In 2–25? | Wall : floor ratio | In 2.0–5.5? | |
-|---|---|---|---|---|---|
-| Powder | 2.79 | ✅ | n/a (not tiled) | n/a | ✅ |
-| Laundry | 5.68 | ✅ | 0.20 | ❌ **expected** — splashback only, verified against sheet 4.02 | ✅ |
-| Main Bath | 8.21 | ✅ | 3.95 | ✅ | ✅ |
-| Guest Ensuite | 8.44 | ✅ | 3.64 | ✅ | ✅ |
-| Master Ensuite | 10.69 | ✅ | 4.32 | ✅ *(against an assumed height — not meaningful until Q2)* | ⚠️ |
-
----
-
-# 4. Totals per material
-
-## 4.1 Tiler
-
-| Material | Powder | Laundry | Main Bath | Guest | Master | **Total** |
-|---|---|---|---|---|---|---|
-| **Floor tile** (m²) | *2.785 †* | 5.684 | 8.205 | 8.440 | 10.693 | **33.022** ‡ |
-| **Wall tile, standard** (m²) | 0 | 1.136 | 26.269 | 25.272 | *35.824 §* | **88.501** |
-| **Wall tile, feature** (m²) | 0 | 0 | 5.454 | *5.413 §* | *10.356 §* | **21.223** |
-| **Niches** (m²) | 0 | 0 | 0.656 | 0.524 | *not measured* | **1.180** |
-| **Wall tile, all** (m²) | 0 | 1.136 | 32.379 | 30.685 | *46.180 §* | **110.380** |
-| **Tile skirting** (lm) | 6.680 | 0 | 0 | 0 | 0 | **6.680** |
-
-† Derived from elevations — floor plan sheet missing (Q1). Excluded from the total below.
-‡ Excludes the Powder Room. **With** the derived Powder Room figure: 35.807 m².
-§ Master Ensuite walls are **PROVISIONAL** pending Q2.
-
-## 4.2 Painter
-
-| Surface | Powder | Laundry | Main Bath | Guest | Master | **Total** |
-|---|---|---|---|---|---|---|
-| **Painted wall** (m²) | 14.359 | 27.107 | 0 | 0 | 0 | **41.466** |
-| **Ceiling** (m²) | 2.785 | 7.452 | 10.337 | 8.440 | *13.385* | **42.400** |
-
-Painted wall working:
-```
-Powder   perimeter 6680 × (2700 − 300 skirting) = 16.032 − door 820×2040 = 14.359 m²
-Laundry  perimeter 11080 × 2700 = 29.916 − splashback 1.136 − door 1.673 = 27.107 m²
-         (does not yet deduct the areas concealed behind full-height joinery — tell me
-          whether you paint behind it and I'll adjust)
-Main Bath / Guest / Master — walls fully tiled, nothing to paint.
-```
-Ceilings use the **gross** floor polygon (the ceiling runs over the vanity), not the net
-tiled floor. Master ceiling is flat-plan area — add the rake factor once Q2 is answered.
-Powder Room wall finish is **textured**, not standard paint — separate rate.
-
----
-
-# 5. Wastage-adjusted totals
-
-Measured is the survey. The adjusted columns are yours to pick from — they are not the
-measurement.
-
-| Material | Measured | +10% | +15% |
-|---|---|---|---|
-| Floor tile (excl. Powder) | **33.022 m²** | 36.325 m² | 37.976 m² |
-| Floor tile (incl. derived Powder) | 35.807 m² | 39.388 m² | 41.178 m² |
-| Wall tile — confirmed rooms only (excl. Master) | **64.200 m²** | 70.620 m² | 73.830 m² |
-| Wall tile — all rooms *(Master provisional)* | *110.380 m²* | *121.418 m²* | *126.937 m²* |
-| Feature tile (Main Bath, confirmed extent) | **5.454 m²** | 5.999 m² | 6.272 m² |
-| Feature tile (all, mostly provisional) | *21.223 m²* | *23.345 m²* | *24.406 m²* |
-| Tile skirting | **6.680 lm** | 7.348 lm | 7.682 lm |
-| Painted wall | **41.466 m²** | 45.613 m² | — |
-| Ceiling | **42.400 m²** | 46.640 m² | — |
-
-You asked for 10%. **Suggested split:** 10% on the Laundry, Main Bath and Guest Ensuite
-(straight lay, rectangular, few cuts); **15% on the Master Ensuite** if the rake is
-confirmed, and 15% anywhere you're laying the feature tile vertically against a raked line.
-
----
-
-# 6. Assumptions register
-
-Every one is a question, numbered to match §QUESTIONS FOR YOU.
-
-| # | Assumption made | Value used | Affects |
-|---|---|---|---|
-| A1 | Powder Room floor derived from elevation runs — no plan sheet | 1730 × 1610 | 2.785 m² floor |
-| A2 | Master Ensuite ceiling flat at 2700 | 2700 | 46.180 m² of wall — **the whole room** |
-| A3 | Guest Ensuite screen at the 1920+960+20 chain | 2900 | ~0.45 m² between standard and feature |
-| A4 | Main Bath west-wall step at the printed chain, not the geometry | 2260 | ±0.03 m² floor |
-| A5 | Main Bath north window height | 1360 | −1.360 m² Elev 02 |
-| A6 | Guest Ensuite north window height | 1590 | −1.161 m² Elev 01 |
-| A7 | Master gable window heights | 780 each | −0.936 m² Elev 02 |
-| A8 | All door opening heights | 2040 | −1.673 m² per door × 4 |
-| A9 | Niche depth where not stated | 70 | ~0.2 m² across the job |
-| A10 | Feature tile extents where not dimensioned | as tabled | ~15.8 m² of the feature total |
-| A11 | Floor tiles run under all wall-hung vanities | no deduction | +2.31 m² floor kept |
-| A12 | Laundry joinery is floor-standing, deducted | −1.768 m² | Laundry floor |
-| A13 | Tiling over bath starts at the rim | 550 AFF | Main Bath Elev 03 |
-| A14 | Powder Room walls textured, not tiled | 0 m² wall tile | Powder Room scope |
-| A15 | "Frame to frame" — measured to printed lines, i.e. to frame | as printed | systematic; finished faces sit ~30–40 mm inside, so all areas are marginally generous (safe) |
-
----
-
-# 7. CONFIRM BEFORE QUOTING
-
-```
-[ ] Sheet revisions match your set — this takeoff read Rev L, dated 01/09/25
-[ ] Q1–Q15 answered (the two that matter most: Powder Room plan, Master ceiling height)
-[ ] Master Ensuite either resolved or EXCLUDED from the quote — it is rated LOW
-[ ] Powder Room floor either confirmed or EXCLUDED — it is rated LOW
-[ ] Tiling heights confirmed: Laundry 450 splashback only, Powder 300 skirting only,
-    Main Bath 2150 over the bath, 1200 nib
-[ ] Opening sizes confirmed — 3 windows and 4 doors have no printed height
-[ ] Deductions match your scope: baths and Laundry joinery OUT, wall-hung vanities IN
-[ ] Niche depths confirmed (only the nib-wall niche has one printed)
-[ ] Feature tile extents marked up on the elevations
-[ ] Tile format and lay direction confirmed — drives your wastage %
-[ ] Wastage % selected and applied (suggest 10% general, 15% Master if raked)
-[ ] Note sheet 12.01 is 1:25 while everything else is 1:20 — do not scale it by habit
-[ ] Waterproofing, screed, falls and substrate prep are NOT in this takeoff
-[ ] You have re-checked at least two numbers by hand against the plan
+[ ] The sheet numbers and dates above match the drawings you were given (Rev L, 01/09/25)
+[ ] You've answered the 4 questions at the top
+[ ] Anything marked ⚠️ is sorted, or left out of your quote
+[ ] Tiling heights confirmed — laundry is a 450 splashback, powder room is a 300 skirting,
+    main bathroom is 2150 over the bath and a 1200 nib
+[ ] Door and window sizes confirmed — 4 doors and 3 windows have no height on any sheet
+[ ] You agree with what we took off and what we left in (under the vanity? behind the bath?)
+[ ] Niche depths confirmed — only one of them is written on the drawings
+[ ] Feature tile edges marked up on the wall drawings
+[ ] Tile size and lay direction confirmed — that's what drives the extra for cuts
+[ ] You're happy with 10% extra for cuts, or you've told us to change it
+[ ] Waterproofing, screed, falls and floor prep are NOT in these numbers
+[ ] You've re-checked at least two numbers by hand against the plan
 ```
 
 ---
 
-*Measured by TAKEOFF from printed dimensions only. Nothing was scaled off the drawings.
-Every number above can be re-derived from the working shown. If one of them is wrong, mark
-it up and send it back — that's how this gets better.*
+*Measured from the printed dimensions only — we never scale off a drawing. Every number
+above can be re-checked from the working. If one of them is wrong, mark it up and send it
+back. That's how this gets better.*
