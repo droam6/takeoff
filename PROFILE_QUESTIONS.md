@@ -147,7 +147,7 @@ One file per customer at `customers/<name>.md`. Plain `key: value` so a person c
 and `takeoff.py` can load it. Copy `customers/_TEMPLATE.md` to start one.
 
 ```
-customer: Sydney Tiler
+customer: Angus
 trade: tiler
 status: DEFAULTS - not yet confirmed
 
@@ -160,6 +160,9 @@ wastage_herringbone: 15
 skirting_in_order_box: yes
 want_box_counts: yes
 rounding: 0.1
+
+# Other trades' quantities in the customer document (off for tilers)
+include_painting: no
 
 batch_variation_buffer: 0
 reorder_lead_time_buffer: 0
@@ -174,7 +177,7 @@ says so on its face and repeats these questions at the bottom. Once he answers, 
 Load it with:
 
 ```bash
-python3 takeoff.py plans.pdf --customer sydney-tiler
+python3 takeoff.py plans.pdf --customer angus
 ```
 
 ---

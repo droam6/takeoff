@@ -1,12 +1,12 @@
-# Customer profile — Sydney Tiler (customer #1)
+# Customer profile — Angus (customer #1)
 
-**These are trade-standard defaults, not his answers.** He hasn't been asked the profile
-questions yet — they go out with his first takeoff. Until he answers, every job for him
+**Angus — North Shore tiler.** These are trade-standard defaults, not his answers. He hasn't
+been asked the profile questions yet — they go out with his first takeoff. Until he answers, every job for him
 prints "trade standard, not your settings yet" on the order box and repeats the questions
 at the bottom.
 
 ```
-customer: Sydney Tiler
+customer: Angus
 trade: tiler
 status: DEFAULTS - not yet confirmed
 
@@ -25,6 +25,9 @@ want_box_counts: yes
 
 # Q4  rounding:  0.1  |  whole
 rounding: 0.1
+
+# Other trades' quantities in the customer document (off for tilers)
+include_painting: no
 
 # Q5  tile-source quirks, as added percentage points on top of the cut allowance
 batch_variation_buffer: 0

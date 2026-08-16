@@ -28,6 +28,9 @@ want_box_counts: yes
 # Q4  rounding:  0.1  (to a decimal)  |  whole  (rounded up to whole m2)
 rounding: 0.1
 
+# Other trades' quantities in the customer document (off for tilers)
+include_painting: no
+
 # Q5  tile-source quirks, as added percentage points on top of the cut allowance
 batch_variation_buffer: 0
 reorder_lead_time_buffer: 0
