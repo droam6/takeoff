@@ -365,18 +365,45 @@ Job details:
   Rooms    : {rooms}
   Wastage  : {wastage}
 
-Method reminders that matter most:
+GETTING THE NUMBERS RIGHT - the reminders that matter most:
   - Measure from STATED dimensions only. Never scale off the drawing.
   - Rooms are rarely rectangles. Decompose the floor into bands. Never use
     overall_width x overall_depth unless you have proved the room is rectangular.
   - Use TRUE tiling heights from the elevations, never an assumed ceiling height.
-  - Run every check in METHOD.md section 5 and print the pass/fail log.
-  - Give every room a confidence rating (HIGH / MED / LOW) per METHOD.md section 6.
-  - Never silently assume. Every inferred number becomes a numbered question.
-  - Lead the document with QUESTIONS FOR YOU. Always.
+  - Run every check in METHOD.md section 5.
+  - Rate every room HIGH / MED / LOW per METHOD.md section 6 - as working vocabulary
+    only. Those words must NOT appear in the document you write.
+  - Never silently assume. Every inferred number becomes a question.
 
-Write your result to TAKEOFF_{job}.md in this folder, in the order given by SPEC.md
-section 3, and end with the CONFIRM BEFORE QUOTING checklist.
+WRITING IT SO IT GETS READ - just as important. Follow METHOD.md sections 9, 10 and 11
+to the letter. The tradie reads this on a phone, one-handed, in a ute. A number he
+misreads is exactly as wrong as one you miscalculated.
+
+  - THE ANSWER COMES FIRST. Section 1 is an "ORDER THIS" box with the quantities to
+    order, with the extra for cuts ALREADY ADDED and a line saying so. Nothing above it.
+  - Then "CHECK THESE n THINGS BEFORE YOU QUOTE" - three to five plain tick-box
+    questions, only the ones that move a number materially. Smaller items go to the
+    bottom with a one-line pointer, never promoted up.
+  - Then ROOM BY ROOM: one number per line, rounded to 0.1 m2, plain English, and NOT
+    ONE piece of arithmetic. No "x", no sums, no formulas in this section.
+  - Round each room to 0.1 first, then make each total the sum of the rounded room
+    figures, so the rooms visibly add up to the total.
+  - Anything not safe to order (a LOW room) is EXCLUDED from the order box and listed
+    underneath as "NOT IN THAT TOTAL", with the question number that unblocks it.
+  - ALL working, checks, formulas and method detail go BELOW, under
+    "HOW WE GOT THESE NUMBERS". There for whoever wants it, invisible to whoever doesn't.
+  - NO JARGON above that divider. Say "sloped ceiling wall" not trapezoid,
+    "double-checked against the plan totals" not reconciliation/cross-check,
+    "extra for cuts" not wastage, "taken off" not deduction, "door hole" not opening,
+    "wall drawings" not elevations, "off the floor" not AFF, "measured in strips" not
+    polygon decomposition. Keep words a tradie owns: niche, splashback, skirting, nib
+    wall, hob, screen, m2.
+  - Use exactly two marks and nothing else: (tick) ready to order, (warning) confirm
+    this first. NEVER a confidence rating, a percentage, a score or a star. Every
+    warning mark must have a matching tick-box question.
+  - End with the plain-language "Before you quote" checklist from METHOD.md section 11.
+
+Write your result to TAKEOFF_{job}.md in this folder.
 """
 
 
