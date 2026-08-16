@@ -34,29 +34,25 @@ Job **TKF-001** · measured against drawings **Rev L, 01/09/25** · 5 rooms.
   We measure. What you charge is your business.
 ```
 
-The order figures above are the measured areas with your settings applied; the measured
-areas themselves are in THE PROOF and never change with anyone's settings.
-
 ## ⚠ Check these 4 things before you quote
 
 **[ ] 1. How high are the master ensuite walls, and is the ceiling sloped?**
-Every other room says 2700. The master ensuite sheets don't say, anywhere. Two of them also
-show a sloped line above the bath and over the vanity. Until you tell us we can't give you a
-wall number for that room — the floor is fine. **Worth about 50 m² of wall tile.**
+No sheet says, and two show a sloped line. Everything else in that room is fine.
+**Worth ~50 m² of wall tile.**
 
 **[ ] 2. Can you send the powder room floor plan?**
-Sheets 3.02, 3.03 and 3.04 are here, but 3.01 isn't. We worked the floor backwards off the
-four wall drawings and got about 1730 × 1610. Confirm that, or send the sheet.
-**Worth about 3 m² of floor tile.**
+Sheet 3.01 isn't in the set — we worked it back off the wall drawings as 1730 × 1610.
+**Worth ~3 m² of floor tile.**
 
 **[ ] 3. How tall are the doors and windows?**
-Not one door or window height is written on any sheet. We used 2040 for the four doors and
-read the windows off the drawings for reference only. **Worth up to 9 m² of wall tile.**
+Not one height is written on any sheet. We used 2040 for the four doors and read the three
+windows off the drawings. **Worth ~6.7 m² on the doors and ~3.5 m² on the windows.**
 
 **[ ] 4. Do you tile under the wall-hung vanities, and behind the baths?**
-We ran the floor straight under all three wall-hung vanities — they sit 300 off the floor.
-We did **not** tile the two bath platforms. **Under the vanities is 3.4 m². The bath
-platforms are 4.3 m².**
+We tiled under all three vanities (300 clear) and not behind the baths.
+**3.4 m² under the vanities, 4.3 m² on the bath platforms.**
+
+*There are 10 smaller things we had to fill in — they're on the answer form, page 3.*
 
 <!--newpage-->
 
@@ -120,6 +116,40 @@ Cross-shaped, not a rectangle. Measured as one rectangle it reads 19.9 m² — 9
   All sheets say "frame to frame", so finished
   tile faces sit ~30-40 mm inside the printed
   lines. Everything here is marginally generous.
+==================================================
+```
+
+```
+==================================================
+          FLAGGED FOR YOU
+==================================================
+  MITRED CORNERS - about 12.1 m
+  Every sheet says wall tiles and niches are mitred
+  at corners, no trims. That's labour, and it's easy
+  to leave out of a quote.
+    Main bathroom  8.9 m   wall step 2.7, shower nib
+                           2.4, two niches 1.8 + 2.0
+    Guest ensuite  3.2 m   two niches 2.0 + 1.2
+    Master ensuite   -     walls not finished (Q1)
+
+  STRIP TRIM - 2.5 m
+  Sheet 4.02 calls a nickel or stainless strip trim
+  to the top edge of the laundry splashback. The
+  only trim in the whole set.
+
+  WATERPROOFING - where the wet zones are
+  Locations only. Membrane extent and upturns are
+  the waterproofer's scope and are NOT in these
+  numbers.
+    Master ensuite  enclosed shower alcove, the
+                    400 x 1200 shower seat, bath
+                    platform
+    Guest ensuite   walk-in shower
+    Main bathroom   shower zone in the SE corner
+                    behind the nib and screen, plus
+                    the bath platform
+    Laundry         floor waste, no shower
+    Powder room     no shower or bath
 ==================================================
 ```
 
