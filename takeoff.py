@@ -12,6 +12,9 @@ Pipeline
     3. ANALYSE       invoke the `claude` CLI headless inside the job folder, against
                      TAKEOFF_METHOD.md, to produce TAKEOFF_<job>.md.
 
+The customer profile (--customer) affects the ORDER only. Measured areas are the
+plans' truth and are identical for every customer - see TAKEOFF_METHOD.md 7.7.
+
 Requires: PyMuPDF (pip install pymupdf) and, for step 3, Claude Code on PATH.
 
 Usage
@@ -19,6 +22,8 @@ Usage
     python takeoff.py plans.pdf
     python takeoff.py plans.pdf --job smith-reno --trade tiler \
         --rooms "main bath, ensuite" --wastage 10
+    python takeoff.py plans.pdf --customer sydney-tiler \
+        --lay-pattern herringbone --tile-size "600x600 porcelain" --m2-per-box 1.44
     python takeoff.py plans.pdf --intake-only
     python takeoff.py plans.pdf --no-analyse
 """
@@ -277,6 +282,139 @@ def write_rejection(job_dir: Path, job: str, pdf: Path,
 
 
 # --------------------------------------------------------------------------
+# Customer profile  (see PROFILE_QUESTIONS.md)
+#
+# The profile changes the ORDER only. It can never change a measured area -
+# measured areas are the plans' truth and are the same for every customer.
+# --------------------------------------------------------------------------
+
+TRADE_STANDARD = {
+    "default_lay_pattern": "straight",
+    "wastage_straight": "10",
+    "wastage_brick_bond": "10",
+    "wastage_diagonal": "15",
+    "wastage_herringbone": "15",
+    "skirting_in_order_box": "yes",
+    "want_box_counts": "yes",
+    "rounding": "0.1",
+    "batch_variation_buffer": "0",
+    "reorder_lead_time_buffer": "0",
+    "always_flag": "waterproofing zones, trims in lineal metres",
+}
+
+KV_RE = re.compile(r"^\s*([a-z_]+)\s*:\s*(.+?)\s*$")
+
+
+def load_profile(name: str | None, root: Path) -> dict:
+    """Load customers/<name>.md. Missing or unconfirmed -> trade-standard defaults.
+
+    A missing profile never blocks a job. It means the order is built on trade
+    standards, which the takeoff then states plainly rather than passing off as
+    the customer's own settings.
+    """
+    prof = dict(TRADE_STANDARD)
+    prof["customer"] = name or ""
+    prof["status"] = "DEFAULTS - not yet confirmed"
+    prof["_source"] = "trade-standard defaults (no profile loaded)"
+
+    if not name:
+        return prof
+
+    path = root / "customers" / f"{name}.md"
+    if not path.exists():
+        prof["_source"] = f"trade-standard defaults (no {path.name} found)"
+        prof["_missing"] = str(path)
+        return prof
+
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        m = KV_RE.match(line)
+        if m and (m.group(1) in TRADE_STANDARD or m.group(1) in ("customer", "trade", "status")):
+            prof[m.group(1)] = m.group(2)
+
+    prof["_source"] = str(path)
+    return prof
+
+
+def profile_is_confirmed(prof: dict) -> bool:
+    return prof.get("status", "").strip().upper().startswith("CONFIRMED")
+
+
+def resolve_order_settings(prof: dict, job: dict) -> dict:
+    """Work out the cut allowance for this job.
+
+    Precedence, highest first:
+        explicit --wastage  ->  --lay-pattern  ->  profile default pattern  ->  10%
+    """
+    pattern = (job.get("lay_pattern") or prof.get("default_lay_pattern") or "straight")
+    key = "wastage_" + pattern.strip().lower().replace(" ", "_").replace("-", "_")
+    try:
+        pct = float(prof.get(key, TRADE_STANDARD.get(key, "10")))
+    except ValueError:
+        pct = 10.0
+
+    source = "this job's lay pattern" if job.get("lay_pattern") else "profile default pattern"
+    if job.get("wastage"):
+        try:
+            pct = float(str(job["wastage"]).rstrip("%"))
+            source = "explicit --wastage for this job"
+        except ValueError:
+            pass
+
+    def _f(k):
+        try:
+            return float(prof.get(k, "0"))
+        except ValueError:
+            return 0.0
+
+    batch, lead = _f("batch_variation_buffer"), _f("reorder_lead_time_buffer")
+    return {
+        "pattern": pattern, "cut_pct": pct, "cut_source": source,
+        "batch_pct": batch, "lead_pct": lead,
+        "total_pct": pct + batch + lead,          # added points, never compounded
+        "rounding": prof.get("rounding", "0.1"),
+        "skirting_in_box": prof.get("skirting_in_order_box", "yes"),
+        "want_boxes": prof.get("want_box_counts", "yes"),
+        "always_flag": prof.get("always_flag", ""),
+        "confirmed": profile_is_confirmed(prof),
+    }
+
+
+def write_profile_report(job_dir: Path, prof: dict, job: dict, s: dict) -> Path:
+    """Job-level order settings. Named order_settings.md, not profile.md, so it can't
+    collide with the copied PROFILE_QUESTIONS.md on a case-insensitive filesystem."""
+    out = job_dir / "order_settings.md"
+    L = ["# Order settings for this job", "",
+         f"**Customer:** {prof.get('customer') or '_none given_'}",
+         f"**Profile:** `{prof.get('_source')}`",
+         f"**Status:** {prof.get('status')}", "",
+         "> These settings change the **order** only. They cannot change a measured area.",
+         "> Measured areas are the plans' truth and are the same for every customer.", "",
+         "| Setting | Value | From |", "|---|---|---|",
+         f"| Lay pattern | {s['pattern']} | {'this job' if job.get('lay_pattern') else 'profile default'} |",
+         f"| Extra for cuts | {s['cut_pct']:g}% | {s['cut_source']} |",
+         f"| Batch variation buffer | {s['batch_pct']:g}% | profile |",
+         f"| Reorder lead-time buffer | {s['lead_pct']:g}% | profile |",
+         f"| **Total added** | **{s['total_pct']:g}%** | added points, not compounded |",
+         f"| Rounding | {s['rounding']} | profile |",
+         f"| Skirting in the order box | {s['skirting_in_box']} | profile |",
+         f"| Box counts wanted | {s['want_boxes']} | profile |",
+         f"| Always flag | {s['always_flag']} | profile |", "",
+         "## This job", "",
+         f"- **Tile size / format:** {job.get('tile_size') or '_not given - ask_'}",
+         f"- **m² per box:** {job.get('m2_per_box') or '_not given - no boxes line_'}",
+         f"- **Lay pattern override:** {job.get('lay_pattern') or '_none - using the profile default_'}",
+         ""]
+    if not s["confirmed"]:
+        L += ["## ⚠️ Not confirmed by the customer", "",
+              "This profile has not been confirmed. The order box must say so in plain words,",
+              "and the profile questions must be repeated at the bottom of the takeoff.", ""]
+    out.write_text("\n".join(L), encoding="utf-8")
+    return out
+
+
+# --------------------------------------------------------------------------
 # Extraction  (deterministic - no model involved)
 # --------------------------------------------------------------------------
 
@@ -353,7 +491,10 @@ Inputs in this folder:
   - METHOD.md          the analysis protocol you must follow
   - SPEC.md            what the output must contain
   - INTAKE.md          the intake requirements (already passed) and the answers given
+  - PROFILE_QUESTIONS.md  how customer profiles work, and what they may not change
   - intake_report.md   the intake result and the tradie's answers
+  - order_settings.md  THE ORDER SETTINGS FOR THIS JOB - read this before you convert
+                       any measured area into an order quantity
   - sheet_register.md  page -> sheet title -> scale
   - all_text.txt       full text layer, per page
   - text_coords.txt    every text run with x/y coordinates and rotation
@@ -365,6 +506,18 @@ Job details:
   Rooms    : {rooms}
   Wastage  : {wastage}
 
+Order settings (from order_settings.md - these change the ORDER only):
+  Customer      : {customer}
+  Profile status: {profile_status}
+  Lay pattern   : {pattern}
+  Extra for cuts: {cut_pct}%  ({cut_source})
+  Extra buffers : batch {batch_pct}%, lead time {lead_pct}%  -> {total_pct}% added in total
+  Rounding      : {rounding}
+  Skirting in the order box: {skirting_in_box}
+  Tile size     : {tile_size}
+  m2 per box    : {m2_per_box}
+  Always flag   : {always_flag}
+
 GETTING THE NUMBERS RIGHT - the reminders that matter most:
   - Measure from STATED dimensions only. Never scale off the drawing.
   - Rooms are rarely rectangles. Decompose the floor into bands. Never use
@@ -374,6 +527,26 @@ GETTING THE NUMBERS RIGHT - the reminders that matter most:
   - Rate every room HIGH / MED / LOW per METHOD.md section 6 - as working vocabulary
     only. Those words must NOT appear in the document you write.
   - Never silently assume. Every inferred number becomes a question.
+
+MEASURED vs ORDER - a hard boundary (METHOD.md 7.7). Do not blur it.
+  - A MEASURED area is what the plans say. It is the same for every customer alive.
+    NOTHING in the profile may change it. If a preference could move a measured
+    number, that number was a guess, not a measurement.
+  - An ORDER quantity is a measured area with this customer's settings applied.
+  - Apply the conversion in visible steps, never folded into one percentage:
+    measured -> + cut allowance -> + any buffers (ADDED points, not compounded)
+    -> rounding -> boxes. Show each step.
+  - The ORDER box and the room lines carry ORDER quantities. The measured areas go
+    below, under HOW WE GOT THESE NUMBERS, at full precision, with the conversion
+    shown and a plain line saying the measured column never changes with anyone's
+    settings and the order column always does.
+  - The ORDER box MUST carry a one-line settings sentence saying what was applied,
+    where it came from, and inviting a change - see METHOD.md 10.1 for the wording
+    for each case. If the profile status is not CONFIRMED, that line must say the
+    settings are trade standard and not this customer's yet, and the profile
+    questions must be repeated near the bottom of the document.
+  - If m2 per box was given, add a "boxes to buy" line under the m2 line for that
+    material, rounded UP to whole boxes, showing the coverage those boxes give.
 
 WRITING IT SO IT GETS READ - just as important. Follow METHOD.md sections 9, 10 and 11
 to the letter. The tradie reads this on a phone, one-handed, in a ute. A number he
@@ -407,7 +580,8 @@ Write your result to TAKEOFF_{job}.md in this folder.
 """
 
 
-def analyse(job_dir: Path, job: str, answers: dict, timeout: int = 3600) -> Path | None:
+def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
+            timeout: int = 3600) -> Path | None:
     binary = resolve_claude()
     if not binary:
         print("  ! claude CLI not found on PATH - skipping analysis.")
@@ -418,7 +592,16 @@ def analyse(job_dir: Path, job: str, answers: dict, timeout: int = 3600) -> Path
         job=job,
         trade=answers.get("trade") or "not supplied - ask in QUESTIONS FOR YOU",
         rooms=answers.get("rooms") or "not supplied - ask in QUESTIONS FOR YOU",
-        wastage=answers.get("wastage") or "not supplied - show measured, +10% and +15%",
+        wastage=answers.get("wastage") or "from the lay pattern below",
+        customer=prof.get("customer") or "none given",
+        profile_status=prof.get("status", ""),
+        pattern=s["pattern"], cut_pct=f"{s['cut_pct']:g}", cut_source=s["cut_source"],
+        batch_pct=f"{s['batch_pct']:g}", lead_pct=f"{s['lead_pct']:g}",
+        total_pct=f"{s['total_pct']:g}", rounding=s["rounding"],
+        skirting_in_box=s["skirting_in_box"],
+        tile_size=answers.get("tile_size") or "not given - ask",
+        m2_per_box=answers.get("m2_per_box") or "not given - no boxes line",
+        always_flag=s["always_flag"],
     )
     cmd = build_command(binary, prompt)
     print(f"  > {binary} -p <instruction> --dangerously-skip-permissions")
@@ -478,7 +661,13 @@ def main(argv=None) -> int:
     ap.add_argument("--dpi", type=int, default=150)
     ap.add_argument("--trade", help="tiler / painter / waterproofer / other")
     ap.add_argument("--rooms", help="which rooms and surfaces to quote")
-    ap.add_argument("--wastage", help="none / 10 / 15 / your own number")
+    ap.add_argument("--wastage", help="explicit override; normally comes from the lay pattern")
+    ap.add_argument("--customer", help="load customers/<name>.md (see PROFILE_QUESTIONS.md)")
+    ap.add_argument("--lay-pattern",
+                    help="straight / brick bond / diagonal / herringbone - this job only")
+    ap.add_argument("--tile-size", help='e.g. "600x600 porcelain"')
+    ap.add_argument("--m2-per-box", type=float,
+                    help="if given, the order box gains a boxes-to-buy line, rounded up")
     ap.add_argument("--no-walls", action="store_true",
                     help="floors only - elevations become a warning, not a failure")
     ap.add_argument("--intake-only", action="store_true", help="run the gate and stop")
@@ -493,7 +682,9 @@ def main(argv=None) -> int:
     job = a.job or re.sub(r"[^A-Za-z0-9_-]+", "_", a.pdf.stem)
     job_dir = (a.outdir / job).resolve()
     job_dir.mkdir(parents=True, exist_ok=True)
-    answers = {"trade": a.trade, "rooms": a.rooms, "wastage": a.wastage}
+    answers = {"trade": a.trade, "rooms": a.rooms, "wastage": a.wastage,
+               "tile_size": a.tile_size,
+               "m2_per_box": a.m2_per_box, "lay_pattern": a.lay_pattern}
 
     print(f"TAKEOFF v1  |  job '{job}'  |  {job_dir}")
 
@@ -512,6 +703,20 @@ def main(argv=None) -> int:
         return 1
 
     print("      -> PASS")
+
+    # ---- 1b. CUSTOMER PROFILE - the order settings, never the measurement ----
+    root = Path(__file__).resolve().parent
+    prof = load_profile(a.customer, root)
+    settings = resolve_order_settings(prof, answers)
+    write_profile_report(job_dir, prof, answers, settings)
+    mark = "confirmed" if settings["confirmed"] else "NOT CONFIRMED - trade standard"
+    print(f"      profile: {prof.get('_source')}  [{mark}]")
+    print(f"      order:   {settings['pattern']} lay, "
+          f"{settings['total_pct']:g}% added, rounding {settings['rounding']}")
+    if a.m2_per_box:
+        print(f"               boxes at {a.m2_per_box} m2/box, rounded up")
+    print("               (order settings only - measured areas are unaffected)")
+
     if a.intake_only:
         return 0
 
@@ -520,11 +725,12 @@ def main(argv=None) -> int:
     info = extract(a.pdf, job_dir, dpi=a.dpi)
     print(f"      {info['pages']} pages rendered @ {a.dpi} dpi")
 
-    for name in ("TAKEOFF_METHOD.md", "SPEC.md", "INTAKE.md"):
-        src = Path(__file__).resolve().parent / name
+    copies = {"TAKEOFF_METHOD.md": "METHOD.md", "SPEC.md": "SPEC.md",
+              "INTAKE.md": "INTAKE.md", "PROFILE_QUESTIONS.md": "PROFILE_QUESTIONS.md"}
+    for name, as_name in copies.items():
+        src = root / name
         if src.exists():
-            dst = job_dir / ("METHOD.md" if name == "TAKEOFF_METHOD.md" else name)
-            shutil.copyfile(src, dst)
+            shutil.copyfile(src, job_dir / as_name)
 
     if a.no_analyse:
         print("      (--no-analyse) stopping after extraction")
@@ -532,7 +738,7 @@ def main(argv=None) -> int:
 
     # ---- 3. ANALYSE ---------------------------------------------------------
     print("[3/3] analysis via claude CLI")
-    out = analyse(job_dir, job, answers, timeout=a.timeout)
+    out = analyse(job_dir, job, answers, prof, settings, timeout=a.timeout)
     if out:
         print(f"\nDone. {out}")
         return 0

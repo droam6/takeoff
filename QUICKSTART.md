@@ -47,11 +47,38 @@ Output lands in `jobs/sample/`:
 jobs/sample/
 ├── TAKEOFF_sample.md      ← the deliverable
 ├── intake_report.md       ← the gate result + the tradie's answers
+├── order_settings.md      ← the profile settings applied to this job's ORDER
 ├── sheet_register.md      ← page → sheet title → scale
 ├── all_text.txt           ← full text layer, per page
 ├── text_coords.txt        ← every text run with x/y + rotation
 └── pages/page_01.png …    ← one image per page
 ```
+
+### With a customer profile
+
+```bash
+# set the profile up once
+cp customers/_TEMPLATE.md customers/dave-tiling.md   # then fill it in
+
+# every job after that
+python3 takeoff.py plans.pdf --customer dave-tiling
+
+# this job is different from their usual, and we know the tile
+python3 takeoff.py plans.pdf --customer dave-tiling \
+    --lay-pattern herringbone --tile-size "600x600 porcelain" --m2-per-box 1.44
+```
+
+The profile changes the **order** only — lay pattern, extra for cuts, buffers, rounding,
+box counts. It cannot change a measured area. See `PROFILE_QUESTIONS.md`.
+
+Cut-allowance precedence, highest first:
+
+```
+--wastage  →  --lay-pattern  →  the profile's default pattern  →  10%
+```
+
+A missing or unconfirmed profile never blocks a job: it runs trade-standard defaults, says
+so on the order box, and repeats the profile questions at the bottom of the takeoff.
 
 ### Useful variations
 
@@ -193,7 +220,11 @@ options:
   --dpi N              page render resolution (default: 150)
   --trade TRADE        tiler / painter / waterproofer / other
   --rooms TEXT         which rooms and surfaces to quote
-  --wastage VALUE      none / 10 / 15 / your own number
+  --wastage VALUE      explicit override; normally comes from the lay pattern
+  --customer NAME      load customers/<name>.md
+  --lay-pattern P      straight / brick bond / diagonal / herringbone - this job only
+  --tile-size TEXT     e.g. "600x600 porcelain"
+  --m2-per-box N       adds a boxes-to-buy line, rounded up to whole boxes
   --no-walls           floors only; missing elevations warn instead of failing
   --intake-only        run the gate and stop
   --no-analyse         extract pages + text, but don't call Claude
@@ -202,13 +233,29 @@ options:
 
 ---
 
-## The three questions to ask every customer
+## The questions to ask
 
-`takeoff.py` takes them as flags, but they come from a conversation. Ask them up front —
-they're in `INTAKE.md` §B and they change what you deliver:
+All of these are flags, but they come from a conversation. If any are missing they're
+carried into the output as questions rather than guessed.
+
+**Every job** (`INTAKE.md` §B) — these change what you deliver:
 
 1. **What's your trade?** → `--trade`
 2. **Which rooms, and which surfaces?** → `--rooms`
-3. **Wastage preference?** → `--wastage`
+3. **Lay pattern for this job**, if it's not their usual → `--lay-pattern`
+4. **Tile size / format?** → `--tile-size`
+5. **m² per box?** (optional, gives them a boxes-to-buy line) → `--m2-per-box`
 
-If any are missing, they're carried into the output as questions rather than guessed.
+**Once per customer** (`PROFILE_QUESTIONS.md`) — these go in `customers/<name>.md` and get
+applied to every job after that, without asking again:
+
+1. Default lay pattern, and the extra for cuts they run for each
+2. Skirting in the order box, or kept separate
+3. Box counts wanted
+4. Rounding — 0.1 m² or whole m²
+5. Tile-source quirks — batch variation, long reorder lead times
+6. Anything they always want flagged
+
+Ask the profile questions **with the first delivery, not before it.** A tradie who has just
+seen his numbers will answer "how do you want these set up". The same questions sent ahead
+of any value read as a form.
