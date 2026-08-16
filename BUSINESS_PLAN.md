@@ -1,12 +1,14 @@
-# TAKEOFF — Business Plan
+# CHALKLINE — Business Plan
 
-*Version 1 · 16 August 2026 · reviewed every Sunday*
+**Measured, not guessed.**
+
+*Version 2 · 16 August 2026 · reviewed every Sunday*
 
 ---
 
 ## 1. What it is
 
-**TAKEOFF is a done-for-you plan-measurement service for trades.**
+**CHALKLINE is a done-for-you plan-measurement service for trades.**
 
 A tradie sends us their plan set. We send back a room-by-room m² breakdown the same day.
 Every number shows its working. Every gap in the drawings comes back as a question, not a
@@ -27,11 +29,46 @@ What comes back:
 - Feature-tile zones priced separately, because they're a different SKU
 - Niches, skirting, linear metres
 - Wastage toggle: measured / +10% / +15%, side by side, his choice
-- A **QUESTIONS FOR YOU** section leading the document
-- A **CONFIRM BEFORE QUOTING** checklist closing it
+- An **ANSWER PACK** — three pages: what to order, what to check, what to answer
+- **THE PROOF** behind a divider — every number's working, for checking not reading
 
 Delivery: PDF or markdown, back by end of day. Intake by email or WhatsApp — wherever he
 already is.
+
+### The delivery model — locked
+
+Three tiers, in order. **We do not skip ahead**, and the last one is a maybe.
+
+**Tier 1 — operator-run service. This is the business, and it is where we stay until
+something forces a change.**
+Plans arrive by email or WhatsApp. A person runs the pipeline, reviews the output, and sends
+a branded PDF back the same day. Per-job pricing. No login, no dashboard, no onboarding.
+Every job is read by a human before it goes out, which is what makes the accuracy claim
+keepable and what keeps us learning from real drawings. A tradie's entire experience is
+*send plans, get numbers* — the same as sending them to an estimator, at a price and speed
+that works for a $6k bathroom.
+
+**Tier 2 — a front door, when volume demands it.** A dedicated intake address, a WhatsApp
+number, an auto-acknowledgement that asks the three job questions. This is plumbing, not a
+product: it removes the operator from the *receiving* of work, never from the checking of it.
+Triggered by volume, not by ambition.
+
+**Tier 3 — hosted subscription, only if demand pulls it.** Customers upload their own plans
+and self-serve. We build this **only** when customers are actively asking for it and the
+per-job model is straining — never because it looks like a better multiple. It trades the
+human sign-off (§4.6) for scale, so it is a genuine change of product and gets its own
+accuracy bar before it ships.
+
+**The program itself is never sold.** Not as a licence, not as a white label, not as an
+on-prem install, not as an API for someone else's app. The pipeline is the thing that makes
+the service possible; selling it turns us into a software vendor competing with Groundplan
+on their terms, with their support burden and none of their distribution. The moat is the
+accuracy doctrine plus face-to-face distribution, and neither survives being packaged into a
+download.
+
+What this rules out, deliberately: seat licences, reseller deals, and "just give us the tool
+and we'll run it ourselves" — which will be asked for, and the answer is that we'll do the
+takeoff.
 
 ---
 
@@ -58,7 +95,8 @@ And it's high-stakes:
 - **The error is invisible until the tiles run out.** By then he's on site, short, and
   eating it.
 
-Our first customer — a Sydney tiler, and the source of the sample set in this repo — put it
+Our first customer — Angus, a North Shore tiler, and the source of the sample set in this
+repo — put it
 plainly:
 
 > **"It's a pain in the arse for all tradies."**
@@ -86,7 +124,7 @@ Accurate, trusted, and priced for builders and commercial contractors — typica
 hundred dollars and multi-day turnaround. Structurally unable to serve a $6k bathroom quote
 where the tradie needs an answer tonight.
 
-**TAKEOFF sits in the gap: the outcome of camp 2 at a price and speed that works for camp 1's
+**CHALKLINE sits in the gap: the outcome of camp 2 at a price and speed that works for camp 1's
 customer.**
 
 Three things make that possible:
@@ -266,7 +304,8 @@ few enough that it stays a pilot rather than a habit.
 
 ### Phase 0 — This week
 
-Send the sample takeoff to **customer #1** (the Sydney tiler whose plans are in this repo).
+Send the sample takeoff to **Angus** (customer #1, the North Shore tiler whose plans are in
+this repo).
 Two questions, nothing else:
 
 > **1. Mark every number you think is wrong.**
@@ -549,5 +588,5 @@ Three numbers decide it. Everything else is commentary.
 
 ---
 
-*TAKEOFF measures from stated dimensions only. It never scales off the drawing, and it never
-guesses. That rule is the product, and it is the business.*
+*CHALKLINE measures from stated dimensions only. It never scales off the drawing, and it never
+guesses. That rule is the product, it is the tagline, and it is the business.*

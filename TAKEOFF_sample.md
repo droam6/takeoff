@@ -1,8 +1,6 @@
-# TAKEOFF — 5 Ellalong Road, Cremorne
+# Tile quantities — 5 Ellalong Road, Cremorne
 
-**Tile quantities · 5 rooms · drawings dated 01/09/25 (Rev L) · measured 16 Aug 2026**
-
----
+Job **TKF-001** · measured against drawings **Rev L, 01/09/25** · 5 rooms.
 
 ```
 ==================================================
@@ -12,42 +10,39 @@
   Wall tiles ...............   58.6 m²
   Feature tiles ............   12.0 m²
   Tile skirting ............    7.3 m
+
+  + ~50.8 m² master ensuite walls — pending Q1
+  + ~3.1 m²  powder room floor    — pending Q2
 ==================================================
   Straight lay, 10% extra for cuts and breakage —
   trade standard, not your settings yet. Tell us how
   you actually work and we'll re-cut every number.
 ```
 
-**Want box counts?** Send us the tile and the m² per box and we'll add a *boxes to buy* line,
-rounded up to whole boxes — that's the number you read out at the counter, not 36.4 m².
+```
+==================================================
+          NOT INCLUDED
+==================================================
+  Waterproofing membrane and upturns
+  Screed, falls and floor wastes
+  Substrate prep, sheeting and levelling
+  Labour, rates and pricing of any kind
+  Master ensuite walls  — unresolved, see Q1
+  Powder room floor     — unresolved, see Q2
+  Feature tile edges    — unresolved, see page 3
+==================================================
+  We measure. What you charge is your business.
+```
 
-### Two sets of numbers in this document
+The order figures above are the measured areas with your settings applied; the measured
+areas themselves are in THE PROOF and never change with anyone's settings.
 
-- **Measured areas** are what the plans say. They're the same for every tiler alive, and
-  nothing about how you work can change them. They're at the bottom, at full precision.
-- **Order quantities** are those measured areas with your settings applied — lay pattern,
-  extra for cuts, rounding. Those are the numbers above.
-
-So if you tell us you lay herringbone, or that you always buy 5% over for batch variation,
-we re-cut the order in about a minute and **the measured areas don't move at all.** You can
-disagree with our 10% and still trust our 33.022 m².
-
-### Not in that total — 2 things we can't finish yet
-
-- **Master ensuite walls** — about **50.8 m²** more. We need the ceiling height before we
-  can give you a real number. See question 1.
-- **Powder room floor** — about **3.1 m²**. The floor plan sheet isn't in the set, so we
-  worked it backwards off the wall drawings. See question 2.
-
----
-
-## ⚠️ CHECK THESE 4 THINGS BEFORE YOU QUOTE
+## ⚠ Check these 4 things before you quote
 
 **[ ] 1. How high are the master ensuite walls, and is the ceiling sloped?**
 Every other room says 2700. The master ensuite sheets don't say, anywhere. Two of them also
-show a sloped line above the bath and over the vanity, which looks like a sloped ceiling.
-Until you tell us, we can't give you a wall number for that room — the floor is fine.
-**Worth about 50 m² of wall tile.**
+show a sloped line above the bath and over the vanity. Until you tell us we can't give you a
+wall number for that room — the floor is fine. **Worth about 50 m² of wall tile.**
 
 **[ ] 2. Can you send the powder room floor plan?**
 Sheets 3.02, 3.03 and 3.04 are here, but 3.01 isn't. We worked the floor backwards off the
@@ -55,23 +50,17 @@ four wall drawings and got about 1730 × 1610. Confirm that, or send the sheet.
 **Worth about 3 m² of floor tile.**
 
 **[ ] 3. How tall are the doors and windows?**
-Not one door or window height is written on any sheet. We used 2040 for the four doors
-(standard) and read the windows off the drawings for reference only.
-**Worth up to 9 m² of wall tile across the job.**
+Not one door or window height is written on any sheet. We used 2040 for the four doors and
+read the windows off the drawings for reference only. **Worth up to 9 m² of wall tile.**
 
 **[ ] 4. Do you tile under the wall-hung vanities, and behind the baths?**
 We ran the floor straight under all three wall-hung vanities — they sit 300 off the floor.
-We did **not** tile the two bath platforms. If your scope is different, tell us.
-**Under the vanities is 3.4 m². The bath platforms are 4.3 m².**
+We did **not** tile the two bath platforms. **Under the vanities is 3.4 m². The bath
+platforms are 4.3 m².**
 
-*There are 10 smaller things we had to fill in — window sizes, niche depths, feature tile
-edges. They're all listed at the bottom under "What we had to fill in".*
-
----
+<!--newpage-->
 
 ## Room by room
-
-Quantities below are **what to order** — the 10% extra for cuts is already in them.
 
 ### MAIN BATHROOM ✅
 
@@ -79,108 +68,99 @@ Quantities below are **what to order** — the 10% extra for cuts is already in 
 - **Wall tiles — 29.6 m²**  · all four walls, includes 2 niches
 - **Feature tiles — 6.0 m²**  · behind the vanity, laid vertically
 
-Two things to know: the wall over the bath is only tiled from the bath rim up, not from the
-floor. And the shower nib is a half wall — tiled 1200 high, not to the ceiling.
+Over the bath, tiling starts at the bath rim. The shower nib is tiled 1200 high.
 
-### GUEST ENSUITE ⚠️
+### GUEST ENSUITE ⚠
 
 - **Floor tiles — 9.3 m²**  · tiles run under the vanity
-- **Wall tiles — 27.8 m²** ⚠️  · all four walls, includes 2 niches
-- **Feature tiles — 6.0 m²** ⚠️
+- **Wall tiles — 27.8 m²** ⚠  · all four walls, includes 2 niches
+- **Feature tiles — 6.0 m²** ⚠
 
-The two wall numbers add up to 33.8 m² and **that total is solid.** It's where the line
-between them sits that we've had to guess, because no sheet says where the feature tile
-stops. If you're buying both tiles off the same supplier on the same day, you're fine. If
-you're ordering the feature tile separately, get the edges marked up first.
+The two wall figures add to 33.8 m² and **that total is solid** — it's the split we've guessed.
 
 ### LAUNDRY ✅
 
 - **Floor tiles — 6.3 m²**  · after taking off the cupboards
 - **Wall tiles — 1.2 m²**  · splashback only
 
-**The laundry is not a tiled room.** It's a 450 high splashback over the bench and nothing
-else — the other three walls are cupboards, a door and paint. If you were expecting to tile
-it floor to ceiling, that's about 30 m² you'd have quoted and never laid.
+**Not a tiled room** — a 450 splashback over the bench, nothing else. Quoted floor to ceiling,
+that's ~30 m² you'd never lay.
 
-### MASTER ENSUITE ⚠️
+### MASTER ENSUITE ⚠
 
 - **Floor tiles — 11.8 m²** ✅  · ready to order
-- **Wall tiles — about 50.8 m²** ⚠️  · **not ready.** We need the ceiling height — question 1
+- **Wall tiles — about 50.8 m²** ⚠  · **not ready.** We need the ceiling height — Q1
 
-The floor is solid. We checked it two different ways and they agree. It's a cross-shaped
-room, not a rectangle: measured as one big rectangle it comes out at 19.9 m², which would
-over-order by about 9 m².
+Cross-shaped, not a rectangle. Measured as one rectangle it reads 19.9 m² — 9 m² over.
 
-### POWDER ROOM ⚠️
+### POWDER ROOM ⚠
 
-- **Floor tiles — about 3.1 m²** ⚠️  · **not ready.** No floor plan in the set — question 2
+- **Floor tiles — about 3.1 m²** ⚠  · **not ready.** No floor plan in the set — Q2
 - **Tile skirting — 7.3 m** ✅  · 300 high
 - **Wall tiles — none**
 
-**The powder room walls aren't tiled.** The drawings call for a textured finish with a
-300 high tile skirting at the bottom. So your job in there is 7.3 m of skirting and the
-floor — the walls belong to the painter.
+**The walls aren't tiled** — textured finish, 300 skirting. The skirting is still safe to order.
 
-The skirting is safe to order even though the floor isn't. The four wall lengths are printed
-on the wall drawings, so adding them up for the skirting is straightforward. The floor needs
-us to assume those four walls make a rectangle, and that's the bit we can't check without
-sheet 3.01.
+```
+==================================================
+          SITE NOTES
+==================================================
+  Sheet 12.01 is 1:25; every other sheet is 1:20.
+  We never scale - anyone who does will be 25%
+  out on the biggest room in the job.
 
----
+  Sheet 4.02 has a hand-drawn red arrow pointing
+  at the laundry splashback. Not CAD - someone
+  marked it up. Measured as drawn.
 
-## Things we flag by default
+  Guest ensuite screen: the two chains on sheet
+  10.05 disagree by 165 mm (2900 vs 2735). We
+  used 2900. Check before you set out.
 
-You haven't set your account up yet, so we're flagging the two things most tilers want
-flagged. Question 6 at the bottom changes this list to whatever you actually want.
+  All sheets say "frame to frame", so finished
+  tile faces sit ~30-40 mm inside the printed
+  lines. Everything here is marginally generous.
+==================================================
+```
 
-### Mitred corners — about 12.1 m of them
+<!--newpage-->
 
-The notes on every sheet say *"All wall tiles & niches to be mitred at corner junctions to
-achieve a clean, continuous finish. No trims to be used unless noted otherwise."* That's a
-labour item, not a material one, and it's easy to leave out of a quote.
+## Assumptions — the answer form
 
-- **Main bathroom — 8.9 m.** The step in the west wall (2.7 m full height), the shower nib
-  (2 corners at 1200 = 2.4 m), and both niches (1.8 m + 2.0 m).
-- **Guest ensuite — 3.2 m.** Both niches (2.0 m + 1.2 m).
-- **Master ensuite — not counted.** Its walls aren't finished, so neither is this.
+Ten things the drawings didn't tell us. We've written what we used and what it's worth, so
+you can see which ones are worth chasing. Scribble your answers in the last column, photo it,
+send it back — **and we re-issue free.**
 
-One actual trim in the whole set: the laundry splashback gets a **nickel or stainless strip
-trim to the top edge, 2.5 m** (sheet 4.02).
+| What we assumed | We used | Worth | Your answer |
+|---|---|---|---|
+| Master ensuite ceiling height, and whether it's sloped | flat 2700 | **~50.8 m²** | ________________ |
+| Powder room floor size — no floor plan in the set | 1730 × 1610 | **~3.1 m²** | ________________ |
+| Door opening heights — 4 doors, none dimensioned | 2040 | **up to 6.7 m²** | ________________ |
+| Main bathroom window height | 1360 | **1.4 m²** | ________________ |
+| Guest ensuite window height | 1590 | **1.2 m²** | ________________ |
+| Master ensuite gable window heights — 2 of them | 780 each | **0.9 m²** | ________________ |
+| Where the feature tile stops — 5 sheets call it up, 1 dimensions it | estimated | **~15.8 m²** | ________________ |
+| Guest ensuite shower screen position — 2 chains disagree | 2900 | **~0.5 m²** | ________________ |
+| Niche depths — only the nib-wall niche is dimensioned | 70 | **~0.2 m²** | ________________ |
+| Main bathroom west wall step — chain says 2260, drawing looks like 2110 | 2260 | **0.03 m²** | ________________ |
 
-### Waterproofing zones
+Two more that aren't assumptions but are scope — tick whichever matches how you work:
 
-Not priced — that's the waterproofer's scope, and the membrane extent and upturn heights
-aren't on these drawings. But here's where the wet zones are, so you can check somebody's
-covering them:
+| | Yes | No |
+|---|---|---|
+| Tile under the wall-hung vanities? *(we said yes — 3.4 m²)* | ☐ | ☐ |
+| Tile behind the bath platforms? *(we said no — 4.3 m²)* | ☐ | ☐ |
 
-- **Master ensuite** — enclosed shower alcove, floor **2.2 m²**, plus the 400 × 1200 shower
-  seat, plus the bath platform.
-- **Guest ensuite** — walk-in shower, floor about **1.3 m²** (depends on question 8 below).
-- **Main bathroom** — shower zone in the south-east corner behind the nib and screen, plus
-  the bath platform. The plan doesn't bound the shower zone separately, so we haven't put a
-  number on it.
-- **Laundry** — floor waste shown; no shower.
+<!--newpage-->
 
----
+```
+===========================================================
+   THE PROOF — for checking, not reading.
+===========================================================
+```
 
-## If you're also quoting the painting
-
-- **Walls to paint — 45.6 m²**  · powder room 15.8, laundry 29.8
-- **Ceilings — 46.7 m²**  · all five rooms
-
-The main bathroom, guest ensuite and master ensuite have no painted wall — they're tiled
-floor to ceiling. The powder room wall finish is textured, not standard paint, so price it
-separately. Add the slope allowance to the master ensuite ceiling once question 1 is
-answered.
-
----
-
-# HOW WE GOT THESE NUMBERS
-
-*Everything below is the working. You don't need to read it to use the numbers above — it's
-here so you can check anything you want to.*
-
----
+Everything past this line is the working. You don't need any of it to use the numbers on
+page 1. It's here so you can check anything you want to, and so you can hold us to it.
 
 ## 1. The measured areas, and how they became the order
 
@@ -201,13 +181,11 @@ them by a millimetre.
 
 ### Then your settings turn those into an order
 
-Applied in steps, so you can see and change any one of them:
-
 ```
   1. Measured                                    the plans' truth
   2. + 10% extra for cuts     straight lay       trade standard - not confirmed by you yet
-  3. + 0% batch buffer        not set            question 5 at the bottom
-  4. + 0% lead-time buffer    not set            question 5 at the bottom
+  3. + 0% batch buffer        not set            account question 5
+  4. + 0% lead-time buffer    not set            account question 5
   5. Rounded to 0.1 m²        per room, then the rooms added up
   6. Boxes                    not worked out - we don't know your tile yet
 ```
@@ -219,21 +197,14 @@ Applied in steps, so you can see and change any one of them:
 | Feature tiles | 10.867 m² | **12.0 m²** |
 | Tile skirting | 6.680 m | **7.3 m** |
 
-If you lay these floors herringbone instead, the order becomes 38.0 / 61.3 / 12.5 m² at 15%,
-and the measured column doesn't change. That's the whole idea.
+The order column runs a touch above a straight 10% because we round each room to 0.1 first
+and then add the rooms up — so the room figures on page 2 visibly add to the total.
 
-The bottom row is a touch higher than 10% on the row above it. That's deliberate: we round
-each room to 0.1 first and then add the rooms up, so the room figures you're quoting from
-visibly add to the total. Rounding the other way round would leave you with a total that
-doesn't match the lines above it.
+Lay these floors herringbone instead and the order becomes 38.0 / 61.3 / 12.5 m² at 15%.
+The measured column doesn't move. That's the whole idea.
 
-Painting, straight: walls 41.466 m², ceilings 42.400 m².
-
-If you want a different percentage: 15% instead of 10% gives floor 38.0 m², wall 61.3 m²,
-feature 12.5 m². We'd suggest 15% on the master ensuite if the sloped ceiling is confirmed —
-slopes make a lot of cuts.
-
----
+**Painter quantities** — measured but not shown, because your account is set to tiler.
+Walls 41.466 m², ceilings 42.400 m². Say the word and they go in every job.
 
 ## 2. Room by room working
 
@@ -367,8 +338,9 @@ Floor to tile                                            10.693 m²
 ```
 
 Measured as one big rectangle (5215 × 3820) this room comes out at 19.9 m². It isn't a
-rectangle. The difference is 9.2 m² of tile you'd order and never lay — roughly $1,400 of
-porcelain, plus the hours you'd have quoted for floor that doesn't exist.
+rectangle. The difference is 9.2 m² of tile you'd order and never lay — at typical porcelain prices,
+well over a thousand dollars of tile, plus the hours you'd have quoted for floor that
+doesn't exist.
 
 **Walls — not finished.** The four wall drawings give us the run lengths and they check out
 perfectly (see §3). What no sheet gives us is a wall height. Sheets 12.02 to 12.05 print
@@ -455,57 +427,13 @@ laundry, which is low because it's a splashback — and that's checked against s
 
 ## 4. What we had to fill in
 
-Every one of these is a question. Answer them and we'll re-issue for free.
+The ten fill-ins are on the answer form on page 3, with what we used and what each one is
+worth. Two extras that didn't make the form because they don't change a number:
 
-**Bigger ones — these are questions 1 to 4 at the top:**
-
-1. Master ensuite ceiling height and whether it's sloped. We used a flat 2700.
-2. Powder room floor, worked backwards off the wall drawings. We used 1730 × 1610.
-3. Door and window heights. We used 2040 for the four doors.
-4. Whether you tile under the wall-hung vanities and behind the baths.
-
-**Smaller ones:**
-
-5. **Main bathroom window height.** 1000 wide on the plan, no height anywhere. We used 1360
-   and took 1.4 m² off that wall. What's the real height?
-
-6. **Guest ensuite window height.** 730 wide, no height. We used 1590 and took 1.2 m² off.
-   Real height?
-
-7. **Master ensuite gable windows.** Two of them, 600 wide each, no heights. We used 780
-   each.
-
-8. **Guest ensuite — where does the shower screen actually sit?** Sheet 10.05 gives two
-   chains along the same wall and they don't agree: `1920 + 960 + 20` puts it at 2900,
-   `2005 + 730` puts it at 2735. 165 mm apart. We went with 2900. It moves about 0.5 m²
-   between plain and feature tile, and it moves your shower setout.
-
-9. **Main bathroom — where's the step in the west wall?** The printed chain says 2260 down
-   from the north wall. The drawing looks more like 2110. We used the printed 2260. Changes
-   the floor by about 0.03 m², so it barely matters for tile — but worth knowing on site.
-
-10. **Niche depths.** Only one is given: the nib wall niche on sheet 7.03 is 70 deep. We
-    used 70 for the rest. Are the shower niches deeper — 100? 150? We didn't measure the two
-    master ensuite niches at all because they're not dimensioned.
-
-11. **Where does the feature tile stop?** Five sheets say "FEATURE TILE LAID VERTICALLY" but
-    only the main bathroom has a dimension we can tie it to (the 2020 vanity run). For the
-    guest and master ensuites there's no edge given, so we've estimated. Mark the edges on
-    the wall drawings and we'll redo it — it's a different tile at a different price.
-
-12. **There's a hand-drawn red mark on sheet 4.02** (laundry wall drawing 01) — a freehand
-    arrow pointing at the splashback. It's not part of the CAD drawing, someone's drawn on
-    it. Does that mean the splashback is changing? We measured it as drawn.
-
-13. **Powder room walls** — the drawings say textured finish with a 300 tile skirting, so
-    we've given you no wall tile in there. Still right, or has it changed since Rev L?
-
-14. **"All dimensions are frame to frame"** — that's on every sheet's notes. It means the
-    dimensions run to the timber, so the finished tiled face sits about 30–40 mm inside each
-    line. Everything we've given you is therefore very slightly generous, which is the safe
-    direction.
-
----
+- **Sheet 4.02 carries a hand-drawn red arrow** pointing at the laundry splashback. Not CAD —
+  someone has marked the drawing up. If that means the splashback is changing, tell us.
+- **The powder room walls** are called up as a textured finish with a 300 tile skirting, so
+  there's no wall tile in there at all. Still right, or has it changed since Rev L?
 
 ## 5. The drawings we read
 
@@ -536,49 +464,14 @@ job scales that sheet out of habit, they'll be 25% wrong on the biggest room in 
 
 ---
 
-## 6. Six quick questions — so we only ask once
-
-These aren't about your plans. They're about **you**, and once you answer them we apply them
-to every job you send us without asking again. Right now we're running trade standards, and
-this document says so wherever it matters.
-
-None of these can change a measured area. They only change how we turn measured area into
-an order.
-
-**1. What do you normally lay, and what do you allow for cuts?**
-Straight, brick bond, diagonal, herringbone? We've run **straight at 10%**. Most run 15% for
-diagonal or herringbone. If your numbers are different, yours win.
-
-**2. Do you want tile skirting in the main order list, or off to the side?**
-We've put it in.
-
-**3. Want box counts as well as m²?**
-Tell us the m² per box on each job and we'll give you whole boxes, rounded up.
-
-**4. Decimals or whole metres?**
-We've used 36.4 m². Some prefer 37 m². We always round whole metres **up**, never down.
-
-**5. Any supplier quirks we should always allow for?**
-Ever been caught by a batch or dye-lot change mid-job? Anything you use where a reorder takes
-six weeks? We can add a standing buffer on top of the cut allowance — shown as its own line,
-so you can see it and drop it whenever you want. Right now it's zero.
-
-**6. Anything you always want flagged?**
-We've defaulted to waterproofing zones and trims in lineal metres. Falls and floor wastes,
-movement joints, substrate notes — say the word and they're on every job.
-
-Answer in one line each and we'll re-issue this takeoff with your settings on it, free.
-
----
-
-## 7. Before you quote
+## 6. Before you quote
 
 ```
 [ ] The sheet numbers and dates above match the drawings you were given (Rev L, 01/09/25)
-[ ] You've answered the 4 questions at the top
-[ ] Anything marked ⚠️ is sorted, or left out of your quote
-[ ] Tiling heights confirmed — laundry is a 450 splashback, powder room is a 300 skirting,
-    main bathroom is 2150 over the bath and a 1200 nib
+[ ] You've answered the 4 questions on page 1
+[ ] Anything marked ⚠ is sorted, or left out of your quote
+[ ] Tiling heights confirmed — laundry is a 450 splashback, powder room a 300 skirting,
+    main bathroom 2150 over the bath and a 1200 nib
 [ ] Door and window sizes confirmed — 4 doors and 3 windows have no height on any sheet
 [ ] You agree with what we took off and what we left in (under the vanity? behind the bath?)
 [ ] Niche depths confirmed — only one of them is written on the drawings
@@ -589,8 +482,61 @@ Answer in one line each and we'll re-issue this takeoff with your settings on it
 [ ] You've re-checked at least two numbers by hand against the plan
 ```
 
+<!--newpage-->
+
+## SET UP YOUR ACCOUNT
+
+**Answer once, applies to every job you ever send.** None of this can change a measured
+area — it only changes how we turn measured area into an order. Right now we're running
+trade standards, and this document says so wherever it matters.
+
+**1. What do you normally lay, and what do you allow for cuts?**
+
+```
+  Straight     ☐   ______%          Diagonal      ☐   ______%
+  Brick bond   ☐   ______%          Herringbone   ☐   ______%
+
+  We've used straight at 10%. Most run 15% for diagonal or herringbone.
+```
+
+**2. Tile skirting — in the main order list, or off to the side?**
+
+```
+  In the list  ☐        Separate  ☐          (we've put it in)
+```
+
+**3. Want box counts as well as m²?**
+
+```
+  Yes  ☐        No  ☐      Tell us the m² per box each job and we'll give you
+                            whole boxes, rounded up.
+```
+
+**4. Decimals or whole metres?**
+
+```
+  36.4 m²  ☐        37 m²  ☐         Whole metres always round UP, never down.
+```
+
+**5. Any supplier quirks we should always allow for?**
+
+```
+  Batch / dye-lot buffer      ______%      (currently 0)
+  Long reorder lead times     ______%      (currently 0)
+
+  Shown as their own line, so you can see them and drop them any time.
+```
+
+**6. Anything you always want flagged?**
+
+```
+  Waterproofing zones  ☑     Trims in lineal metres  ☑     (our defaults)
+  Falls & floor wastes ☐     Movement joints  ☐     Substrate notes  ☐
+
+  Other: ________________________________________________
+```
+
 ---
 
-*Measured from the printed dimensions only — we never scale off a drawing. Every number
-above can be re-checked from the working. If one of them is wrong, mark it up and send it
-back. That's how this gets better.*
+*Measured from the printed dimensions only — we never scale off a drawing. Every number can
+be re-checked from the working. If one is wrong, mark it up and send it back.*

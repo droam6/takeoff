@@ -1,6 +1,8 @@
-# TAKEOFF
+# CHALKLINE
 
-**AI plan measurement for tradies.** Send a plan set, get a room-by-room m² breakdown back
+**Measured, not guessed.**
+
+AI plan measurement for tradies. Send a plan set, get a room-by-room m² breakdown back
 the same day, with every number showing its working.
 
 Not software they have to learn — a service they send plans to.
@@ -32,14 +34,17 @@ document — not a guess buried in a footnote.
 | [`TAKEOFF_METHOD.md`](TAKEOFF_METHOD.md) | The analysis protocol: six-check verification layer, the measured/order split, and the output template |
 | [`QUICKSTART.md`](QUICKSTART.md) | Exact usage, macOS and Windows PowerShell |
 | [`TAKEOFF_sample.md`](TAKEOFF_sample.md) · [`.pdf`](TAKEOFF_sample.pdf) | A worked takeoff of the sample set — order box first, all working below |
-| [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) · [`.pdf`](BUSINESS_PLAN.pdf) | The business: problem, moat, pricing, go-to-market, kill criteria |
+| [`BRAND.md`](BRAND.md) | Wordmark, one accent colour, header/footer strips, the ORDER THIS box |
+| [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) · [`.pdf`](BUSINESS_PLAN.pdf) | The business: problem, moat, pricing, go-to-market, the locked delivery model, kill criteria |
+| [`STRESS_REPORT.md`](STRESS_REPORT.md) | What broke when nine plan sets we didn't choose went through the gate |
 
 ## Code
 
 | File | What it does |
 |---|---|
 | `takeoff.py` | Intake gate → profile → extraction → analysis via the `claude` CLI |
-| `render_pdf.py` | Markdown → PDF (used for the business plan; works for takeoffs too) |
+| `render_pdf.py` | Markdown → branded PDF (header/footer strips, page breaks) |
+| `backtest/backtest.py` | QA harness — runs a folder of plan PDFs through the pipeline and scores them |
 
 ## Pipeline
 
