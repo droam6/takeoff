@@ -35,6 +35,7 @@ document — not a guess buried in a footnote.
 | [`SPEC.md`](SPEC.md) | What we output — for tilers and for painters |
 | [`TAKEOFF_METHOD.md`](TAKEOFF_METHOD.md) | The analysis protocol: six-check verification layer, the measured/order split, and the output template |
 | [`QUICKSTART.md`](QUICKSTART.md) | Exact usage, macOS and Windows PowerShell |
+| [`FRONT_DESK.md`](FRONT_DESK.md) | The operator's copy-paste scripts — enquiry to delivery, plain tradie language |
 | [`TAKEOFF_sample.md`](TAKEOFF_sample.md) · [`.pdf`](TAKEOFF_sample.pdf) | A worked takeoff of the sample set — order box first, all working below |
 | [`TAKEOFF_sample_floors_only.md`](TAKEOFF_sample_floors_only.md) · [`.pdf`](TAKEOFF_sample_floors_only.pdf) | The worked **PARTIAL** deliverable — floors + skirting off a set with no internal wet-area elevations |
 | [`BRAND.md`](BRAND.md) | Wordmark, one accent colour, header/footer strips, the ORDER THIS box |
