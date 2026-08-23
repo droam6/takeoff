@@ -48,6 +48,7 @@ document — not a guess buried in a footnote.
 | `takeoff.py` | Intake gate → profile → extraction → analysis via the `claude` CLI |
 | `render_pdf.py` | Markdown → branded PDF (header/footer strips, page breaks) |
 | `backtest/backtest.py` | QA harness — runs a folder of plan PDFs through the pipeline and scores them |
+| `backtest/fetch_corpus.sh` | Rebuilds the test corpus from a clean clone (7 of the 9 sets — see `backtest/SOURCES.md`) |
 
 ## Pipeline
 

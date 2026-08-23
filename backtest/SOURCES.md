@@ -11,6 +11,9 @@ by the firms that drew them.
 > not fair testing use. The URLs below make the run reproducible without us becoming a
 > distributor of other people's drawings.
 
+**To rebuild the corpus from a clean clone:** `sh backtest/fetch_corpus.sh` — downloads
+the five fetchable sets, copies the control and builds the derived cases (7 of 9).
+
 Fetched **16 August 2026**. Re-fetched **23 August 2026** on a fresh machine: the five
 open-web sets below downloaded fine; the two Sutherland Shire DA sets now return
 `403 Access Denied` from the council's WAF, and `phone-scan-of-da-plans.pdf` is derived
