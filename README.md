@@ -36,6 +36,7 @@ document — not a guess buried in a footnote.
 | [`TAKEOFF_METHOD.md`](TAKEOFF_METHOD.md) | The analysis protocol: six-check verification layer, the measured/order split, and the output template |
 | [`QUICKSTART.md`](QUICKSTART.md) | Exact usage, macOS and Windows PowerShell |
 | [`TAKEOFF_sample.md`](TAKEOFF_sample.md) · [`.pdf`](TAKEOFF_sample.pdf) | A worked takeoff of the sample set — order box first, all working below |
+| [`TAKEOFF_sample_floors_only.md`](TAKEOFF_sample_floors_only.md) · [`.pdf`](TAKEOFF_sample_floors_only.pdf) | The worked **PARTIAL** deliverable — floors + skirting off a set with no internal wet-area elevations |
 | [`BRAND.md`](BRAND.md) | Wordmark, one accent colour, header/footer strips, the ORDER THIS box |
 | [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) · [`.pdf`](BUSINESS_PLAN.pdf) | The business: problem, moat, pricing, go-to-market, the locked delivery model, kill criteria |
 | [`STRESS_REPORT.md`](STRESS_REPORT.md) | What broke when nine plan sets we didn't choose went through the gate |

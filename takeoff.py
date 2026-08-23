@@ -1036,7 +1036,8 @@ def main(argv=None) -> int:
     ap.add_argument("--m2-per-box", type=float,
                     help="if given, the order box gains a boxes-to-buy line, rounded up")
     ap.add_argument("--no-walls", action="store_true",
-                    help="floors only - elevations become a warning, not a failure")
+                    help="floors only by request - wall checks warn instead of "
+                         "deciding PASS/PARTIAL")
     ap.add_argument("--intake-only", action="store_true", help="run the gate and stop")
     ap.add_argument("--no-analyse", action="store_true", help="extract but don't call claude")
     ap.add_argument("--timeout", type=int, default=3600)

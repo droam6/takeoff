@@ -199,6 +199,9 @@ real-world job is a PARTIAL one.
 - Delivered alongside `PARTIAL_<job>.md` — the letter that says what we measured today
   and exactly which sheets unlock the rest. Same job, no extra back-and-forth.
 
+Worked example: `TAKEOFF_sample_floors_only.md` / `.pdf` — the sample set with its
+internal wet-area elevations removed, taken through the PARTIAL path end to end.
+
 ## 5. What we deliberately do **not** do
 
 - We do not scale off the drawing. Ever. Printed dimensions only.
