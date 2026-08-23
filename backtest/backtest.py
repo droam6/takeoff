@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """
-TAKEOFF backtest harness - QA only.
+Backtest harness - QA only. (The product's brand name lives in BRAND.md.)
 
 Runs every PDF in backtest/inbox/ through the real pipeline and scores the result.
 Nothing here is customer-facing; it exists to find out where the gate and the
 method break on plans we didn't choose.
 
     backtest/
-      inbox/            drop plan PDFs here
-      results/<name>/   per-plan output (rejection letter, or extraction + takeoff)
-      RESULTS.md        the scoreboard
+      inbox/                       drop plan PDFs here
+      results/<timestamp>/<name>/  per-run, per-plan output (rejection letter, or
+                                   extraction + takeoff) - every run gets its own
+                                   folder; nothing is overwritten by a later run
+      results/<timestamp>/RESULTS.md  that run's scoreboard
+      RESULTS.md        the scoreboard of the latest FULL run only ( --only runs
+                        never touch it - they stay in their own results folder)
       SOURCES.md        where each PDF came from
 
 Two depths:
@@ -49,6 +53,7 @@ import fitz  # noqa: E402
 from takeoff import (  # noqa: E402
     run_intake, write_rejection, write_intake_report, extract, analyse,
     load_profile, resolve_order_settings, write_profile_report,
+    gate_verdict, write_partial_notice, get_page_classes,
     WET_RE, SHEET_PLAN_RE, SHEET_ELEV_RE,
 )
 
@@ -152,18 +157,22 @@ def headline_areas(takeoff_md: Path | None) -> str:
     return " / ".join(out) if out else "produced, not parsed"
 
 
-def run_one(pdf: Path, args) -> dict:
+def run_one(pdf: Path, args, run_dir: Path) -> dict:
     name = re.sub(r"[^A-Za-z0-9_-]+", "_", pdf.stem)[:60]
-    out_dir = RESULTS / name
-    if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+    out_dir = run_dir / name
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     row = {"file": pdf.name, "name": name, "size_mb": round(pdf.stat().st_size / 1e6, 1)}
     t0 = time.time()
 
+    # The model recognises pages (sidecar in-session, claude CLI on a local
+    # machine); the deterministic layer stays the trust authority for numbers.
+    classes, class_src = get_page_classes(pdf)
+    row["classification"] = class_src if classes else f"unclassified ({class_src})"
+
     try:
-        checks, facts = run_intake(pdf, want_walls=not args.no_walls)
+        checks, facts = run_intake(pdf, want_walls=not args.no_walls,
+                                   page_classes=classes)
     except Exception as exc:  # a PDF so broken the gate itself throws
         row.update(intake="ERROR", why=f"gate crashed: {exc}", pages="?",
                    rooms="—", areas="—", flags=["harness caught an exception"],
@@ -175,8 +184,9 @@ def run_one(pdf: Path, args) -> dict:
     write_intake_report(out_dir, name, pdf, checks, facts,
                         {"trade": "tiler", "rooms": "all wet areas", "wastage": "10"})
 
+    verdict = gate_verdict(checks)
     hard_fails = [c for c in checks if not c.ok and c.hard]
-    if hard_fails:
+    if verdict == "FAIL":
         # Fail politely, and keep the letter we would actually send.
         write_rejection(out_dir, name, pdf, checks, facts,
                         {"trade": "tiler", "rooms": None, "wastage": None})
@@ -184,10 +194,18 @@ def run_one(pdf: Path, args) -> dict:
             intake="FAIL",
             why="; ".join(c.detail for c in hard_fails),
             rooms="—", areas="—",
-            flags=[f"rejected: {c.key}" for c in hard_fails],
+            flags=[f"rejected: {c.key}" for c in hard_fails]
+                  + ([] if classes else [f"pages unclassified ({class_src}) - "
+                                         "title heuristics used"]),
             runtime=round(time.time() - t0, 1),
         )
         return row
+
+    partial = verdict == "PARTIAL"
+    if partial:
+        # A job, not a rejection: floors + skirting now, walls when the
+        # internal elevations arrive. Keep the letter we would send with it.
+        write_partial_notice(out_dir, name, pdf, checks, facts)
 
     pr = probe(facts)
     (out_dir / "probe.json").write_text(json.dumps(pr, indent=2))
@@ -204,22 +222,29 @@ def run_one(pdf: Path, args) -> dict:
                          ("PROFILE_QUESTIONS.md", "PROFILE_QUESTIONS.md")):
             if (ROOT / src).exists():
                 shutil.copyfile(ROOT / src, out_dir / dst)
+        rooms_ask = ("all wet areas - floors and skirting only" if partial
+                     else "floors only" if args.no_walls else "all wet areas")
         takeoff_md = analyse(out_dir, name,
-                             {"trade": "tiler",
-                              "rooms": "floors only" if args.no_walls else "all wet areas",
+                             {"trade": "tiler", "rooms": rooms_ask,
                               "wastage": None, "tile_size": None,
                               "m2_per_box": None, "lay_pattern": None},
-                             prof, settings, timeout=args.timeout)
+                             prof, settings, timeout=args.timeout,
+                             partial=partial)
 
     rooms = sorted(pr["measurable_rooms"]) or sorted(pr["wet_rooms"])
+    why = (f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev "
+           f"({pr['wet_elev_sheets']} internal wet) · {pr['total_chains']} chains")
+    if partial:
+        why += " → floors + skirting now, walls when the internal elevations arrive"
     row.update(
-        intake="PASS",
-        why=f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev "
-            f"({pr['wet_elev_sheets']} internal wet) · {pr['total_chains']} chains",
+        intake="PARTIAL" if partial else "PASS",
+        why=why,
         rooms=", ".join(rooms) if rooms else "none identified",
         n_measurable=len(pr["measurable_rooms"]),
         areas=headline_areas(takeoff_md),
-        flags=probe_flags(pr, checks),
+        flags=probe_flags(pr, checks)
+              + ([] if classes else [f"pages unclassified ({class_src}) - "
+                                     "title heuristics used"]),
         scales=pr["scales"],
         runtime=round(time.time() - t0, 1),
     )
@@ -228,23 +253,28 @@ def run_one(pdf: Path, args) -> dict:
 
 # --------------------------------------------------------------------------
 
-def write_scoreboard(rows: list[dict], args) -> Path:
-    out = HERE / "RESULTS.md"
+def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> Path:
+    out = run_dir / "RESULTS.md"
     passed = [r for r in rows if r["intake"] == "PASS"]
+    partial = [r for r in rows if r["intake"] == "PARTIAL"]
     failed = [r for r in rows if r["intake"] == "FAIL"]
     errored = [r for r in rows if r["intake"] == "ERROR"]
 
     L = ["# Backtest scoreboard", "",
-         f"**Run:** {_dt.date.today().isoformat()} · "
+         f"**Run:** {run_dir.name} · "
          f"**Depth:** {'full pipeline (gate + extract + model takeoff)' if args.analyse else 'structure probe (gate + extract, no model)'} · "
          f"**Plans:** {len(rows)}", "",
-         f"**{len(passed)} passed the gate · {len(failed)} rejected · {len(errored)} errored**", "",
+         f"**{len(passed)} passed · {len(partial)} partial (floors + skirting) · "
+         f"{len(failed)} rejected · {len(errored)} errored**", "",
+         "*Every run archives to `backtest/results/<timestamp>/`; the committed "
+         "`backtest/RESULTS.md` always holds the latest full run only.*", "",
          "| File | Pages | Intake | Why | Rooms found | Headline areas | Flags | Runtime |",
          "|---|---|---|---|---|---|---|---|"]
     for r in rows:
         flags = r.get("flags") or []
         fl = "<br>".join(f"⚠️ {x}" for x in flags) if flags else "—"
-        mark = {"PASS": "✅ PASS", "FAIL": "🛑 FAIL", "ERROR": "💥 ERROR"}[r["intake"]]
+        mark = {"PASS": "✅ PASS", "PARTIAL": "🟨 PARTIAL", "FAIL": "🛑 FAIL",
+                "ERROR": "💥 ERROR"}[r["intake"]]
         L.append(f"| `{r['file']}` | {r.get('pages','?')} | {mark} | {r.get('why','')} | "
                  f"{r.get('rooms','—')} | {r.get('areas','—')} | {fl} | {r.get('runtime','?')}s |")
 
@@ -252,7 +282,7 @@ def write_scoreboard(rows: list[dict], args) -> Path:
     if not failed:
         L.append("_None._")
     for r in failed:
-        letter = RESULTS / r["name"] / f"REJECTED_{r['name']}.md"
+        letter = run_dir / r["name"] / f"REJECTED_{r['name']}.md"
         L += [f"### `{r['file']}`", "",
               f"**Gate said:** {r['why']}", ""]
         if letter.exists():
@@ -261,10 +291,20 @@ def write_scoreboard(rows: list[dict], args) -> Path:
             L += ["The letter we would actually send:", "",
                   "```", blocking.strip()[:1800], "```", ""]
 
+    if partial:
+        L += ["", "## Partial notices in full", ""]
+        for r in partial:
+            letter = run_dir / r["name"] / f"PARTIAL_{r['name']}.md"
+            L += [f"### `{r['file']}`", "", f"**Gate said:** {r['why']}", ""]
+            if letter.exists():
+                L += ["The letter we would actually send:", "", "```",
+                      letter.read_text(encoding="utf-8").strip()[:1800], "```", ""]
+
     L += ["", "## Per-plan detail", ""]
-    for r in passed:
+    for r in passed + partial:
         L += [f"### `{r['file']}`", "",
               f"- Sheets: {r.get('why')}",
+              f"- Page classification: {r.get('classification', '—')}",
               f"- Scales: {', '.join(r.get('scales') or []) or 'none printed'}",
               f"- Wet rooms with plan **and** elevations: **{r.get('n_measurable', 0)}**",
               f"- Rooms: {r.get('rooms')}",
@@ -274,46 +314,69 @@ def write_scoreboard(rows: list[dict], args) -> Path:
         L.append("")
 
     out.write_text("\n".join(L), encoding="utf-8")
+
+    # Only a FULL run (every PDF in the inbox, no --only filter) may update the
+    # committed scoreboard. A filtered run would overwrite a 9-set table with a
+    # 1-set one - the merge accident RESULTS.md used to invite.
+    if full_run:
+        shutil.copyfile(out, HERE / "RESULTS.md")
     return out
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="TAKEOFF backtest harness (QA only)")
+    ap = argparse.ArgumentParser(description="Backtest harness (QA only)")
     ap.add_argument("--analyse", action="store_true",
                     help="also run the real headless takeoff on every set that passes")
     ap.add_argument("--only", help="substring filter on the filename")
     ap.add_argument("--customer", default="angus")
     ap.add_argument("--no-walls", action="store_true",
                     help="floors only - missing wet-area elevations warn instead of failing")
+    ap.add_argument("--inbox", type=Path, default=INBOX,
+                    help="folder of plan PDFs to run (default backtest/inbox). Only a "
+                         "full run of the DEFAULT inbox updates the committed RESULTS.md")
     ap.add_argument("--dpi", type=int, default=150)
     ap.add_argument("--timeout", type=int, default=5400)
     a = ap.parse_args(argv)
 
-    INBOX.mkdir(parents=True, exist_ok=True)
+    inbox = a.inbox.resolve()
+    inbox.mkdir(parents=True, exist_ok=True)
     RESULTS.mkdir(parents=True, exist_ok=True)
 
-    pdfs = sorted(p for p in INBOX.glob("*.pdf"))
-    if a.only:
-        pdfs = [p for p in pdfs if a.only.lower() in p.name.lower()]
+    all_pdfs = sorted(p for p in inbox.glob("*.pdf"))
+    pdfs = ([p for p in all_pdfs if a.only.lower() in p.name.lower()]
+            if a.only else all_pdfs)
     if not pdfs:
-        print(f"No PDFs in {INBOX}")
+        print(f"No PDFs in {inbox}")
         return 2
 
+    # Every run writes into its own timestamped folder; runs never clobber
+    # each other, and a background --only run can't wipe a full run's output.
+    run_dir = RESULTS / _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    run_dir.mkdir(parents=True, exist_ok=True)
+    # Only a full, unfiltered run of the DEFAULT inbox owns the committed
+    # scoreboard - an alternate --inbox run stays in its own folder.
+    full_run = len(pdfs) == len(all_pdfs) and inbox == INBOX.resolve()
+
     print(f"BACKTEST  |  {len(pdfs)} plan set(s)  |  "
-          f"{'full pipeline' if a.analyse else 'structure probe'}\n")
+          f"{'full pipeline' if a.analyse else 'structure probe'}  |  {run_dir}\n")
     rows = []
     for pdf in pdfs:
         print(f"── {pdf.name}")
-        row = run_one(pdf, a)
+        row = run_one(pdf, a, run_dir)
         rows.append(row)
         print(f"   {row['intake']}  {row.get('why','')[:90]}")
         for x in (row.get("flags") or [])[:4]:
             print(f"   ⚠️  {x}")
         print(f"   {row.get('runtime')}s\n")
 
-    out = write_scoreboard(rows, a)
+    out = write_scoreboard(rows, a, run_dir, full_run)
+    if not full_run:
+        print("(--only run: backtest/RESULTS.md untouched - "
+              "it keeps the latest full run)")
     ok = sum(r["intake"] == "PASS" for r in rows)
-    print(f"{ok}/{len(rows)} passed the gate.  Scoreboard: {out}")
+    part = sum(r["intake"] == "PARTIAL" for r in rows)
+    print(f"{ok}/{len(rows)} passed, {part} partial (floors + skirting).  "
+          f"Scoreboard: {out}")
     return 0
 
 

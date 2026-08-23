@@ -4,10 +4,21 @@ Accuracy is the product. The fastest way to destroy it is to start measuring a p
 that cannot support a measurement. So every job passes an intake gate first, and the gate
 is automated (`takeoff.py` runs it before any analysis).
 
-**Pass → we measure. Fail → we send back `REJECTED_<job>.md` telling the tradie exactly
-what is missing and exactly what to send instead. We never guess off bad inputs.**
+Every job gets one of three verdicts:
+
+- **PASS → we measure everything.**
+- **PARTIAL → we measure the floors and skirting now.** The set has dimensioned floor
+  plans but no internal wet-area elevations — the most common shape a real set arrives in
+  (5 of the 9 stress-test sets). The takeoff delivered is floors + tile skirting, and its
+  walls section reads: *"Walls: not measured — this set has no internal wet-area
+  elevations. Send the internal elevations and we'll add every wall."* A `PARTIAL_<job>.md`
+  letter goes with it saying exactly which sheets unlock the walls.
+- **FAIL → we send back `REJECTED_<job>.md`** telling the tradie exactly what is missing
+  and exactly what to send instead. **We never guess off bad inputs.**
 
 A rejection is not a lost job. It is a 60-second email that saves both sides a wrong quote.
+And a PARTIAL is not a rejection at all — it is a smaller job delivered the same day, with
+a standing offer to finish it.
 
 ---
 
@@ -167,23 +178,61 @@ Different tile per room? Give us the m² per box for each and we'll do them sepa
 
 ## C. The automated gate — what `takeoff.py` actually checks
 
-Run before any analysis. Machine-checkable subset of the above.
+Run before any analysis. Machine-checkable subset of the above. Twelve checks, in the order
+the gate runs them:
 
 | # | Check | Rule | Fails when |
 |---|---|---|---|
-| 1 | **Text layer** | ≥ 200 extractable characters across the document | Scanned / raster / image-only PDF |
-| 2 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
-| 3 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
-| 4 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
-| 5 | **Plan pages** | ≥ 1 page whose title matches `PLAN` | No floor plan → no floor area |
-| 6 | **Elevation pages** | ≥ 1 page whose title matches `ELEVATION` | Warning only, unless walls are in scope → then a fail |
-| 7 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
-| 8 | **Encryption** | PDF not password-locked against extraction | Locked file |
-| 9 | **Intake answers** | trade / rooms / wastage supplied | Recorded as questions, never blocks the run |
-| 10 | **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Missing or unconfirmed → trade-standard defaults, stated on the order box, never blocks the run |
+| 1 | **Readable file** | The PDF opens at all | Corrupt file, or not a PDF |
+| 2 | **Encryption** | Not password-locked against extraction | Locked file |
+| 3 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
+| 4 | **Text layer** | ≥ 200 extractable characters across the document | Scanned / raster / image-only PDF |
+| 5 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
+| 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet | Text is present but is OCR spray, not a real text layer |
+| 7 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
+| 8 | **Dimension chains** *(advisory since round 5)* | context: chains verified set-wide, per drawing page | Never decides on its own — verdicts rest on per-page verification (check 10). Recorded for the reviewer |
+| 9 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
+| 10 | **Plan pages** | ≥ 1 page the model classifies as a floor plan, carrying ≥ 8 dimension tokens **and ≥ 4 chains that verify on that page** — the measurement layer's founding rule (chains must sum where they're used) applied to the gate | No floor plan whose own chains verify → no floor area. The letter says exactly what we couldn't verify — never "you have no floor plan", never "dimensioned and readable" beyond what was proved |
+| 11 | **Elevation pages** | ≥ 1 page classified as an internal or external elevation (title heuristics as fallback) | Warning only, unless walls are in scope → then a fail |
+| 12 | **Wet-area elevations** | ≥ 1 page classified as an *internal* elevation carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | Floors are measurable, walls are not. Conditional, like #11 |
 
-Checks 1–5 and 7–8 are **hard**. Any hard failure writes `REJECTED_<job>.md` and stops.
-Check 6 is **conditional** — hard when the tradie asked for wall areas.
+**How the checks become a verdict:**
+
+- Any failure among checks **1–10** → **FAIL.** `REJECTED_<job>.md` is written and
+  nothing is measured.
+- Checks **11–12** are the *wall-evidence* checks. When they are the **only** failures
+  (walls were asked for, floor plans are dimensioned and readable) → **PARTIAL.**
+  Floors + skirting are measured now; `PARTIAL_<job>.md` says what unlocks the walls.
+  Under `--no-walls` they are warnings and the verdict is PASS.
+- Nothing failed → **PASS.**
+
+Page recognition (checks 10–12) is a **model** task: each page image is classified as
+floor_plan / internal_elevation / external_elevation / detail / document /
+marketing_render / scan, via a sidecar JSON (in-session) or the headless CLI (local
+machine). The **deterministic layer stays the trust authority** — a model class never
+makes a quantity; it only chooses which pages the deterministic evidence (dimension
+tokens, wet-area terms, chains) is read against. With no classification available the
+gate falls back to the title-block heuristics and its output says so. See
+`TAKEOFF_METHOD.md` §0b.
+
+Every failure message states only what was actually established — what we *did* find and
+what we *couldn't confidently read* — never a confident diagnosis of what the file is.
+And **every outgoing letter ends with the appeal line** (*"Reckon we've got this wrong?
+Reply — a human will personally look at your file within the day."*): gate misses must
+convert to human review, not lost jobs.
+
+Three more things are recorded at intake but **never block the run**:
+
+| Recorded | Rule | When missing / low |
+|---|---|---|
+| **Word-hit score** *(advisory)* | ≥ 15% of alphabetic tokens are recognised words | Warned and recorded for the reviewer. Demoted from a hard gate: on the test corpus it could not separate OCR spray (0.315) from a clean set (0.307) — the chain check (#8) is what actually catches a scan |
+| **Intake answers** | trade / rooms / wastage supplied | Carried into the takeoff as questions |
+| **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Trade-standard defaults, stated on the order box |
+
+> **Threshold status:** every numeric threshold above was tuned on the nine-set backtest
+> corpus (`backtest/SOURCES.md`) and evaluated on those same nine files. There is no
+> held-out set yet. The separations are wide (`STRESS_REPORT.md`), but the values are
+> **tuned-on-corpus, pending validation on live jobs** — expect them to move.
 
 ---
 

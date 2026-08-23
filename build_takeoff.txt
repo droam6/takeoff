@@ -1,3 +1,11 @@
+================================================================================
+ SUPERSEDED - HISTORICAL RECORD ONLY. This is the original v1 brief, kept for
+ provenance. Do not build from it. The current contracts are SPEC.md, INTAKE.md
+ and TAKEOFF_METHOD.md. Known-wrong content below includes the "expected
+ ballpark ~7.1 m2 and ~19.9 m2" figures - both are naive rectangle products the
+ repo has since disproved (actual: 8.21 m2 and 10.69 m2; see TAKEOFF_sample.md).
+================================================================================
+
 Build TAKEOFF v1 in this repository: an AI plan-measurement service for tradies. sample_plans.pdf in the repo root is a real architectural joinery set (bathrooms/laundry, mm dimensions) from our first customer, a tiler.
 
 1. Read sample_plans.pdf thoroughly - render every page as an image AND extract all text/dimensions (PyMuPDF).

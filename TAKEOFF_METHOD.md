@@ -20,6 +20,38 @@ is pass silently as though it were the customer's choice.
 
 The profile governs the **order** only. It cannot touch a measured area — see §7.7.
 
+### 0b. Who does what: the deterministic layer verifies, the model recognises
+
+Two kinds of question run through this method, and they are answered by different
+machinery on purpose:
+
+- **Recognition — "what is this page?"** A seeing task: floor plan or brochure render,
+  internal or external elevation, drawing or council notice. Three stress rounds showed
+  the same failure family three times when a text heuristic did this job, so page
+  classification is performed by a **model** looking at the page images (a sidecar
+  `<pdf>.classes.json` written in-session, or the headless CLI on a local machine —
+  classes: floor_plan, internal_elevation, external_elevation, detail, document,
+  marketing_render, scan). When no classification is available the gate falls back to
+  the title heuristics **and says so** — it never silently pretends it looked.
+- **Verification — "can this number be trusted?"** Chains summing to printed totals,
+  text readability, every piece of arithmetic in §5–§8. This stays **deterministic**
+  and is the sole trust authority. A model class never makes a quantity: it only
+  decides which pages the deterministic evidence is read against (a page the model
+  calls a floor plan still needs printed dimension tokens to count as one; a page it
+  calls an internal elevation still needs wet-area evidence and dimensions to count as
+  measurable). Rates like chains-per-page are computed over classified **drawing**
+  pages, so document-heavy DA packs don't dilute the sheets that carry the chains.
+
+**Per-page verification — the founding rule, applied to the gate.** The measurement
+layer's first law is §5.1: *chains must sum where they are used.* From round 5 the gate
+obeys the same law: a page counts as a **dimensioned floor plan** for verdict purposes
+only if **its own chains verify** — segment chains printed on that page summing to their
+printed totals within tolerance. Set-wide chain rates are advisory context for a
+reviewer; a verdict rests on the pages it depends on, exactly as a measured area rests
+on the chains of the sheet it came from. (This closed the last known way a
+pathological text layer could reach the measurement stage: a file whose set-wide noise
+produced plausible totals could never produce a floor plan whose own chains close.)
+
 ---
 
 ## 1. Build the sheet register
@@ -429,8 +461,9 @@ Every ⚠️ has a matching tick-box question. Nothing is flagged without being 
 
 The document is two documents in one binder, and the divider between them is unmissable.
 
-**ANSWER PACK** — pages 1–3. What to order, what to check, what to answer. Written to be read
-on a phone, in a ute, once. **THE PROOF** — everything after. Written to be checked, not read.
+**ANSWER PACK** — pages 1–4. What to order, what to check, what we flagged, what to answer.
+Written to be read on a phone, in a ute, once. **THE PROOF** — everything after. Written to be
+checked, not read.
 
 Branding, boxes, header and footer strips are specified in `BRAND.md` and are not optional
 decoration — the header's *drawings revision measured against* line is the only thing
@@ -496,9 +529,17 @@ came from, and inviting a change:
    and would otherwise have to dig out of the proof: scale anomalies between sheets,
    hand-drawn markups, setout discrepancies, the measurement convention from the notes page.
 
-### Page 3 — the answer form
+### Page 3 — flagged for you
 
-8. **ASSUMPTIONS — THE ANSWER FORM.** Every fill-in as a table row:
+8. **FLAGGED FOR YOU box.** Cost items that are not order quantities and would otherwise be
+   easy to leave out of a quote: mitred corners and other labour called up on the sheets (in
+   lineal metres, per room), trims, and where the wet zones are (locations only — membrane
+   extent is the waterproofer's scope and is stated as not in the numbers). Anything in the
+   profile's `always_flag` list lands here too.
+
+### Page 4 — the answer form
+
+9. **ASSUMPTIONS — THE ANSWER FORM.** Every fill-in as a table row:
 
    | What we assumed | We used | Worth | Your answer |
    |---|---|---|---|
@@ -523,19 +564,19 @@ has all of it. Neither wades through the other's document.
 
 ### THE PROOF
 
-9. **The measured areas, and how they became the order** — full precision, then the
-   conversion in visible steps (§7.8), stating that the measured column never changes with
-   anyone's settings and the order column always does.
-10. **Room by room working** — every `×`, every subtraction (§8).
-11. **What we double-checked** — the §5 checks as plain statements with ✅/⚠.
-12. **What we had to fill in** — pointing back to the page-3 form, plus anything that needs
+10. **The measured areas, and how they became the order** — full precision, then the
+    conversion in visible steps (§7.8), stating that the measured column never changes with
+    anyone's settings and the order column always does.
+11. **Room by room working** — every `×`, every subtraction (§8).
+12. **What we double-checked** — the §5 checks as plain statements with ✅/⚠.
+13. **What we had to fill in** — pointing back to the page-4 form, plus anything that needs
     saying but doesn't change a number.
-13. **The drawings we read** — sheet numbers, titles, scale, revision.
-14. **Before you quote** — the closing checklist (§11).
+14. **The drawings we read** — sheet numbers, titles, scale, revision.
+15. **Before you quote** — the closing checklist (§11).
 
 ### Last page — the account form
 
-15. **SET UP YOUR ACCOUNT — answer once, applies to every job you ever send.** The six
+16. **SET UP YOUR ACCOUNT — answer once, applies to every job you ever send.** The six
     profile questions (`PROFILE_QUESTIONS.md`) as a fillable form with tick-boxes and blanks.
     It goes last because it is not about this job. Ask it after he has seen his numbers, not
     before (`PROFILE_QUESTIONS.md`, *How to ask them*).

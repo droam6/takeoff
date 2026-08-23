@@ -1,5 +1,16 @@
 # STRESS REPORT — nine plan sets we didn't choose
 
+> **CURRENT RESULT — Round 5 (23 August 2026), the final corpus round: 13 of 13
+> runnable sets agree with their labels. 0 crashes · 0 silent guesses.** A page counts
+> as a dimensioned floor plan only if its own chains verify — the measurement layer's
+> founding rule applied to the gate — and every letter states only what was verified,
+> ending with the human-review appeal line. See
+> [ROUND 5](#round-5--per-page-verification-the-lab-closes-here). Rounds 1–4 and JOB 2
+> below are kept as the record of what each round fixed; their headline numbers are
+> superseded. (Round 2's "scanned and OCR'd" diagnosis of `ncc` was itself wrong —
+> round 4 established it is vector CAD with a corrupt text encoding.) **The lab phase
+> ends here: the next test data is a real customer's drawings.**
+
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
 
@@ -11,9 +22,9 @@ So: eight real plan PDFs pulled off the open web — NSW council DA trackers, pu
 sample working drawings, an ABCB reference set — plus one raster case, all run through the
 gate cold.
 
-**5 passed, 4 rejected.** The headline is not the split. It's that **three of the four
-rejections were rejected for a reason that isn't true**, and **one of the five passes should
-have been rejected.**
+**Round 1: 5 passed, 4 rejected** *(superseded — round 2 below is current)*. The headline is
+not the split. It's that **three of the four rejections were rejected for a reason that isn't
+true**, and **one of the five passes should have been rejected.**
 
 ---
 
@@ -306,16 +317,20 @@ The separation is not close:
 | **ncc (OCR'd scan)** | **0.12** | **noise** |
 
 Threshold set at 5 chains total and 0.4/page — an order of magnitude below the weakest real
-set, and three times above the scan.
+set, and three times above the scan. *(Like every gate threshold, this was tuned on these
+nine sets and evaluated on the same nine. No held-out set exists yet: tuned-on-corpus,
+pending validation on live jobs.)*
 
 **A text-quality score** — the share of characters that belong on a drawing sheet, and the
 share of alphabetic tokens that are real words, scored against an embedded vocabulary rather
 than a system dictionary (so the verdict doesn't depend on which machine it ran on).
 
 **Honest finding: the word-hit rate did not do the work.** The OCR'd set scored 0.315 and a
-perfectly good set (`eastcoast`) scored 0.307 — the score cannot separate them. It is kept as
-a cheap catch for badly garbled text and reported in the intake record, but **the chain check
-is what actually caught the scan.** Reporting the opposite would have been easy and wrong.
+perfectly good set (`eastcoast`) scored 0.307 — the score cannot separate them. **The chain
+check is what actually caught the scan.** Reporting the opposite would have been easy and
+wrong. *(Follow-through: the word-hit score has since been demoted to advisory — recorded
+and warned on in the intake report, never a hard gate. A check that blocks nothing today
+could one day block something legitimate.)*
 
 ### Fix 2 — sheet titles from the title block
 
@@ -390,7 +405,353 @@ quote*, and the letter says so and offers floors-only instead. But it is worth s
 that the gate is now stricter, and that the right commercial answer to most of these
 rejections is **"we can still do your floors"** rather than "no".
 
-That reframes Risk 3 in the business plan: of nine sets, **one was genuinely unreadable** and
-**six could be measured for floors but not walls.** The addressable failure isn't
-unreadability — it's missing internal elevations, and there's a product on the other side of
-it.
+That reframes Risk 3 in the business plan: of nine sets, **two were genuinely unreadable**
+(`ncc` is OCR spray, `phone-scan` is a raster) and **five could be measured for floors but
+not walls.** The addressable failure isn't unreadability — it's missing internal elevations,
+and there's a product on the other side of it.
+
+---
+---
+
+# ROUND 3 — the PARTIAL tier
+
+**Re-run:** 23 August 2026, fresh machine, `backtest/backtest.py`, structure probe.
+**Result: 2 PASS · 5 PARTIAL · 2 FAIL — every verdict right, every stated reason true.**
+
+## What changed
+
+The gate now returns three verdicts instead of two:
+
+- **PASS** — every hard check passed. Full takeoff.
+- **PARTIAL** — dimensioned floor plans, but no internal wet-area elevations (the only
+  hard failures are the wall-evidence checks). **This is a job, not a rejection:** a
+  floors + tile-skirting takeoff is produced now, its walls section reads *"Walls: not
+  measured — this set has no internal wet-area elevations. Send the internal elevations
+  and we'll add every wall,"* and a `PARTIAL_<job>.md` letter goes with it naming exactly
+  which sheets unlock the rest.
+- **FAIL** — anything else. Rejection letter, nothing measured.
+
+Round 2 already knew the commercial answer to most rejections was "we can still do your
+floors" — but offered it only in the last line of a rejection letter, with no floors-only
+deliverable defined anywhere. Round 3 turns the most common real-world input into the
+product's default smaller job. Also in this round: the word-hit score was demoted to
+advisory (round 2 showed it separates nothing), and every threshold is now labelled
+tuned-on-corpus pending live validation.
+
+## Scoreboard
+
+**Corpus availability, stated plainly:** this run was made on a fresh machine.
+5 of the 8 web sets re-downloaded fine; the two Sutherland Shire DA sets now 403 behind
+the council's WAF, and `phone-scan` is derived from one of them, so those three were
+**not re-run** — their verdicts below are mapped from their recorded round-2 check
+results (the mapping is mechanical: which checks failed decides the verdict). One new
+derived set was added to exercise the tier: the control with its 6 internal wet-area
+elevation sheets removed.
+
+| Plan set | Round 2 | Round 3 | How |
+|---|---|---|---|
+| `sample_plans.pdf` | ✅ PASS | ✅ **PASS** · 4 plan / 13 elev (6 internal wet) · 144 chains | re-run |
+| `derbyshire-construction-sample.pdf` | ✅ PASS | ✅ **PASS** · 4 plan / 6 elev (4 internal wet) · 494 chains | re-run |
+| `ssc-da220327-architectural.pdf` | 🛑 FAIL | 🟨 **PARTIAL** — 5 floor plans, no internal wet elevations | mapped from round-2 checks (WAF blocks re-fetch) |
+| `ssc-da181440-architectural.pdf` | 🛑 FAIL | 🟨 **PARTIAL** — 4 floor plans, no internal wet elevations | mapped from round-2 checks (WAF blocks re-fetch) |
+| `housedesigners-working-drawings.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 3 plan / 2 elev · 86 chains | re-run |
+| `creativehomeplans-sample.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 4 plan / 1 elev · 13 chains | re-run |
+| `eastcoast-sample-plan-set.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 2 plan / 4 elev · 100 chains | re-run |
+| `ncc-building-plans-example.pdf` | 🛑 FAIL | 🛑 **FAIL** — 0.12 chains/page: text present but not reliably readable | re-run |
+| `phone-scan-of-da-plans.pdf` | 🛑 FAIL | 🛑 **FAIL** — 0 extractable characters | mapped from round-2 checks (source set unavailable) |
+| `sample-floors-only-derived.pdf` *(new)* | — | 🟨 **PARTIAL** · 4 plan / 7 elev (0 internal wet) · 93 chains | derived + run |
+
+Every PARTIAL set gets the *floors first* letter instead of a rejection: what's being
+measured today, what the gap is, and that sending the internal elevations adds every wall
+to the same job. Full letters in `backtest/RESULTS.md`.
+
+## What this means commercially
+
+Round 2's framing stands, sharpened: of nine sets we didn't choose, **two are genuinely
+unreadable and five are floors-only** — and floors-only is now a deliverable with a
+defined document, a defined letter, and a harness-tested path, not a hypothetical in the
+last line of a rejection. The most likely real-world job is a PARTIAL one, and the product
+now treats it as the default smaller job rather than a failure.
+
+## Honest limits of this round
+
+- **The structure probe ran; the model takeoff did not.** Verdicts and letters are
+  harness-tested; no measured numbers were produced in this round.
+- **Three of nine corpus sets were mapped, not re-run** (WAF). The mapping uses their
+  recorded round-2 per-check results, and the verdict function is deterministic in those
+  results — but a live re-run on the original machine should confirm it.
+- **The derived floors-only set shares geometry with the control.** It proves the PARTIAL
+  path, not the gate's behaviour on unfamiliar floors-only drawings — the three re-run
+  DA-level sets cover that.
+- Thresholds remain tuned-on-corpus. Nothing in this round adds held-out validation.
+
+---
+---
+
+# JOB 2 — the measurement method on unfamiliar drawings
+
+**Run:** 23 August 2026 · **in-session model runs** — the headless `claude` subprocess
+cannot launch in this remote environment, so the model performed both takeoffs directly,
+following `TAKEOFF_METHOD.md`; the subprocess pipeline itself still gets exercised on the
+local machine separately. Deliverables: `backtest/TAKEOFF_derbyshire.md` / `.pdf` (full)
+and `backtest/TAKEOFF_eastcoast.md` / `.pdf` (PARTIAL tier). This is the first time the
+measurement method has run end-to-end on plan sets nobody here had measured before.
+
+## Headline results
+
+| Set | Tier | Floors | Walls | Other |
+|---|---|---|---|---|
+| `derbyshire` (VIC construction set) | FULL | **28.179 m²** measured → 31.0 m² order | **30.606 m²** measured → 33.7 m² order | 0.578 m² mosaic splashback · 4.26 m tile skirting · laundry splashback + skirting held as questions |
+| `eastcoast` (QLD quote set) | PARTIAL | **~25.7 m² provisional — nothing order-grade** | not measured (no internal elevations) — the standing offer sent instead | empty ORDER THIS box, and that is the correct output |
+
+## Did the method hold? Mostly — and where it strained, it strained loudly.
+
+### What measured clean (derbyshire)
+
+A completely different practice style from the control — 1:100 plan + 1:50 plan details
+with internal elevations, mixed-case titles, joinery-heavy — and the method's core loop
+worked unchanged: chains → polygons → elevation heights → checks. **Every dimension chain
+closed to 0 mm**, including the house-length chain (20,185) and six independent ceiling
+chains that each sum to exactly 2,700 by different routes (300+1,500+40+560+300 ·
+450+500+1,750 · 900+150+600+1,050 · 500+1,000+300+900 · 600+2,100 · 300+1,350+150+900).
+Rooms closed both ways round. Fixture cross-checks landed (the 1800 bath, 900 benches on
+every sheet, 2,100 screens twice).
+
+### What the checks caught that a naive read would have guessed
+
+- **Tile bands, not tiled rooms.** This practice tiles a 900-high band in the ensuite and
+  full height only on feature/shower walls — the heights are printed and differ wall by
+  wall (900 / 300 under-vanity / 150 splashback / 2,700). A naive "room × 2,700" read
+  would have roughly **doubled the ensuite wall figure**. The §5.6 sanity ratio fired at
+  1.34/1.82 (below the 2.0–5.5 band) precisely because of this — and the right response
+  was to explain the flag, not suppress it: the ratio range itself assumes full-height
+  tiling and needs a caveat for band-tiled practices.
+- **Windows that don't exist inside.** Rev A plastered W2 and W2A over internally
+  (clouded on the ensuite sheet). A reader working from the window schedule would have
+  deducted two openings from walls that no longer have any. The revision-cloud rule
+  (§4) is what surfaced it.
+- **The laundry sheet with no lengths.** A19 prints vertical chains only — not one
+  horizontal dimension. Bench run and skirting runs are genuinely unmeasurable, so the
+  laundry splashback (~1.6 m²) and skirting (~4 m) shipped as questions instead of
+  quantities. A naive read would have scaled them off the 1:50 detail.
+- **A bathroom with no bath, a bedroom with tile.** The room called BATH is a shower
+  room; the only tub is in the ensuite. And BED 3's floor is marked TILES while BED 2 is
+  carpet — flagged for confirmation rather than silently priced either way.
+- **Scope cliff.** Entry, passage, kitchen, dining, living and bed 3 are all tiled on
+  the plan — several times the wet-area quantity — and the kitchen splashback is glass,
+  not tile. Both went to NOT INCLUDED with a question, not into the totals.
+
+### Where the method strained
+
+- **§5.3 (wall runs vs floor perimeter) lost its independence.** Derbyshire's internal
+  elevations print height chains but no run lengths, so both sides of the check derive
+  from the same plan chains. It still closed (13,780 = 13,780; 12,560 = 12,560) but as a
+  consistency check, not the two-sheet cross-check it is on the control set. The method
+  should record which sheets each side came from and say when they're the same.
+- **The eastcoast finding — the PARTIAL premise has a floor of its own.** The gate's
+  PARTIAL logic assumes *dimensioned floor plans ⇒ measurable floors*. Eastcoast passes
+  every text/chain check honestly — 100 chains verify, the 17,990 and 10,630 building
+  chains close exactly — **and no wet room carries a single printed extent.** It's a
+  quote-issue set ("QUOTE SET ONLY – NOT FOR CONSTRUCTION"): the structure is
+  dimensioned, the rooms are not. The method's no-scaling rule held (the deliverable is
+  an empty order box, provisional zone reads, and a request for the Construction Set),
+  but the gate currently can't tell this set from a room-dimensioned one. **Gate idea
+  for round 4: a room-level dimension coverage signal — how many enclosed room polygons
+  have ≥2 printed extents adjacent — so PARTIAL can say "floors measurable" vs "floors
+  provisional" before any measuring starts.**
+
+## Suspicious numbers, with reasoning
+
+| Number | Where | Why it's suspicious | Resolution |
+|---|---|---|---|
+| Wall:floor 1.34 / 1.82 | derbyshire ENS/BATH | Below the 2.0–5.5 sanity band | Real: band tiling. Every height traces to a printed chain. Flag explained, not suppressed |
+| 3,610 vs 3,620 | derbyshire bed 2 | Same wall, two values | Reference faces (100 vs 90 ticks); totals agree. Noted, not an error |
+| 10 mm segment | bath south chain (1,100 + **10** + 910) | Oddly small | The shower-screen line's own thickness; chain closes to 0 mm with it |
+| Laundry bench "2,400" | derbyshire | Not printed anywhere | Provisional from drawn bays; shipped as a question, worth ~1.6 m² |
+| Every eastcoast room figure | eastcoast | No printed room extents | All provisional by design; order box left empty |
+| 343.17 m² schedule total | eastcoast | Printed but unverifiable at room level | Used as a sanity anchor only |
+
+## Honest limits of this run
+
+- **These are in-session model runs.** The same model that wrote the method executed it;
+  the subprocess pipeline (headless CLI, timeouts, file handoff) was not exercised here
+  and still needs its local-machine run.
+- **Nobody has verified these numbers by hand.** The control set's numbers were
+  hand-measured and cross-checked; derbyshire's 28.179/30.606 are chain-verified but
+  await a second reader. They are exactly what the answer-form workflow is for.
+- **Two sets is two sets.** One construction-documentation practice and one quote-set
+  practice. The method generalised across that gap; that is evidence, not proof.
+
+## Verdict on generalisation
+
+**The method generalises; the gate's optimism about floor plans doesn't, and the checks
+are the reason we know.** On a real construction set the full loop produced an
+order-grade takeoff with every number traceable to a printed chain, and its strains were
+visible in the check log rather than hidden in the totals. On a quote set the method
+correctly refused to manufacture numbers, and the refusal surfaced a specific, fixable
+gate gap. Both documents ship with their uncertainty printed on page 1 — which is the
+product working as designed.
+
+---
+---
+
+# ROUND 4 — letters, model page recognition, and the honest denominator
+
+**Run:** 23 August 2026 · full harness, both inboxes, model page classification via
+committed sidecars (`backtest/page_classes/`) · built from `backtest/HELD_OUT_TEST.md`'s
+four logged defects, nothing else.
+
+## What changed
+
+1. **Letters state only verified facts**, and every rejection and PARTIAL letter now ends
+   with the appeal line — *"Reckon we've got this wrong? Reply — a human will personally
+   look at your file within the day."* Gate misses must convert to human review, not lost
+   jobs. The two misdiagnosing templates are gone: the chains letter no longer claims
+   "OCR'd scan", the wet-area letter no longer describes elevations it didn't find.
+2. **Page recognition is a model task** (sidecar in-session / headless CLI in subprocess
+   mode; classes floor_plan · internal_elevation · external_elevation · detail ·
+   document · marketing_render · scan), with the deterministic layer unchanged as the
+   sole trust authority — a class never makes a quantity. Fallback to title heuristics
+   announces itself. (`TAKEOFF_METHOD.md` §0b.)
+3. **Chains-per-page counts classified drawing pages only.**
+
+## Round-4 scoreboard vs round 3 — 13 runnable sets, both label sets
+
+| Set | Label | Round 3 | Round 4 | Δ |
+|---|---|---|---|---|
+| `sample_plans` | PASS | ✅ PASS ✓ | ✅ PASS ✓ | — |
+| `derbyshire` | PASS | ✅ PASS ✓ | ✅ PASS ✓ (and now counts exactly 1 floor plan, not 4 title-hits) | — |
+| `eastcoast` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `housedesigners` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `creativehomeplans` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `sample-floors-only-derived` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `ncc` | FAIL | 🛑 ✓ | 🟨 **PARTIAL ✗** | **NEW MISS** |
+| `arei` *(held-out)* | floors-only | 🛑 ✗ | 🟨 ✓ | **FIXED** |
+| `bodc-da137` *(held-out)* | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `bodc-da142` *(held-out)* | floors-only | 🛑 ✗ | 🟨 ✓ | **FIXED** |
+| `uralla-da45` *(held-out)* | scan | 🛑 ✓ | 🛑 ✓ | — |
+| `desirehomes` *(held-out)* | marketing | 🛑 ✓ | 🛑 ✓ | — |
+| `dp-wilston` *(held-out)* | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+
+**Round 3: 11/13 · Round 4: 12/13.** Both held-out misses flipped to correct; one corpus
+set regressed. (`ssc-da220327`, `ssc-da181440`, `phone-scan` remain un-runnable on this
+machine — a scan classification would fail phone-scan on 0 characters exactly as before,
+and the two DA sets' floor plans would classify like the other DA packs; both statements
+are inference, not runs.)
+
+## The new miss, dissected — and a discovery about the set itself
+
+`ncc` flipped FAIL → PARTIAL, and the letter now tells its owner "your floor plans are
+dimensioned and readable." They are not. Three guards each missed by a margin:
+
+- **Classification told the truth** — and that truth was new: the pages are **vector CAD
+  with ~9,500–15,400 vector strokes per page and a corrupt text encoding**, not the
+  "scanned and OCR'd" set round 2 diagnosed. Round 2's confident diagnosis was itself
+  wrong; the honest classes are floor_plan/detail/elevation, so the recognition layer
+  correctly refused to call it a scan.
+- **The clean-ratio check passes garbage** (99.5%+): the corrupt encoding emits ordinary
+  ASCII, and the word-hit score — demoted to advisory in round 3 precisely because it
+  separates nothing — reads 29%, above its old bar.
+- **The chain rate crossed the new denominator**: 6 coincidence-chains over 11 drawing
+  pages = 0.55/page, over the 0.4 bar that nine sets tuned. Round 2's protection was the
+  50-page denominator — a coincidence of document-heavy packs, not a design.
+
+Not fixed this round — round 4 built only from the held-out evidence, and this defect
+surfaced during its own re-run. **Logged for round 5** with a proposed fix: require
+verified chains *on the floor-plan pages themselves* — a "dimensioned floor plan" whose
+own chains never add up is not readable, whatever the set-wide rate says. (ncc's two
+floor-plan pages carry garbage tokens and effectively zero verified chains; every real
+floor plan in both corpora carries several.)
+
+## Counts for the round
+
+| Count | Value |
+|---|---|
+| Crashes | **0** (13 sets, two inboxes) |
+| Wrong verdicts | **1 of 13** (`ncc`, new) — was 2 of 13 in round 3 |
+| Silent guesses | **0** — no letter carries a quantity; but note the PARTIAL letter's fixed phrase "dimensioned and readable" is itself a confident claim the ncc miss falsifies. Same defect family as round 3's letters; goes to round 5 with the fix above |
+
+## Verdict
+
+The seeing task moved to the thing that can see, and both held-out misses — three rounds
+of the same title-detection family, and the diluted denominator — flipped to correct
+without touching a threshold. The cost was honestly measured: one regression, from a set
+whose text layer is pathological in a way no current deterministic check individually
+catches, now the sharpest known edge of the gate. The safety net for exactly this case —
+the appeal line and the human-review rule — is on every letter it would send.
+
+---
+---
+
+# ROUND 5 — per-page verification. The lab closes here.
+
+**Run:** 23 August 2026 · full harness, both inboxes, sidecar classifications.
+**Result: 13 of 13 runnable sets agree with their labels. 0 crashes. 0 silent guesses.**
+
+## What changed
+
+**The founding rule, applied to the gate.** The measurement layer's first law has always
+been §5.1: *chains must sum where they are used.* Round 5 makes the gate obey it: a page
+counts as a **dimensioned floor plan** for verdict purposes only if **its own chains
+verify** — segment chains on that sheet summing to their printed totals within
+tolerance (≥ 4 verified chains on the page, with ≥ 8 dimension tokens). Set-wide chain
+rates are advisory context; verdicts rest on the pages they depend on.
+(`TAKEOFF_METHOD.md` §0b.)
+
+The margins are stated, not hidden: across all 13 sets every real floor plan carries
+≥ 4 verified chains on its own sheet (two sit exactly at 4 — `bodc-142`'s plan and
+`creativehomeplans`' proposed first floor), and the worst corrupt-text page fakes 3 by
+coincidence. One chain of margin each way, tuned on this corpus, pending live
+validation.
+
+**Letter truth sweep.** "Dimensioned and readable" is gone as an unearned phrase: the
+PARTIAL letter now states the verified fact and its count — *"we verified the dimension
+chains on your floor plan sheet — 4 chains across 1 sheet add up to their printed
+totals"* — and the rejection letter for a failed verification says exactly what was
+looked for and not found, with the possible reasons left open and the human-review reply
+line underneath. The letter's "the set has no internal wet-area elevations" became "we
+couldn't find internal wet-area elevations in the set", with an explicit pointer to the
+reply line if we missed them.
+
+## The see-saw lesson, recorded for whoever tunes this next
+
+Round 2 caught `ncc` with a chains-per-page rate whose denominator happened to be a
+50-page document-heavy pack — **protection by coincidence, not design**. Round 4 fixed
+the denominator for two honest sets and thereby admitted `ncc` — the coincidence
+removed, nothing designed in its place. Round 5 replaces the coincidence with the
+design: verification at the exact place the verdict depends on. A set-wide rate can be
+diluted or concentrated by whatever else is in the pack; a floor plan's own chains
+cannot. When a threshold protects you and you don't know why, it isn't protecting you.
+
+## Final scoreboard — 13 runnable sets, both label sets
+
+| Set | Label | Round 3 | Round 4 | **Round 5** |
+|---|---|---|---|---|
+| `sample_plans` | PASS | ✓ | ✓ | **✅ PASS ✓** |
+| `derbyshire` | PASS | ✓ | ✓ | **✅ PASS ✓** |
+| `eastcoast` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `housedesigners` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `creativehomeplans` | floors-only | ✓ | ✓ | **🟨 ✓** (now on its 1 verified plan page; 2 chain-less plan pages rightly dropped) |
+| `sample-floors-only-derived` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `ncc` | FAIL | ✓ | ✗ | **🛑 FAIL ✓** — "no floor plan whose own dimension chains verify", the honest reason at last |
+| `arei` | floors-only | ✗ | ✓ | **🟨 ✓** |
+| `bodc-da137` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `bodc-da142` | floors-only | ✗ | ✓ | **🟨 ✓** (its plan page verifies exactly 4 chains — at the bar; watch it live) |
+| `uralla-da45` | scan | ✓ | ✓ | **🛑 FAIL ✓** |
+| `desirehomes` | marketing | ✓ | ✓ | **🛑 FAIL ✓** |
+| `dp-wilston` | floors-only | ✓ | ✓ | **🟨 ✓** (4 → 3 plan pages: the chain-less existing-conditions plan rightly dropped) |
+
+**Sets that moved this round:** `ncc` PARTIAL → FAIL (intended, honestly worded). Within
+unchanged verdicts, three sets' plan-page counts tightened (`creativehomeplans` 3 → 1,
+`wilston` 4 → 3, `ncc` 2 → 0) — every dropped page is one whose own chains do not
+verify. Nothing else moved in either direction. Graduation bar met: 0 crashes, 0 silent
+guesses, 12 holds held, `ncc` back to FAIL with the appeal line on its letter.
+
+## What the lab cannot prove
+
+Thirteen sets, all seen by the people who tuned against them. The two sets sitting
+exactly at the 4-chain bar are the first thing to watch when real drawings arrive; the
+three WAF-blocked corpus sets remain un-runnable on this machine; the subprocess
+classification path and the headless pipeline still get their exercise on the local
+machine. The next test data is a real customer's drawings — which is the test that
+counts, and the one this report cannot contain.

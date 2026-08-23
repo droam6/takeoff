@@ -29,7 +29,7 @@ Job **TKF-001** · measured against drawings **Rev L, 01/09/25** · 5 rooms.
   Labour, rates and pricing of any kind
   Master ensuite walls  — unresolved, see Q1
   Powder room floor     — unresolved, see Q2
-  Feature tile edges    — unresolved, see page 3
+  Feature tile edges    — unresolved, see page 4
 ==================================================
   We measure. What you charge is your business.
 ```
@@ -52,7 +52,7 @@ windows off the drawings. **Worth ~6.7 m² on the doors and ~3.5 m² on the wind
 We tiled under all three vanities (300 clear) and not behind the baths.
 **3.4 m² under the vanities, 4.3 m² on the bath platforms.**
 
-*There are 10 smaller things we had to fill in — they're on the answer form, page 3.*
+*There are 10 smaller things we had to fill in — they're on the answer form, page 4.*
 
 <!--newpage-->
 
@@ -457,7 +457,7 @@ laundry, which is low because it's a splashback — and that's checked against s
 
 ## 4. What we had to fill in
 
-The ten fill-ins are on the answer form on page 3, with what we used and what each one is
+The ten fill-ins are on the answer form on page 4, with what we used and what each one is
 worth. Two extras that didn't make the form because they don't change a number:
 
 - **Sheet 4.02 carries a hand-drawn red arrow** pointing at the laundry splashback. Not CAD —

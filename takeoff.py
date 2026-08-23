@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-TAKEOFF v1 - AI plan-measurement for tradies.
+Takeoff pipeline v1 - AI plan-measurement for tradies.
+
+The product's brand name lives in BRAND.md and is read from there at runtime
+(brand_name below) - nothing in this script hardcodes it.
 
 Pipeline
 --------
@@ -32,17 +35,32 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import json
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 try:
     import fitz  # PyMuPDF
 except ImportError:  # pragma: no cover
     sys.exit("PyMuPDF is required.  pip install pymupdf")
+
+
+def brand_name(root: Path | None = None) -> str:
+    """The product name, read from BRAND.md - the single source of truth."""
+    path = (root or Path(__file__).resolve().parent) / "BRAND.md"
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"\*\*Name:\*\*\s*(.+?)\s*$", line)
+            if m:
+                return m.group(1).strip()
+    except OSError:
+        pass
+    return "takeoff"
 
 
 # --------------------------------------------------------------------------
@@ -66,6 +84,30 @@ class Check:
     @property
     def status(self):
         return "PASS" if self.ok else ("FAIL" if self.hard else "WARN")
+
+
+# The wall-evidence checks. When these are the ONLY hard failures, the job is
+# PARTIAL rather than FAIL: the floors are measurable today, the walls aren't.
+PARTIAL_KEYS = {"elevation_pages", "wet_area_elevations"}
+
+
+def gate_verdict(checks: list) -> str:
+    """Document-level gate verdict: PASS / PARTIAL / FAIL.
+
+    PASS     every hard check passed - full takeoff.
+    PARTIAL  dimensioned floor plans, but no internal wet-area elevations
+             (the only hard failures are the wall-evidence checks). We deliver
+             a floors + skirting takeoff now, and add every wall the day the
+             internal elevations arrive. This is the most common real-world
+             shape - 5 of 9 corpus sets - and it is a job, not a rejection.
+    FAIL     anything else - rejection letter, nothing measured.
+    """
+    hard_fails = [c for c in checks if not c.ok and c.hard]
+    if not hard_fails:
+        return "PASS"
+    if all(c.key in PARTIAL_KEYS for c in hard_fails):
+        return "PARTIAL"
+    return "FAIL"
 
 
 DIM_RE = re.compile(r"\b(\d{2,5})\b")
@@ -282,12 +324,139 @@ SHEET_ELEV_RE = re.compile(r"(elevations?\b|elev\.)", re.I)
 # A scale only counts as a scale when it is written like one.
 SCALE_RE = re.compile(r"(1\s*:\s*\d{1,4}\s*@?\s*A\d|scale[^\n]{0,18}?1\s*:\s*\d{1,4})", re.I)
 
+# TUNING STATUS: every threshold below was fitted on the nine-set backtest corpus
+# (backtest/SOURCES.md) and evaluated on the same nine files. There is no held-out
+# set. The separations are wide (see STRESS_REPORT.md), but treat these values as
+# tuned-on-corpus pending validation on live jobs.
 TITLE_CONF = 0.30       # below this we say we couldn't identify it, not that it's absent
 MIN_CHAINS = 5          # total verified chains across the document
 MIN_CHAINS_PER_PAGE = 0.4
 MIN_CLEAN_RATIO = 0.90
-MIN_WORD_HIT = 0.15
+MIN_WORD_HIT = 0.15     # ADVISORY only - see the word_hit_score check
 MIN_WET_KEYWORDS = 4    # on one elevation sheet, incl. at least one fitting
+# ROUND 5 - per-page verification. A page counts as a DIMENSIONED floor plan
+# for verdict purposes only if ITS OWN chains verify: segment chains on that
+# page summing to their printed totals within tolerance. This is the
+# measurement layer's founding rule - chains must sum where they're used -
+# applied to the gate. Set-wide chain rates are advisory context only.
+# Margins, stated plainly: across both corpora every real floor plan carries
+# >= 4 verified chains on its own sheet (weakest observed: 4), and the worst
+# corrupt-text page fakes 3 by coincidence. One chain of margin each way,
+# tuned on 13 sets, pending live validation - expect this number to move.
+MIN_PAGE_CHAINS = 4
+
+
+# --------------------------------------------------------------------------
+# Page classification - the model RECOGNISES, the deterministic layer VERIFIES.
+#
+# Three stress rounds produced the same failure family three times: the
+# title-block heuristic misreads what a page IS (round 1: copyright
+# boilerplate beats sheet names; round 2's fix held only on layouts it had
+# seen; the held-out round named 1 of 9 sheets on an unseen style and turned
+# a measurable set into a rejection). Recognising a drawing is a seeing task,
+# so recognition now belongs to a model. Every NUMBER still comes from the
+# deterministic layer - chains, readability, arithmetic - which remains the
+# sole trust authority: a model class never makes a quantity, it only says
+# which pages the deterministic evidence should be read against.
+# See TAKEOFF_METHOD.md section 0b.
+#
+# Two ways a classification reaches the gate:
+#   in-session  a sidecar JSON written by the operating model or a human:
+#               <pdf>.classes.json beside the PDF, or
+#               backtest/page_classes/<stem>.classes.json (committed).
+#   subprocess  the headless `claude` CLI looks at rendered page images and
+#               writes the same JSON (local-machine mode).
+# No sidecar and no CLI -> the gate falls back to the title heuristics and
+# says so in its output; it never silently pretends it classified.
+# --------------------------------------------------------------------------
+
+PAGE_CLASSES = ("floor_plan", "internal_elevation", "external_elevation",
+                "detail", "document", "marketing_render", "scan")
+DRAWING_CLASSES = {"floor_plan", "internal_elevation", "external_elevation", "detail"}
+
+CLASSIFY_INSTRUCTION = """\
+Look at every page image in this folder (page_001.png ... page_{n:03d}.png) and classify
+each page as exactly one of:
+  floor_plan          a floor plan with printed dimensions or dimension chains
+  internal_elevation  an internal wall elevation / joinery elevation of a room
+  external_elevation  an external elevation of the building
+  detail              any other drawing sheet: site plan, section, slab, roof,
+                      electrical, construction detail, schedule drawn as a sheet
+  document            a text page: notice, report, form, notes-only page, schedule
+                      set as text
+  marketing_render    a brochure page, render or marketing floor plan without
+                      printed dimension chains
+  scan                a scanned or photographed page (raster image of a drawing)
+
+Judge from the image only. Write the result to page_classes.json in this folder as one
+JSON object mapping page number to class, e.g. {{"1": "document", "2": "floor_plan"}}.
+Every page must appear. Write the file and nothing else.
+"""
+
+
+def _normalise_classes(raw: dict) -> dict:
+    out = {}
+    for k, v in raw.items():
+        v = str(v).strip().lower().replace(" ", "_").replace("-", "_")
+        if v in PAGE_CLASSES:
+            out[int(k)] = v
+    return out
+
+
+def load_page_classes(pdf_path: Path):
+    """In-session mode: find a sidecar classification for this PDF."""
+    stem = pdf_path.stem
+    candidates = [
+        pdf_path.with_suffix(".classes.json"),
+        Path(__file__).resolve().parent / "backtest" / "page_classes" / f"{stem}.classes.json",
+    ]
+    for c in candidates:
+        if c.exists():
+            try:
+                return _normalise_classes(json.loads(c.read_text(encoding="utf-8"))), str(c)
+            except (ValueError, OSError) as exc:
+                return None, f"sidecar {c.name} unreadable: {exc}"
+    return None, ""
+
+
+def classify_pages_subprocess(pdf_path: Path, timeout: int = 600):
+    """Subprocess mode: headless `claude` CLI classifies the rendered pages."""
+    binary = resolve_claude()
+    if not binary:
+        return None, "claude CLI not on PATH"
+    with tempfile.TemporaryDirectory() as td:
+        doc = fitz.open(pdf_path)
+        mat = fitz.Matrix(100 / 72, 100 / 72)
+        for i, page in enumerate(doc):
+            page.get_pixmap(matrix=mat).save(Path(td) / f"page_{i + 1:03d}.png")
+        n = doc.page_count
+        doc.close()
+        cmd = build_command(binary, CLASSIFY_INSTRUCTION.format(n=n))
+        try:
+            proc = subprocess.run(cmd, cwd=td, timeout=timeout,
+                                  capture_output=True, text=True)
+        except (subprocess.TimeoutExpired, OSError) as exc:
+            return None, f"classifier did not run: {exc}"
+        out = Path(td) / "page_classes.json"
+        if proc.returncode == 0 and out.exists():
+            try:
+                return _normalise_classes(json.loads(out.read_text())), "claude CLI"
+            except ValueError:
+                return None, "classifier wrote invalid JSON"
+        return None, f"classifier exited {proc.returncode}"
+
+
+def get_page_classes(pdf_path: Path):
+    """Sidecar first, then subprocess, then honestly nothing."""
+    classes, src = load_page_classes(pdf_path)
+    if classes:
+        return classes, f"sidecar {Path(src).name}"
+    if src:                      # a sidecar existed but was unreadable
+        return None, src
+    classes, src = classify_pages_subprocess(pdf_path)
+    if classes:
+        return classes, src
+    return None, src
 
 
 def classify_pages(doc):
@@ -310,17 +479,26 @@ def classify_pages(doc):
             "chains": verify_chains(toks),
             "wet_kw": len(kws),
             "has_fitting": bool(FITTING_RE.search(text)),
-            "scales": sorted({m.group(0) for m in SCALE_RE.finditer(text)}),
+            # collapse whitespace - a scale wrapped across two lines would
+            # otherwise carry a newline into every table it is printed in
+            "scales": sorted({" ".join(m.group(0).split())
+                              for m in SCALE_RE.finditer(text)}),
         })
     return pages
 
 
-def run_intake(pdf_path: Path, want_walls: bool = True):
-    """Deterministic gate. Returns (checks, facts). Runs before any analysis.
+def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | None = None):
+    """The gate. Returns (checks, facts). Runs before any analysis.
+
+    Two layers with one boundary: the MODEL recognises what each page is
+    (page_classes, when available), the DETERMINISTIC layer verifies what can
+    be trusted (chains, readability, arithmetic). A model class never makes a
+    quantity. Without a classification the gate falls back to the title
+    heuristics and says so.
 
     Every failure message states only what was actually established. Where a
-    signal is merely absent, the wording says we could not identify it - never
-    a count asserting the customer's drawings lack something they contain.
+    signal is merely absent, the wording says we could not confidently read it
+    - never a confident diagnosis of what the customer's file is.
     """
     checks, facts = [], {}
 
@@ -349,19 +527,50 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "Send the drawing set as a single PDF of the relevant sheets."))
 
     pages = classify_pages(doc)
+    classes = page_classes or {}
+    for p in pages:
+        p["class"] = classes.get(p["page"])
+    model_mode = bool(classes)
+
     all_text = "\n".join((p.get_text() or "") for p in doc)
     clean, word_hit = text_quality(all_text)
 
     total_chars = sum(p["chars"] for p in pages)
     total_dims = sum(p["dims"] for p in pages)
     total_chains = sum(p["chains"] for p in pages)
-    chains_pp = total_chains / max(n, 1)
     dim_pages = [p for p in pages if p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE]
-    plan_pages = [p for p in pages if p["is_plan"]]
-    elev_pages = [p for p in pages if p["is_elev"]]
     named = [p for p in pages if p["named"]]
-    wet_elev = [p for p in elev_pages
-                if p["wet_kw"] >= MIN_WET_KEYWORDS and p["has_fitting"] and p["dims"] >= 5]
+
+    if model_mode:
+        # The model says what a page IS; the deterministic evidence on that
+        # page (dimension tokens, wet keywords, fittings, and - decisively -
+        # its own verified chains) says whether it can be measured from.
+        # Neither substitutes for the other.
+        plan_pages = [p for p in pages if p["class"] == "floor_plan"
+                      and p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE
+                      and p["chains"] >= MIN_PAGE_CHAINS]
+        elev_pages = [p for p in pages
+                      if p["class"] in ("internal_elevation", "external_elevation")]
+        wet_elev = [p for p in pages if p["class"] == "internal_elevation"
+                    and p["wet_kw"] >= MIN_WET_KEYWORDS and p["has_fitting"]
+                    and p["dims"] >= 5]
+        drawing_pages = [p for p in pages if p["class"] in DRAWING_CLASSES]
+        # Rates are per DRAWING page: a DA pack full of notices and reports
+        # must not dilute the sheets that carry the actual chains.
+        chains_pp = total_chains / max(len(drawing_pages), 1)
+        rate_base = f"{len(drawing_pages)} drawing page(s)"
+        src_note = "model-classified pages"
+    else:
+        plan_pages = [p for p in pages if p["is_plan"]
+                      and p["chains"] >= MIN_PAGE_CHAINS]
+        elev_pages = [p for p in pages if p["is_elev"]]
+        wet_elev = [p for p in elev_pages
+                    if p["wet_kw"] >= MIN_WET_KEYWORDS and p["has_fitting"]
+                    and p["dims"] >= 5]
+        drawing_pages = pages
+        chains_pp = total_chains / max(n, 1)
+        rate_base = f"all {n} page(s)"
+        src_note = "title heuristics - no page classification available"
     scales = sorted({s for p in pages for s in p["scales"]})
 
     facts.update(per_page=pages, total_chars=total_chars, total_dims=total_dims,
@@ -369,7 +578,9 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
                  clean_ratio=round(clean, 3), word_hit=round(word_hit, 3),
                  dim_pages=len(dim_pages), plan_pages=len(plan_pages),
                  elev_pages=len(elev_pages), named_pages=len(named),
-                 wet_elev_pages=len(wet_elev), scales=scales)
+                 wet_elev_pages=len(wet_elev), scales=scales,
+                 drawing_pages=len(drawing_pages), classification=src_note,
+                 plan_page_chains=[(p["page"], p["chains"]) for p in plan_pages])
 
     checks.append(Check(
         "text_layer", total_chars >= MIN_TOTAL_CHARS, True,
@@ -387,14 +598,26 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "Re-export the full set as vector PDF from the drawing software."))
 
     # ---- readability, not existence -------------------------------------
-    quality_ok = clean >= MIN_CLEAN_RATIO and word_hit >= MIN_WORD_HIT
     checks.append(Check(
-        "text_quality", quality_ok, True,
-        f"text quality: {clean:.1%} of characters usable, {word_hit:.0%} of words "
-        f"recognised (need {MIN_CLEAN_RATIO:.0%} / {MIN_WORD_HIT:.0%})",
+        "text_quality", clean >= MIN_CLEAN_RATIO, True,
+        f"text quality: {clean:.1%} of characters usable "
+        f"(need {MIN_CLEAN_RATIO:.0%})",
         "There is text in this file, but it doesn't read like a drawing sheet - "
         "which is what a scan looks like after OCR has been run over it.",
         "Send the original PDF exported from the drawing software, not a scan."))
+
+    # The word-hit score is ADVISORY only. On the backtest corpus it demonstrably
+    # cannot separate OCR spray from a clean set (0.315 vs 0.307 - see
+    # STRESS_REPORT.md round 2), so it is recorded and warned on, never a hard
+    # gate: it currently blocks nothing and must not one day block something
+    # legitimate. The chain check below is what actually catches a scan.
+    checks.append(Check(
+        "word_hit_score", word_hit >= MIN_WORD_HIT, False,
+        f"advisory: {word_hit:.0%} of words recognised "
+        f"(expect >= {MIN_WORD_HIT:.0%}; never blocks on its own)",
+        "Few of the words in the text layer look like drawing-sheet words. On its "
+        "own this proves nothing - it is recorded for the reviewer, not enforced.",
+        "Nothing - the other checks decide."))
 
     checks.append(Check(
         "dimension_tokens", total_dims >= MIN_DIM_TOKENS, True,
@@ -403,17 +626,20 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "from stated dimensions only - we never scale off the drawing.",
         "Send drawings with the dimension strings printed on them, in mm."))
 
+    # ROUND 5: the set-wide chain rate is ADVISORY CONTEXT only. Verdicts rest
+    # on the pages they depend on - see the plan_pages check, where each floor
+    # plan must verify its own chains. Letters state only verified facts; a low
+    # set-wide rate is context for a reviewer, never a rejection on its own.
     chains_ok = total_chains >= MIN_CHAINS and chains_pp >= MIN_CHAINS_PER_PAGE
     checks.append(Check(
-        "dimension_chains", chains_ok, True,
-        f"{total_chains} dimension chains check out ({chains_pp:.2f} per page, "
-        f"need {MIN_CHAINS} and {MIN_CHAINS_PER_PAGE}/page)",
-        "Text is present but not reliably readable. On a real drawing the numbers "
-        "in a chain add up to the total printed beside them - 100 + 840 + 790 = "
-        "1730. We can't find enough of those here, which is what OCR'd scans look "
-        "like: numbers that are individually plausible and never add up.",
-        "Send the original vector PDF from the drawing software. If this is already "
-        "the original, let us know and we'll look at it by hand."))
+        "dimension_chains", chains_ok, False,
+        f"advisory: {total_chains} dimension chains verified set-wide "
+        f"({chains_pp:.2f} per {'drawing page' if model_mode else 'page'} across "
+        f"{rate_base}; context only - verdicts rest on per-page verification)",
+        "Fewer printed dimension chains verified across the whole set than we "
+        "usually see. On its own this decides nothing - the floor-plan check "
+        "verifies chains on the sheets that matter.",
+        "Nothing needed - the per-page checks decide."))
 
     checks.append(Check(
         "dimensioned_pages", len(dim_pages) >= MIN_DIM_PAGES, True,
@@ -421,49 +647,95 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "The set looks like cover sheets, 3D views or renders only.",
         "Include the dimensioned floor plans and elevations."))
 
-    # ---- sheet identification: never assert absence from a failed guess --
-    if named:
-        plan_detail = (f"{len(plan_pages)} floor plan sheet(s) identified"
-                       if plan_pages else
-                       f"no floor plan among the {len(named)} sheet(s) we could name")
-        plan_means = ("Without a floor plan we cannot measure floor area."
-                      if plan_pages else
-                      f"We read sheet names on {len(named)} of {n} sheets and none of "
-                      "them is a floor plan.")
+    # ---- the check verdicts rest on: a floor plan must verify ITS OWN chains.
+    # Never assert absence from a failed guess - and never assert "dimensioned
+    # and readable" beyond what was verified on the sheet itself.
+    verified_ch = sum(p["chains"] for p in plan_pages)
+    if plan_pages:
+        plan_detail = (f"{len(plan_pages)} floor plan sheet(s) whose own dimension "
+                       f"chains verify ({verified_ch} chains on those sheets)"
+                       + (f" [{src_note}]" if model_mode else ""))
+        plan_means = ""
+    elif model_mode:
+        plan_detail = (f"no floor plan whose own dimension chains verify, among the "
+                       f"{n} pages [{src_note}]")
+        plan_means = ("We looked at every page for a floor plan whose printed "
+                      "dimension chains add up on that sheet (100 + 840 + 790 = "
+                      "1730 next to a printed 1730). We couldn't verify one. That "
+                      "can mean a text layer we can't read, sparse dimensioning, "
+                      "or our reading of your drawings - we can't tell which from "
+                      "here, and we won't measure without it.")
+    elif named:
+        plan_detail = (f"no floor plan whose own dimension chains verify, among the "
+                       f"{len(named)} sheet(s) we could name")
+        plan_means = ("We could only read sheet names on "
+                      f"{len(named)} of {n} sheets, and we couldn't verify a floor "
+                      "plan's dimension chains among those. We may simply not have "
+                      "recognised yours.")
     else:
         plan_detail = f"couldn't confidently identify any sheet names across {n} sheets"
         plan_means = ("We couldn't read the title blocks, so we can't tell which sheet "
                       "is which. That may be our end, not yours.")
     checks.append(Check(
         "plan_pages", len(plan_pages) >= 1, True, plan_detail, plan_means,
-        "Send the floor plan sheet for every room you want quoted, or tell us which "
-        "sheet number it is and we'll work from that."))
+        "Send the floor plan sheet for every room you want quoted - the original "
+        "vector PDF from the drawing software - or reply and a human will look at "
+        "what you've sent."))
 
-    elev_detail = (f"{len(elev_pages)} elevation sheet(s) identified" if elev_pages
-                   else (f"no elevation sheet among the {len(named)} sheet(s) we could "
-                         f"name" if named else "couldn't confidently identify sheet names"))
+    if elev_pages:
+        elev_detail = (f"{len(elev_pages)} elevation sheet(s) "
+                       f"{'recognised' if model_mode else 'identified'}")
+    elif model_mode:
+        elev_detail = f"no elevation sheet recognised among the {n} pages [{src_note}]"
+    elif named:
+        elev_detail = f"no elevation sheet among the {len(named)} sheet(s) we could name"
+    else:
+        elev_detail = "couldn't confidently identify sheet names"
     checks.append(Check(
         "elevation_pages", len(elev_pages) >= 1, want_walls, elev_detail,
-        "Wall tiling heights only appear on elevations. Without them we can give you "
+        "Wall tiling heights only appear on elevations. We couldn't confidently "
+        "find elevation sheets to read them from, so without more we can give you "
         "floor area only.",
         "Include the elevation sheets for each room you want wall areas on."))
 
-    # ---- the check that legitimately rejects a DA set --------------------
+    # ---- the check that legitimately degrades a DA set to floors ---------
+    # State only what was established: if we found elevations, say none of THEM
+    # reads as internal wet-area; if we found none, say that - never describe
+    # sheets we did not find.
     wet_detail = (f"{len(wet_elev)} internal elevation sheet(s) of wet areas"
                   if wet_elev else
                   (f"{len(plan_pages)} floor plan(s) and {len(elev_pages)} elevation "
-                   f"sheet(s) found, but none of the elevations is a dimensioned "
+                   f"sheet(s) found, but none of the elevations reads as a dimensioned "
                    f"internal elevation of a wet area"))
+    if wet_elev:
+        wet_means = ""
+    elif elev_pages:
+        wet_means = ("None of the elevation sheets we could read is a dimensioned "
+                     "internal elevation of a wet area - wall tile quantities come "
+                     "from those internal wall drawings: each bathroom, ensuite and "
+                     "laundry with tiling heights printed. We may not have recognised "
+                     "yours.")
+    else:
+        wet_means = ("We couldn't confidently find any elevation sheets in this set, "
+                     "and wall tile quantities come from dimensioned internal "
+                     "elevations - the wall drawings of each bathroom, ensuite and "
+                     "laundry with tiling heights printed on them.")
     checks.append(Check(
-        "wet_area_elevations", len(wet_elev) >= 1, want_walls, wet_detail,
-        "The elevations in this set look like external elevations - the outside of "
-        "the building. Wall tile quantities come from internal elevations: the wall "
-        "drawings of each bathroom, ensuite and laundry, with tiling heights on them.",
-        "Ask for the internal elevations / joinery sheets for each wet area. If they "
-        "don't exist, we can still do floor areas - just say the word."))
+        "wet_area_elevations", len(wet_elev) >= 1, want_walls, wet_detail, wet_means,
+        "Ask for the internal elevations / joinery sheets for each wet area. "
+        "Meanwhile we'll measure your floors and skirting off the plans - send the "
+        "internal elevations and we'll add every wall."))
 
     doc.close()
     return checks, facts
+
+
+# Every outgoing letter ends with this. Gate misses must convert to human
+# review, not lost jobs: the held-out test showed the gate's reading of a set
+# can be wrong while its wording is right - the appeal line is the safety net
+# that turns a wrong verdict into a reply instead of a silent walk-away.
+APPEAL_LINE = ("**Reckon we've got this wrong? Reply - a human will personally look "
+               "at your file within the day.**")
 
 
 def write_rejection(job_dir: Path, job: str, pdf: Path,
@@ -518,9 +790,48 @@ def write_rejection(job_dir: Path, job: str, pdf: Path,
             L.append("- Wastage preference? (none / 10% / 15% / your own number)")
         L.append("")
 
-    L += ["---", "", "*We measure from stated dimensions only. We never scale off the "
+    L += ["---", "", APPEAL_LINE, "",
+          "*We measure from stated dimensions only. We never scale off the "
           "drawing, and we never guess off a bad input — that's the whole point.*", ""]
 
+    out.write_text("\n".join(L), encoding="utf-8")
+    return out
+
+
+def write_partial_notice(job_dir: Path, job: str, pdf: Path,
+                         checks: list[Check], facts: dict) -> Path:
+    """The letter that goes with a PARTIAL job: what we're delivering today
+    (floors + skirting), and exactly what to send to get the walls added."""
+    wall_fails = [c for c in checks if not c.ok and c.hard and c.key in PARTIAL_KEYS]
+    out = job_dir / f"PARTIAL_{job}.md"
+    today = _dt.date.today().isoformat()
+    # Letter truth rule: "dimensioned and readable" only as far as verified.
+    # This letter only exists when per-page verification passed, and it says
+    # exactly what passed: the chains on those sheets, counted.
+    ppc = facts.get("plan_page_chains", [])
+    n_pl, n_ch = len(ppc), sum(c for _, c in ppc)
+    L = [f"# Floors first - {job}", "",
+         f"**File:** `{pdf.name}`  |  **Checked:** {today}  |  "
+         f"**Pages:** {facts.get('pages', '?')}", "",
+         "Good news and a gap.", "",
+         f"**The good news:** we verified the dimension chains on your floor plan "
+         f"sheet{'s' if n_pl != 1 else ''} - {n_ch} chain{'s' if n_ch != 1 else ''} "
+         f"across {n_pl} sheet{'s' if n_pl != 1 else ''} add up to their printed "
+         "totals - so your **floor areas and tile skirting are being measured now** "
+         "and you'll have them the same day.", "",
+         "**The gap:** we couldn't find internal wet-area elevations in the set - "
+         "the wall drawings of each bathroom, ensuite and laundry, with tiling "
+         "heights on them. Wall tile can only be measured off those, and we won't "
+         "guess. (If they exist and we missed them, the reply line below is for "
+         "exactly that.)", ""]
+    for c in wall_fails:
+        L += [f"- **{c.detail}** - {c.means}", ""]
+    L += ["**Send the internal elevations and we'll add every wall** - same job, "
+          "no extra back-and-forth. Ask your designer for the internal elevation / "
+          "joinery sheets for each wet area.", "",
+          "---", "", APPEAL_LINE, "",
+          "*We measure from stated dimensions only. We never scale off "
+          "the drawing, and we never guess - that's the whole point.*", ""]
     out.write_text("\n".join(L), encoding="utf-8")
     return out
 
@@ -827,9 +1138,27 @@ misreads is exactly as wrong as one you miscalculated.
 Write your result to TAKEOFF_{job}.md in this folder.
 """
 
+PARTIAL_INSTRUCTION = """
+THIS IS A PARTIAL JOB - FLOORS + SKIRTING ONLY. The set passed intake as PARTIAL:
+dimensioned floor plans, but NO internal wet-area elevations.
+
+  - Measure floor areas and tile skirting from the floor plans, exactly per METHOD.md.
+  - Do NOT measure, estimate or assume ANY wall tile area. Not as a pending line, not
+    as a provisional number, not as a question with a guess attached. No wall numbers
+    exist in this document.
+  - The document gets a walls section in the ANSWER PACK that reads exactly:
+    "Walls: not measured - this set has no internal wet-area elevations.
+    Send the internal elevations and we'll add every wall."
+  - The ORDER THIS box carries floor tiles and skirting only. Under the bottom rule,
+    one line: walls are waiting on the internal elevations.
+  - Niches, feature walls and tiling heights are wall scope - out, same message.
+  - Everything else (checks, measured-vs-order split, answer form, proof) as normal,
+    applied to the floors.
+"""
+
 
 def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
-            timeout: int = 3600) -> Path | None:
+            timeout: int = 3600, partial: bool = False) -> Path | None:
     binary = resolve_claude()
     if not binary:
         print("  ! claude CLI not found on PATH - skipping analysis.")
@@ -852,6 +1181,8 @@ def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
         m2_per_box=answers.get("m2_per_box") or "not given - no boxes line",
         always_flag=s["always_flag"],
     )
+    if partial:
+        prompt += PARTIAL_INSTRUCTION
     cmd = build_command(binary, prompt)
     print(f"  > {binary} -p <instruction> --dangerously-skip-permissions")
     print(f"    cwd = {job_dir}")
@@ -887,10 +1218,20 @@ def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
 
 def write_intake_report(job_dir: Path, job: str, pdf: Path,
                         checks: list[Check], facts: dict, answers: dict) -> Path:
+    verdict = gate_verdict(checks)
+    verdict_line = {
+        "PASS": "**Verdict: PASS** - full takeoff.",
+        "PARTIAL": "**Verdict: PARTIAL** - floor plans whose own dimension chains "
+                   "verify, but no internal wet-area elevations. Floors + skirting "
+                   "measured now; send the internal elevations and we'll add every "
+                   "wall.",
+        "FAIL": "**Verdict: FAIL** - see the rejection letter.",
+    }[verdict]
     out = job_dir / "intake_report.md"
     L = [f"# Intake report - {job}", "",
          f"**File:** `{pdf.name}`  |  **Pages:** {facts.get('pages','?')}  |  "
          f"**Checked:** {_dt.date.today().isoformat()}", "",
+         verdict_line, "",
          "| Check | Result | Detail |", "|---|---|---|"]
     for c in checks:
         L.append(f"| {c.key} | {c.status} | {c.detail} |")
@@ -903,7 +1244,8 @@ def write_intake_report(job_dir: Path, job: str, pdf: Path,
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="TAKEOFF v1 - AI plan measurement")
+    ap = argparse.ArgumentParser(
+        description=f"{brand_name()} takeoff pipeline v1 - AI plan measurement")
     ap.add_argument("pdf", type=Path, help="path to the plan set PDF")
     ap.add_argument("--job", help="job name (default: PDF stem)")
     ap.add_argument("--outdir", type=Path, default=Path("jobs"))
@@ -918,7 +1260,11 @@ def main(argv=None) -> int:
     ap.add_argument("--m2-per-box", type=float,
                     help="if given, the order box gains a boxes-to-buy line, rounded up")
     ap.add_argument("--no-walls", action="store_true",
-                    help="floors only - elevations become a warning, not a failure")
+                    help="floors only by request - wall checks warn instead of "
+                         "deciding PASS/PARTIAL")
+    ap.add_argument("--page-classes", type=Path,
+                    help="page-classification sidecar JSON ({\"1\": \"floor_plan\", ...}); "
+                         "default: auto-discover sidecar, else classify via claude CLI")
     ap.add_argument("--intake-only", action="store_true", help="run the gate and stop")
     ap.add_argument("--no-analyse", action="store_true", help="extract but don't call claude")
     ap.add_argument("--timeout", type=int, default=3600)
@@ -935,23 +1281,43 @@ def main(argv=None) -> int:
                "tile_size": a.tile_size,
                "m2_per_box": a.m2_per_box, "lay_pattern": a.lay_pattern}
 
-    print(f"TAKEOFF v1  |  job '{job}'  |  {job_dir}")
+    print(f"{brand_name()} takeoff v1  |  job '{job}'  |  {job_dir}")
 
     # ---- 1. INTAKE GATE - always first, before any analysis -----------------
     print("[1/3] intake gate")
-    checks, facts = run_intake(a.pdf, want_walls=not a.no_walls)
+    if a.page_classes:
+        try:
+            classes = _normalise_classes(
+                json.loads(a.page_classes.read_text(encoding="utf-8")))
+            class_src = f"sidecar {a.page_classes.name}"
+        except (ValueError, OSError) as exc:
+            print(f"error: could not read --page-classes {a.page_classes}: {exc}")
+            return 2
+    else:
+        classes, class_src = get_page_classes(a.pdf)
+    print(f"      pages: {class_src if classes else 'unclassified - ' + class_src}"
+          f"{'' if classes else ' (falling back to title heuristics)'}")
+    checks, facts = run_intake(a.pdf, want_walls=not a.no_walls, page_classes=classes)
     for c in checks:
         print(f"      {c.status:4}  {c.key:20} {c.detail}")
 
     write_intake_report(job_dir, job, a.pdf, checks, facts, answers)
 
-    if any(not c.ok and c.hard for c in checks):
+    verdict = gate_verdict(checks)
+    if verdict == "FAIL":
         path = write_rejection(job_dir, job, a.pdf, checks, facts, answers)
         print(f"\nINTAKE FAILED - no analysis run.\nWrote {path}")
         print("We never guess off bad inputs.")
         return 1
 
-    print("      -> PASS")
+    partial = verdict == "PARTIAL"
+    if partial:
+        notice = write_partial_notice(job_dir, job, a.pdf, checks, facts)
+        print("      -> PARTIAL  floors + skirting only")
+        print("         no internal wet-area elevations - walls not measured.")
+        print(f"         Wrote {notice} (forward it with the takeoff)")
+    else:
+        print("      -> PASS")
 
     # ---- 1b. CUSTOMER PROFILE - the order settings, never the measurement ----
     root = Path(__file__).resolve().parent
@@ -986,8 +1352,10 @@ def main(argv=None) -> int:
         return 0
 
     # ---- 3. ANALYSE ---------------------------------------------------------
-    print("[3/3] analysis via claude CLI")
-    out = analyse(job_dir, job, answers, prof, settings, timeout=a.timeout)
+    print("[3/3] analysis via claude CLI"
+          + ("  (PARTIAL: floors + skirting only)" if partial else ""))
+    out = analyse(job_dir, job, answers, prof, settings, timeout=a.timeout,
+                  partial=partial)
     if out:
         print(f"\nDone. {out}")
         return 0

@@ -3,6 +3,12 @@
 **Name:** CHALKLINE
 **Tagline:** *Measured, not guessed.*
 
+> **⚠ The name is under review** — `chalkline.com.au` is already taken (domain collision),
+> so CHALKLINE may not survive contact with the handle grab. It stays until Jack decides.
+> This file is the **single source of truth** for the name and tagline: every document,
+> template and script sources them from here — body copy included — so the rename, if it
+> comes, is an edit to this file plus a re-render of the PDFs, nothing else.
+
 A chalk line is the first true line on a job. You snap it before you lay anything, and
 everything after it references back to it. If the line's wrong, the floor's wrong, and no
 amount of good work later fixes it.
@@ -109,7 +115,7 @@ Every page, full width, rule above in rule grey.
 
 ```
 ───────────────────────────────────────────────────────────────────────────
-Answer the questions — we re-issue free within 24 hours.   hello@chalkline.example · 04XX XXX XXX      3 / 9
+Answer the questions — we re-issue free within 24 hours.   <EMAIL> · <MOBILE>      3 / 9
 ```
 
 The re-issue promise is **said once** — here, as page furniture. It never appears in the
@@ -154,20 +160,21 @@ no dotted leaders — it's a list, not a quantity.
 
 ## 7. Boxes generally
 
-Three box types, all built from ASCII rules in monospace so they survive any renderer:
+Four box types, all built from ASCII rules in monospace so they survive any renderer:
 
 | Box | Where | Contains |
 |---|---|---|
 | **ORDER THIS** | Page 1, first thing | The quantities. Pending lines included. |
 | **NOT INCLUDED** | Page 1, straight after | Scope we did not measure, and anything ⚠-unresolved. |
 | **SITE NOTES** | Page 2, after the rooms | Drawing-set quirks a person on site needs to know. |
+| **FLAGGED FOR YOU** | Page 3 | Cost items that aren't quantities — mitred corners, trims, where the wet zones are. |
 
 ## 8. Structure — ANSWER PACK, then PROOF
 
 The document is two documents in one binder.
 
-**ANSWER PACK** — pages 1–3. What to order, what to check, what to answer. Written to be
-read on a phone, in a ute, once.
+**ANSWER PACK** — pages 1–4. What to order, what to check, what we flagged, what to answer.
+Written to be read on a phone, in a ute, once.
 
 **THE PROOF** — everything after the divider. Full working, every cross-check, every sheet.
 Written to be checked, not read.

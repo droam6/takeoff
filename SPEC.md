@@ -1,6 +1,7 @@
-# SPEC — What TAKEOFF measures, and for whom
+# SPEC — What we measure, and for whom
 
-TAKEOFF is a done-for-you plan-measurement service. A tradie sends a plan set; we send
+This is a done-for-you plan-measurement service (the brand name lives in `BRAND.md`).
+A tradie sends a plan set; we send
 back a room-by-room m² breakdown with every number showing its working, plus a list of
 questions we need answered before the numbers can be used to quote.
 
@@ -137,16 +138,37 @@ those areas are reported as their own line because they carry a different rate.
 doesn't trust is worth nothing. He is reading this on a phone, one-handed, in a ute. A
 number that gets misread is exactly as wrong as one that was miscalculated.
 
-So the answer comes first and the working comes last. The full template is defined in
-`TAKEOFF_METHOD.md` §9–§11; the shape is:
+So the answer comes first and the working comes last. The document is two documents in one
+binder — the **ANSWER PACK** (pages 1–4), then **THE PROOF** behind an unmissable divider.
+The full template is defined in `TAKEOFF_METHOD.md` §9–§11; this is the shipped shape,
+section for section (see `TAKEOFF_sample.md` / `.pdf` for the worked example):
+
+**ANSWER PACK — pages 1–4**
+
+| Page | Section | |
+|---|---|---|
+| 1 | **ORDER THIS** box | Quantities to order, extra for cuts already added, rounded to 0.1. Pending lines inside the box, each naming the question that unblocks it. Settings sentence under the bottom rule. First thing on the page. |
+| 1 | **NOT INCLUDED** box | Scope we did not measure — waterproofing, screed, prep, labour, pricing — plus every ⚠-unresolved item, each pointing at its question. |
+| 1 | **CHECK THESE *n* THINGS BEFORE YOU QUOTE** | Three to five plain tick-box questions — only what changes a number materially, each with what it's worth in m². |
+| 2 | **ROOM BY ROOM** | One number per line, plain English, no arithmetic. ✅ or ⚠ on every room. |
+| 2 | **SITE NOTES** box | Drawing-set quirks a person on site needs: scale anomalies, hand-drawn markups, chain disagreements, the measurement convention. |
+| 3 | **FLAGGED FOR YOU** box | Cost items that aren't quantities: mitred corners and trims in lineal metres, and where the wet zones are. |
+| 4 | **ASSUMPTIONS — THE ANSWER FORM** | Every fill-in as a table row — what we assumed, what we used, what it's worth, a blank for their answer — plus scope tick-boxes. |
+
+**THE PROOF — everything after the divider**
 
 | | Section | |
 |---|---|---|
-| 1 | **ORDER THIS** | The totals box. Quantities to order, extra for cuts already added, rounded to 0.1. First thing on the page. |
-| 2 | **CHECK THESE *n* THINGS BEFORE YOU QUOTE** | Three to five plain tick-box questions — only what changes a number materially. |
-| 3 | **ROOM BY ROOM** | One number per line, plain English, no arithmetic. |
-| 4 | *Other trades* | Only if in scope. |
-| 5 | **HOW WE GOT THESE NUMBERS** | Straight measurements, all working, what we double-checked, what we filled in, drawings read, and the closing checklist. |
+| 1 | **The measured areas, and how they became the order** | Full precision, conversion in visible steps. The measured column never moves with anyone's settings. |
+| 2 | **Room by room working** | Every `×`, every subtraction. |
+| 3 | **What we double-checked** | The six verification checks as plain statements with ✅/⚠. |
+| 4 | **What we had to fill in** | Points back to the page-4 answer form, plus anything worth saying that doesn't change a number. |
+| 5 | **The drawings we read** | Sheet numbers, titles, scale, revision. |
+| 6 | **Before you quote** | The closing checklist, unticked. |
+| last | **SET UP YOUR ACCOUNT** | The six profile questions as a fillable form. Last because it isn't about this job. |
+
+Other trades' quantities (painter) sit behind a profile toggle: measured regardless, one line
+in the proof, shown in full only when asked for.
 
 Three rules govern everything above the divider:
 
@@ -157,7 +179,30 @@ Three rules govern everything above the divider:
 - **Nothing unsafe to order sits in the order total.** A room we can't finish is excluded
   from the box and listed underneath as "not in that total".
 
-## 4. What we deliberately do **not** do
+## 4. The PARTIAL takeoff — floors + skirting first
+
+An intake verdict of **PARTIAL** (dimensioned floor plans, no internal wet-area
+elevations — `INTAKE.md` §C) produces a real deliverable, not a rejection. Five of the
+nine stress-test sets are exactly this shape (`STRESS_REPORT.md`): the most likely
+real-world job is a PARTIAL one.
+
+- **Measured and delivered:** floor areas per room (§1.1), tile skirting in lineal
+  metres, with the same verification checks, the same measured-vs-order split, and the
+  same answer form — applied to the floors.
+- **Not in the document:** any wall number. No wall tile, no niches, no feature zones,
+  no tiling heights — not even as a provisional line. A guessed wall is exactly the
+  product we refuse to sell.
+- **The walls section reads:** *"Walls: not measured — this set has no internal
+  wet-area elevations. Send the internal elevations and we'll add every wall."*
+- The ORDER THIS box carries floor tiles and skirting only, with one line under the
+  bottom rule saying the walls are waiting on the elevations.
+- Delivered alongside `PARTIAL_<job>.md` — the letter that says what we measured today
+  and exactly which sheets unlock the rest. Same job, no extra back-and-forth.
+
+Worked example: `TAKEOFF_sample_floors_only.md` / `.pdf` — the sample set with its
+internal wet-area elevations removed, taken through the PARTIAL path end to end.
+
+## 5. What we deliberately do **not** do
 
 - We do not scale off the drawing. Ever. Printed dimensions only.
 - We do not price. We measure. Rates are the tradie's business.

@@ -1,6 +1,4 @@
-# CHALKLINE — Business Plan
-
-**Measured, not guessed.**
+# Business plan
 
 *Version 3 · 16 August 2026 · reviewed every Sunday*
 
@@ -71,6 +69,11 @@ run before we know what any of this is worth, and a published price list would f
 answer before we've heard it. It also keeps every enquiry a conversation, which is where the
 other three modules get sold.
 
+> **⚠ HYPOTHESIS — every number in this section.** Zero discovery conversations have
+> happened and zero prices have been paid. Nothing below is validated until **Gate 1
+> returns a named price from customer #1**; treat these as anchors for that conversation,
+> not as prices.
+
 Indicative, to be replaced by discovery:
 
 | | Product | From | Notes |
@@ -91,6 +94,9 @@ costs.
 ---
 
 ## 4. The revenue math
+
+> **⚠ HYPOTHESIS.** The $250/month average is a §3 hypothesis compounded — no client has
+> ever paid it. This table is arithmetic on an assumption, pending Gate 1's price.
 
 **30 clients at an average of $250/month = $7,500/month recurring — before a single per-job
 takeoff is invoiced.**
@@ -288,9 +294,12 @@ content for a business with no paying customers is procrastination with a receip
   better files → M1 narrows to floors-only or dies.
 
 On intake we now have data rather than a guess: of nine plan sets pulled off the open web,
-**one was genuinely unreadable** and **six could be measured for floors but not walls**
-(`STRESS_REPORT.md`). The addressable failure isn't unreadability — it's missing internal
-elevations, and **floors-only is still a sellable product.** That materially softens the risk.
+**two were genuinely unreadable** and **five could be measured for floors but not walls**
+(`STRESS_REPORT.md`, round 2). The addressable failure isn't unreadability — it's missing
+internal elevations, and **floors-only is now a shipped product tier, not a hypothesis**: the
+gate's PARTIAL verdict produces a floors + skirting takeoff the same day, with a letter saying
+exactly which sheets unlock the walls (`INTAKE.md`, `SPEC.md` §4, `STRESS_REPORT.md` round 3).
+That materially softens the risk.
 
 ### The Sunday gate
 
@@ -365,5 +374,5 @@ Weekday evening blocks, roughly 90 minutes after the tools, plus a Sunday review
 
 ---
 
-*CHALKLINE measures from stated dimensions only. It never scales off the drawing, and it never
-guesses. That rule is the product, it is the tagline, and it is the business.*
+*We measure from stated dimensions only. We never scale off the drawing, and we never
+guess. That rule is the product, it is the tagline, and it is the business.*

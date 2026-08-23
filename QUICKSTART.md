@@ -5,6 +5,43 @@ waiting.
 
 ---
 
+## A fresh job, start to finish
+
+A real customer set just arrived. The whole flow is three steps:
+
+**1. Drop the PDF** anywhere on this machine (the repo folder is fine).
+
+**2. Run it** — one command, with the customer's answers as flags:
+
+```bash
+python3 takeoff.py path/to/their-plans.pdf \
+    --job smith-reno \
+    --trade tiler \
+    --rooms "main bath and ensuite - floors and walls" \
+    --customer <their-profile-name-if-they-have-one>
+```
+
+The intake gate runs first and decides, before anything is spent:
+
+| Gate says | What you get | What you send the customer |
+|---|---|---|
+| **PASS** | `jobs/smith-reno/TAKEOFF_smith-reno.md` — the full takeoff | The takeoff (render it: step 3) |
+| **PARTIAL** | The takeoff, **floors + skirting only**, plus `PARTIAL_smith-reno.md` | Both — the takeoff and the floors-first letter. The walls get added when they send the internal elevations |
+| **FAIL** | `REJECTED_smith-reno.md`, nothing measured | The rejection letter, as-is |
+
+**3. Review, render, send.** Read the takeoff before it goes out — every number, the
+questions, the ⚠ marks (human sign-off is the delivery model). Then render the branded PDF:
+
+```bash
+python3 render_pdf.py jobs/smith-reno/TAKEOFF_smith-reno.md TAKEOFF_smith-reno.pdf \
+    --job TKF-002 --rev A --drawings "<their rev, date>" --supersedes none \
+    --date "<today>"
+```
+
+Everything below is the detail: per-platform setup, profiles, flags, exit codes.
+
+---
+
 ## What you need
 
 | | |
@@ -89,7 +126,10 @@ python3 takeoff.py plans.pdf --intake-only
 # extract pages and text but don't call Claude (useful for eyeballing a set)
 python3 takeoff.py plans.pdf --no-analyse
 
-# floors only - a set with no elevations then passes intake instead of failing
+# the customer only wants floors - wall checks become warnings, verdict is PASS
+# (a set with plans but no internal wet-area elevations already degrades to a
+#  floors + skirting job on its own: the PARTIAL verdict. --no-walls is for when
+#  floors-only is the REQUEST, not the limitation.)
 python3 takeoff.py plans.pdf --no-walls --rooms "all floors"
 
 # sharper page images for fine dimension text (slower, bigger files)
@@ -171,8 +211,27 @@ python3 takeoff.py plans.pdf
 
 ## What happens when the plans aren't good enough
 
-The intake gate runs **before** any analysis. If it fails, you get a
-`REJECTED_<job>.md` instead of a takeoff, and nothing is spent on measuring:
+The intake gate runs **before** any analysis and returns one of three verdicts
+(`INTAKE.md` §C).
+
+**PARTIAL** — the floor plans are dimensioned and readable but there are no internal
+wet-area elevations. The run continues as a **floors + skirting** job: the takeoff's walls
+section says the walls weren't measured and asks for the internal elevations, and
+`PARTIAL_<job>.md` is written for you to forward with it:
+
+```
+[1/3] intake gate
+      ...
+      FAIL  wet_area_elevations  4 floor plan(s) and 7 elevation sheet(s) found, but
+                                 none of the elevations reads as a dimensioned internal
+                                 elevation of a wet area
+      -> PARTIAL  floors + skirting only
+         no internal wet-area elevations - walls not measured.
+         Wrote jobs/smith-reno/PARTIAL_smith-reno.md (forward it with the takeoff)
+```
+
+**FAIL** — you get a `REJECTED_<job>.md` instead of a takeoff, and nothing is spent on
+measuring:
 
 ```
 [1/3] intake gate
@@ -196,7 +255,7 @@ what it means, and what to send instead. See `INTAKE.md` for the full list of re
 
 | Code | Meaning |
 |---|---|
-| `0` | Success — takeoff written (or `--intake-only` / `--no-analyse` completed) |
+| `0` | Success — takeoff written (or `--intake-only` / `--no-analyse` completed). A PARTIAL run exits 0 too: a smaller job is still a job |
 | `1` | Intake failed (rejection written), or the analysis step produced no file |
 | `2` | The PDF path doesn't exist |
 
@@ -225,7 +284,8 @@ options:
   --lay-pattern P      straight / brick bond / diagonal / herringbone - this job only
   --tile-size TEXT     e.g. "600x600 porcelain"
   --m2-per-box N       adds a boxes-to-buy line, rounded up to whole boxes
-  --no-walls           floors only; missing elevations warn instead of failing
+  --no-walls           floors only by request; wall checks warn instead of
+                       deciding PASS/PARTIAL
   --intake-only        run the gate and stop
   --no-analyse         extract pages + text, but don't call Claude
   --timeout SECONDS    analysis timeout (default: 3600)

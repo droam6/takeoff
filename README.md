@@ -1,11 +1,13 @@
-# CHALKLINE
-
-**Measured, not guessed.**
+# Plan measurement for tradies
 
 AI plan measurement for tradies. Send a plan set, get a room-by-room m² breakdown back
 the same day, with every number showing its working.
 
 Not software they have to learn — a service they send plans to.
+
+**The brand name and tagline live in [`BRAND.md`](BRAND.md) and nowhere else** — every
+document, template and script sources them from there. (The name is currently under
+review — domain collision; see the note in `BRAND.md`.)
 
 ```bash
 pip install pymupdf
@@ -34,6 +36,7 @@ document — not a guess buried in a footnote.
 | [`TAKEOFF_METHOD.md`](TAKEOFF_METHOD.md) | The analysis protocol: six-check verification layer, the measured/order split, and the output template |
 | [`QUICKSTART.md`](QUICKSTART.md) | Exact usage, macOS and Windows PowerShell |
 | [`TAKEOFF_sample.md`](TAKEOFF_sample.md) · [`.pdf`](TAKEOFF_sample.pdf) | A worked takeoff of the sample set — order box first, all working below |
+| [`TAKEOFF_sample_floors_only.md`](TAKEOFF_sample_floors_only.md) · [`.pdf`](TAKEOFF_sample_floors_only.pdf) | The worked **PARTIAL** deliverable — floors + skirting off a set with no internal wet-area elevations |
 | [`BRAND.md`](BRAND.md) | Wordmark, one accent colour, header/footer strips, the ORDER THIS box |
 | [`BUSINESS_PLAN.md`](BUSINESS_PLAN.md) · [`.pdf`](BUSINESS_PLAN.pdf) | The business: problem, moat, pricing, go-to-market, the locked delivery model, kill criteria |
 | [`STRESS_REPORT.md`](STRESS_REPORT.md) | What broke when nine plan sets we didn't choose went through the gate |
@@ -45,6 +48,7 @@ document — not a guess buried in a footnote.
 | `takeoff.py` | Intake gate → profile → extraction → analysis via the `claude` CLI |
 | `render_pdf.py` | Markdown → branded PDF (header/footer strips, page breaks) |
 | `backtest/backtest.py` | QA harness — runs a folder of plan PDFs through the pipeline and scores them |
+| `backtest/fetch_corpus.sh` | Rebuilds the test corpus from a clean clone (7 of the 9 sets — see `backtest/SOURCES.md`) |
 
 ## Pipeline
 
@@ -70,6 +74,13 @@ describes. Extraction and arithmetic are deterministic.
 **A customer profile can never change a measured area.** Lay pattern, cut allowance,
 buffers, rounding and box counts change the *order* only. Every takeoff prints both,
 labelled — so a tradie can disagree with the allowance and still trust the measurement.
+
+## Operating cadence
+
+The operating cadence — the Sunday gate reviews, kill-criteria checks and follow-ups the
+business plan depends on — **is scheduled and tracked in the manager system, not in this
+repo.** Nothing here fires a reminder; the repo holds the criteria (`BUSINESS_PLAN.md` §8),
+the manager system holds the schedule.
 
 ## Sample set
 

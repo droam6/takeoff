@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Render a markdown document to a branded CHALKLINE PDF.
+"""Render a markdown document to a branded PDF.
+
+The brand (name + tagline) is read from BRAND.md at render time - the single
+source of truth. Nothing here hardcodes it.
 
 Markdown -> HTML (`markdown`) -> PDF (PyMuPDF's Story engine), so the only
 dependencies are the two libraries takeoff.py already needs plus `markdown`.
@@ -12,7 +15,7 @@ dotted leaders line up.
 Page control
 ------------
 A line containing only `<!--newpage-->` starts a new page. Used to hold the
-ANSWER PACK to its three pages.
+ANSWER PACK to its four pages.
 
     pip install pymupdf markdown
 
@@ -84,7 +87,11 @@ def read_brand(path: Path = BRAND_FILE) -> tuple[str, str]:
                 break
     except OSError:
         pass
-    return name or "CHALKLINE", tagline or "Measured, not guessed."
+    if not (name and tagline):
+        # Fail loudly rather than render an unbranded or wrongly-branded PDF.
+        raise SystemExit(f"could not read **Name:** / **Tagline:** from {path} - "
+                         "BRAND.md is the single source of truth for the brand")
+    return name, tagline
 
 
 def spaced(name: str) -> str:
@@ -130,7 +137,7 @@ def draw_footer(page, meta, n, total, pw, ph):
     L, R, y = 54, pw - 54, ph - 42
     page.draw_line(fitz.Point(L, y), fitz.Point(R, y), color=RULE, width=0.8)
     _text(page, L, y + 12, PROMISE, 7.5, ACCENT, "hebo")
-    contact = meta.get("contact", "hello@chalkline.example  ·  04XX XXX XXX")
+    contact = meta.get("contact", "<EMAIL>  ·  <MOBILE>")
     _text(page, L, y + 22, contact, 7, GREY)
     pn = f"{n} / {total}"
     _text(page, R - fitz.get_text_length(pn, fontname="helv", fontsize=7.5),
@@ -181,7 +188,8 @@ def render(src: Path, dst: Path, meta: dict) -> Path:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Render markdown to a branded CHALKLINE PDF")
+    ap = argparse.ArgumentParser(
+        description="Render markdown to a branded PDF (brand read from BRAND.md)")
     ap.add_argument("src", type=Path)
     ap.add_argument("dst", type=Path)
     ap.add_argument("--title", default="")
@@ -192,7 +200,7 @@ def main() -> None:
     ap.add_argument("--drawings", default="")
     ap.add_argument("--supersedes", default="")
     ap.add_argument("--date", default="")
-    ap.add_argument("--contact", default="hello@chalkline.example  ·  04XX XXX XXX")
+    ap.add_argument("--contact", default="<EMAIL>  ·  <MOBILE>")
     a = ap.parse_args()
     brand_name, brand_tagline = read_brand()
     render(a.src, a.dst, {
