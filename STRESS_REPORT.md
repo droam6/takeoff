@@ -1,13 +1,13 @@
 # STRESS REPORT — nine plan sets we didn't choose
 
-> **CURRENT RESULT — Round 3 (23 August 2026), with the PARTIAL tier live:
-> 2 PASS · 5 PARTIAL (floors + skirting now, walls on receipt of internal elevations) ·
-> 2 FAIL.** The five sets that round 2 rejected for missing internal elevations are now
-> jobs, not rejections. Round 3 is the round of record — see
-> [ROUND 3 — the PARTIAL tier](#round-3--the-partial-tier). Rounds 1 and 2 below are kept
-> because they document what each set of fixes fixed; their headline numbers are superseded.
-> **JOB 2 (23 August 2026)** put the *measurement method* itself through two unfamiliar
-> sets — see [JOB 2 — the measurement method on unfamiliar drawings](#job-2--the-measurement-method-on-unfamiliar-drawings).
+> **CURRENT RESULT — Round 4 (23 August 2026), with model page recognition, honest
+> letters and the drawing-page denominator: 12 of 13 runnable sets agree with their
+> labels across both corpora** — both held-out misses fixed, one new miss (`ncc`, whose
+> pathological text layer is now the gate's sharpest known edge, logged for round 5).
+> See [ROUND 4](#round-4--letters-model-page-recognition-and-the-honest-denominator).
+> Rounds 1–3 and JOB 2 below are kept because they document what each round fixed; their
+> headline numbers are superseded. (Round 2's "scanned and OCR'd" diagnosis of `ncc` was
+> itself wrong — round 4 established it is vector CAD with a corrupt text encoding.)
 
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
@@ -589,3 +589,91 @@ visible in the check log rather than hidden in the totals. On a quote set the me
 correctly refused to manufacture numbers, and the refusal surfaced a specific, fixable
 gate gap. Both documents ship with their uncertainty printed on page 1 — which is the
 product working as designed.
+
+---
+---
+
+# ROUND 4 — letters, model page recognition, and the honest denominator
+
+**Run:** 23 August 2026 · full harness, both inboxes, model page classification via
+committed sidecars (`backtest/page_classes/`) · built from `backtest/HELD_OUT_TEST.md`'s
+four logged defects, nothing else.
+
+## What changed
+
+1. **Letters state only verified facts**, and every rejection and PARTIAL letter now ends
+   with the appeal line — *"Reckon we've got this wrong? Reply — a human will personally
+   look at your file within the day."* Gate misses must convert to human review, not lost
+   jobs. The two misdiagnosing templates are gone: the chains letter no longer claims
+   "OCR'd scan", the wet-area letter no longer describes elevations it didn't find.
+2. **Page recognition is a model task** (sidecar in-session / headless CLI in subprocess
+   mode; classes floor_plan · internal_elevation · external_elevation · detail ·
+   document · marketing_render · scan), with the deterministic layer unchanged as the
+   sole trust authority — a class never makes a quantity. Fallback to title heuristics
+   announces itself. (`TAKEOFF_METHOD.md` §0b.)
+3. **Chains-per-page counts classified drawing pages only.**
+
+## Round-4 scoreboard vs round 3 — 13 runnable sets, both label sets
+
+| Set | Label | Round 3 | Round 4 | Δ |
+|---|---|---|---|---|
+| `sample_plans` | PASS | ✅ PASS ✓ | ✅ PASS ✓ | — |
+| `derbyshire` | PASS | ✅ PASS ✓ | ✅ PASS ✓ (and now counts exactly 1 floor plan, not 4 title-hits) | — |
+| `eastcoast` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `housedesigners` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `creativehomeplans` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `sample-floors-only-derived` | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `ncc` | FAIL | 🛑 ✓ | 🟨 **PARTIAL ✗** | **NEW MISS** |
+| `arei` *(held-out)* | floors-only | 🛑 ✗ | 🟨 ✓ | **FIXED** |
+| `bodc-da137` *(held-out)* | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+| `bodc-da142` *(held-out)* | floors-only | 🛑 ✗ | 🟨 ✓ | **FIXED** |
+| `uralla-da45` *(held-out)* | scan | 🛑 ✓ | 🛑 ✓ | — |
+| `desirehomes` *(held-out)* | marketing | 🛑 ✓ | 🛑 ✓ | — |
+| `dp-wilston` *(held-out)* | floors-only | 🟨 ✓ | 🟨 ✓ | — |
+
+**Round 3: 11/13 · Round 4: 12/13.** Both held-out misses flipped to correct; one corpus
+set regressed. (`ssc-da220327`, `ssc-da181440`, `phone-scan` remain un-runnable on this
+machine — a scan classification would fail phone-scan on 0 characters exactly as before,
+and the two DA sets' floor plans would classify like the other DA packs; both statements
+are inference, not runs.)
+
+## The new miss, dissected — and a discovery about the set itself
+
+`ncc` flipped FAIL → PARTIAL, and the letter now tells its owner "your floor plans are
+dimensioned and readable." They are not. Three guards each missed by a margin:
+
+- **Classification told the truth** — and that truth was new: the pages are **vector CAD
+  with ~9,500–15,400 vector strokes per page and a corrupt text encoding**, not the
+  "scanned and OCR'd" set round 2 diagnosed. Round 2's confident diagnosis was itself
+  wrong; the honest classes are floor_plan/detail/elevation, so the recognition layer
+  correctly refused to call it a scan.
+- **The clean-ratio check passes garbage** (99.5%+): the corrupt encoding emits ordinary
+  ASCII, and the word-hit score — demoted to advisory in round 3 precisely because it
+  separates nothing — reads 29%, above its old bar.
+- **The chain rate crossed the new denominator**: 6 coincidence-chains over 11 drawing
+  pages = 0.55/page, over the 0.4 bar that nine sets tuned. Round 2's protection was the
+  50-page denominator — a coincidence of document-heavy packs, not a design.
+
+Not fixed this round — round 4 built only from the held-out evidence, and this defect
+surfaced during its own re-run. **Logged for round 5** with a proposed fix: require
+verified chains *on the floor-plan pages themselves* — a "dimensioned floor plan" whose
+own chains never add up is not readable, whatever the set-wide rate says. (ncc's two
+floor-plan pages carry garbage tokens and effectively zero verified chains; every real
+floor plan in both corpora carries several.)
+
+## Counts for the round
+
+| Count | Value |
+|---|---|
+| Crashes | **0** (13 sets, two inboxes) |
+| Wrong verdicts | **1 of 13** (`ncc`, new) — was 2 of 13 in round 3 |
+| Silent guesses | **0** — no letter carries a quantity; but note the PARTIAL letter's fixed phrase "dimensioned and readable" is itself a confident claim the ncc miss falsifies. Same defect family as round 3's letters; goes to round 5 with the fix above |
+
+## Verdict
+
+The seeing task moved to the thing that can see, and both held-out misses — three rounds
+of the same title-detection family, and the diluted denominator — flipped to correct
+without touching a threshold. The cost was honestly measured: one regression, from a set
+whose text layer is pathological in a way no current deterministic check individually
+catches, now the sharpest known edge of the gate. The safety net for exactly this case —
+the appeal line and the human-review rule — is on every letter it would send.

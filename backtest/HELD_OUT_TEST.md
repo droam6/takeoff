@@ -128,3 +128,32 @@ set (sheet naming, chains-per-page over mixed packs) is brittle on layouts it ha
 seen, and each miss turns a same-day floors job into a rejection letter — lost revenue,
 not lost trust. The failure wording rules held even when the verdicts were wrong, which
 is why these are commercial defects rather than credibility defects.
+
+---
+
+# ROUND 4 — before / after on the held-out six
+
+The freeze lifted; round 4 was built from this file's four defects (honest letters +
+appeal line, model page recognition with the deterministic layer unchanged as trust
+authority, drawing-page denominator). Frozen-run verdicts vs round 4, same
+prediction-based labels:
+
+| Set | Label | Frozen run (round 3) | Round 4 | Δ |
+|---|---|---|---|---|
+| `arei-example-plan.pdf` | floors-only | 🛑 FAIL ✗ | 🟨 **PARTIAL ✓** | **fixed** — the model recognised the floor plan the title heuristic missed (1 plan / 1 elev / 91 chains) |
+| `bodc-da137-dwelling.pdf` | floors-only | 🟨 PARTIAL ✓ | 🟨 PARTIAL ✓ | — |
+| `bodc-da142-dwelling.pdf` | floors-only | 🛑 FAIL ✗ | 🟨 **PARTIAL ✓** | **fixed** — 7 chains over 3 drawing pages (2.33/page) instead of 0.28 over 25 mixed pages |
+| `uralla-da45-2020-313-gostwyck-rd.pdf` | scan | 🛑 FAIL ✓ | 🛑 FAIL ✓ | — (all pages classify `scan`; post-hoc: the file is a scanned quarry environmental statement, not building drawings — the label and verdict hold either way) |
+| `desirehomes-coen-283.pdf` | marketing | 🛑 FAIL ✓ | 🛑 FAIL ✓ | — (`marketing_render`, 30 chars, 0 dims) |
+| `dp-wilston-house-extension.pdf` | floors-only | 🟨 PARTIAL ✓ | 🟨 PARTIAL ✓ | — |
+
+**Held-out agreement: 4/6 → 6/6.** Every letter now ends with the appeal line, and both
+previously-misdiagnosing templates state only what was verified.
+
+Cross-corpus honesty note: the same round introduced **one regression on the original
+corpus** — `ncc` flipped FAIL → PARTIAL (its corrupt-but-ASCII text layer passes the
+clean-ratio check, and its 6 coincidence-chains now clear the smaller drawing-page
+denominator). Dissected, with the round-5 fix proposal, in `STRESS_REPORT.md` ROUND 4.
+Round-4 runs used in-session sidecar classifications (committed in
+`backtest/page_classes/`); the subprocess classification path exists but was not
+exercised here — local-machine plumbing remains separately tested.
