@@ -480,3 +480,110 @@ now treats it as the default smaller job rather than a failure.
   path, not the gate's behaviour on unfamiliar floors-only drawings — the three re-run
   DA-level sets cover that.
 - Thresholds remain tuned-on-corpus. Nothing in this round adds held-out validation.
+
+---
+---
+
+# JOB 2 — the measurement method on unfamiliar drawings
+
+**Run:** 23 August 2026 · **in-session model runs** — the headless `claude` subprocess
+cannot launch in this remote environment, so the model performed both takeoffs directly,
+following `TAKEOFF_METHOD.md`; the subprocess pipeline itself still gets exercised on the
+local machine separately. Deliverables: `backtest/TAKEOFF_derbyshire.md` / `.pdf` (full)
+and `backtest/TAKEOFF_eastcoast.md` / `.pdf` (PARTIAL tier). This is the first time the
+measurement method has run end-to-end on plan sets nobody here had measured before.
+
+## Headline results
+
+| Set | Tier | Floors | Walls | Other |
+|---|---|---|---|---|
+| `derbyshire` (VIC construction set) | FULL | **28.179 m²** measured → 31.0 m² order | **30.606 m²** measured → 33.7 m² order | 0.578 m² mosaic splashback · 4.26 m tile skirting · laundry splashback + skirting held as questions |
+| `eastcoast` (QLD quote set) | PARTIAL | **~25.7 m² provisional — nothing order-grade** | not measured (no internal elevations) — the standing offer sent instead | empty ORDER THIS box, and that is the correct output |
+
+## Did the method hold? Mostly — and where it strained, it strained loudly.
+
+### What measured clean (derbyshire)
+
+A completely different practice style from the control — 1:100 plan + 1:50 plan details
+with internal elevations, mixed-case titles, joinery-heavy — and the method's core loop
+worked unchanged: chains → polygons → elevation heights → checks. **Every dimension chain
+closed to 0 mm**, including the house-length chain (20,185) and six independent ceiling
+chains that each sum to exactly 2,700 by different routes (300+1,500+40+560+300 ·
+450+500+1,750 · 900+150+600+1,050 · 500+1,000+300+900 · 600+2,100 · 300+1,350+150+900).
+Rooms closed both ways round. Fixture cross-checks landed (the 1800 bath, 900 benches on
+every sheet, 2,100 screens twice).
+
+### What the checks caught that a naive read would have guessed
+
+- **Tile bands, not tiled rooms.** This practice tiles a 900-high band in the ensuite and
+  full height only on feature/shower walls — the heights are printed and differ wall by
+  wall (900 / 300 under-vanity / 150 splashback / 2,700). A naive "room × 2,700" read
+  would have roughly **doubled the ensuite wall figure**. The §5.6 sanity ratio fired at
+  1.34/1.82 (below the 2.0–5.5 band) precisely because of this — and the right response
+  was to explain the flag, not suppress it: the ratio range itself assumes full-height
+  tiling and needs a caveat for band-tiled practices.
+- **Windows that don't exist inside.** Rev A plastered W2 and W2A over internally
+  (clouded on the ensuite sheet). A reader working from the window schedule would have
+  deducted two openings from walls that no longer have any. The revision-cloud rule
+  (§4) is what surfaced it.
+- **The laundry sheet with no lengths.** A19 prints vertical chains only — not one
+  horizontal dimension. Bench run and skirting runs are genuinely unmeasurable, so the
+  laundry splashback (~1.6 m²) and skirting (~4 m) shipped as questions instead of
+  quantities. A naive read would have scaled them off the 1:50 detail.
+- **A bathroom with no bath, a bedroom with tile.** The room called BATH is a shower
+  room; the only tub is in the ensuite. And BED 3's floor is marked TILES while BED 2 is
+  carpet — flagged for confirmation rather than silently priced either way.
+- **Scope cliff.** Entry, passage, kitchen, dining, living and bed 3 are all tiled on
+  the plan — several times the wet-area quantity — and the kitchen splashback is glass,
+  not tile. Both went to NOT INCLUDED with a question, not into the totals.
+
+### Where the method strained
+
+- **§5.3 (wall runs vs floor perimeter) lost its independence.** Derbyshire's internal
+  elevations print height chains but no run lengths, so both sides of the check derive
+  from the same plan chains. It still closed (13,780 = 13,780; 12,560 = 12,560) but as a
+  consistency check, not the two-sheet cross-check it is on the control set. The method
+  should record which sheets each side came from and say when they're the same.
+- **The eastcoast finding — the PARTIAL premise has a floor of its own.** The gate's
+  PARTIAL logic assumes *dimensioned floor plans ⇒ measurable floors*. Eastcoast passes
+  every text/chain check honestly — 100 chains verify, the 17,990 and 10,630 building
+  chains close exactly — **and no wet room carries a single printed extent.** It's a
+  quote-issue set ("QUOTE SET ONLY – NOT FOR CONSTRUCTION"): the structure is
+  dimensioned, the rooms are not. The method's no-scaling rule held (the deliverable is
+  an empty order box, provisional zone reads, and a request for the Construction Set),
+  but the gate currently can't tell this set from a room-dimensioned one. **Gate idea
+  for round 4: a room-level dimension coverage signal — how many enclosed room polygons
+  have ≥2 printed extents adjacent — so PARTIAL can say "floors measurable" vs "floors
+  provisional" before any measuring starts.**
+
+## Suspicious numbers, with reasoning
+
+| Number | Where | Why it's suspicious | Resolution |
+|---|---|---|---|
+| Wall:floor 1.34 / 1.82 | derbyshire ENS/BATH | Below the 2.0–5.5 sanity band | Real: band tiling. Every height traces to a printed chain. Flag explained, not suppressed |
+| 3,610 vs 3,620 | derbyshire bed 2 | Same wall, two values | Reference faces (100 vs 90 ticks); totals agree. Noted, not an error |
+| 10 mm segment | bath south chain (1,100 + **10** + 910) | Oddly small | The shower-screen line's own thickness; chain closes to 0 mm with it |
+| Laundry bench "2,400" | derbyshire | Not printed anywhere | Provisional from drawn bays; shipped as a question, worth ~1.6 m² |
+| Every eastcoast room figure | eastcoast | No printed room extents | All provisional by design; order box left empty |
+| 343.17 m² schedule total | eastcoast | Printed but unverifiable at room level | Used as a sanity anchor only |
+
+## Honest limits of this run
+
+- **These are in-session model runs.** The same model that wrote the method executed it;
+  the subprocess pipeline (headless CLI, timeouts, file handoff) was not exercised here
+  and still needs its local-machine run.
+- **Nobody has verified these numbers by hand.** The control set's numbers were
+  hand-measured and cross-checked; derbyshire's 28.179/30.606 are chain-verified but
+  await a second reader. They are exactly what the answer-form workflow is for.
+- **Two sets is two sets.** One construction-documentation practice and one quote-set
+  practice. The method generalised across that gap; that is evidence, not proof.
+
+## Verdict on generalisation
+
+**The method generalises; the gate's optimism about floor plans doesn't, and the checks
+are the reason we know.** On a real construction set the full loop produced an
+order-grade takeoff with every number traceable to a printed chain, and its strains were
+visible in the check log rather than hidden in the totals. On a quote set the method
+correctly refused to manufacture numbers, and the refusal surfaced a specific, fixable
+gate gap. Both documents ship with their uncertainty printed on page 1 — which is the
+product working as designed.
