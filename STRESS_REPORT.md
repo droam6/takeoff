@@ -1,13 +1,15 @@
 # STRESS REPORT — nine plan sets we didn't choose
 
-> **CURRENT RESULT — Round 4 (23 August 2026), with model page recognition, honest
-> letters and the drawing-page denominator: 12 of 13 runnable sets agree with their
-> labels across both corpora** — both held-out misses fixed, one new miss (`ncc`, whose
-> pathological text layer is now the gate's sharpest known edge, logged for round 5).
-> See [ROUND 4](#round-4--letters-model-page-recognition-and-the-honest-denominator).
-> Rounds 1–3 and JOB 2 below are kept because they document what each round fixed; their
-> headline numbers are superseded. (Round 2's "scanned and OCR'd" diagnosis of `ncc` was
-> itself wrong — round 4 established it is vector CAD with a corrupt text encoding.)
+> **CURRENT RESULT — Round 5 (23 August 2026), the final corpus round: 13 of 13
+> runnable sets agree with their labels. 0 crashes · 0 silent guesses.** A page counts
+> as a dimensioned floor plan only if its own chains verify — the measurement layer's
+> founding rule applied to the gate — and every letter states only what was verified,
+> ending with the human-review appeal line. See
+> [ROUND 5](#round-5--per-page-verification-the-lab-closes-here). Rounds 1–4 and JOB 2
+> below are kept as the record of what each round fixed; their headline numbers are
+> superseded. (Round 2's "scanned and OCR'd" diagnosis of `ncc` was itself wrong —
+> round 4 established it is vector CAD with a corrupt text encoding.) **The lab phase
+> ends here: the next test data is a real customer's drawings.**
 
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
@@ -677,3 +679,79 @@ without touching a threshold. The cost was honestly measured: one regression, fr
 whose text layer is pathological in a way no current deterministic check individually
 catches, now the sharpest known edge of the gate. The safety net for exactly this case —
 the appeal line and the human-review rule — is on every letter it would send.
+
+---
+---
+
+# ROUND 5 — per-page verification. The lab closes here.
+
+**Run:** 23 August 2026 · full harness, both inboxes, sidecar classifications.
+**Result: 13 of 13 runnable sets agree with their labels. 0 crashes. 0 silent guesses.**
+
+## What changed
+
+**The founding rule, applied to the gate.** The measurement layer's first law has always
+been §5.1: *chains must sum where they are used.* Round 5 makes the gate obey it: a page
+counts as a **dimensioned floor plan** for verdict purposes only if **its own chains
+verify** — segment chains on that sheet summing to their printed totals within
+tolerance (≥ 4 verified chains on the page, with ≥ 8 dimension tokens). Set-wide chain
+rates are advisory context; verdicts rest on the pages they depend on.
+(`TAKEOFF_METHOD.md` §0b.)
+
+The margins are stated, not hidden: across all 13 sets every real floor plan carries
+≥ 4 verified chains on its own sheet (two sit exactly at 4 — `bodc-142`'s plan and
+`creativehomeplans`' proposed first floor), and the worst corrupt-text page fakes 3 by
+coincidence. One chain of margin each way, tuned on this corpus, pending live
+validation.
+
+**Letter truth sweep.** "Dimensioned and readable" is gone as an unearned phrase: the
+PARTIAL letter now states the verified fact and its count — *"we verified the dimension
+chains on your floor plan sheet — 4 chains across 1 sheet add up to their printed
+totals"* — and the rejection letter for a failed verification says exactly what was
+looked for and not found, with the possible reasons left open and the human-review reply
+line underneath. The letter's "the set has no internal wet-area elevations" became "we
+couldn't find internal wet-area elevations in the set", with an explicit pointer to the
+reply line if we missed them.
+
+## The see-saw lesson, recorded for whoever tunes this next
+
+Round 2 caught `ncc` with a chains-per-page rate whose denominator happened to be a
+50-page document-heavy pack — **protection by coincidence, not design**. Round 4 fixed
+the denominator for two honest sets and thereby admitted `ncc` — the coincidence
+removed, nothing designed in its place. Round 5 replaces the coincidence with the
+design: verification at the exact place the verdict depends on. A set-wide rate can be
+diluted or concentrated by whatever else is in the pack; a floor plan's own chains
+cannot. When a threshold protects you and you don't know why, it isn't protecting you.
+
+## Final scoreboard — 13 runnable sets, both label sets
+
+| Set | Label | Round 3 | Round 4 | **Round 5** |
+|---|---|---|---|---|
+| `sample_plans` | PASS | ✓ | ✓ | **✅ PASS ✓** |
+| `derbyshire` | PASS | ✓ | ✓ | **✅ PASS ✓** |
+| `eastcoast` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `housedesigners` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `creativehomeplans` | floors-only | ✓ | ✓ | **🟨 ✓** (now on its 1 verified plan page; 2 chain-less plan pages rightly dropped) |
+| `sample-floors-only-derived` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `ncc` | FAIL | ✓ | ✗ | **🛑 FAIL ✓** — "no floor plan whose own dimension chains verify", the honest reason at last |
+| `arei` | floors-only | ✗ | ✓ | **🟨 ✓** |
+| `bodc-da137` | floors-only | ✓ | ✓ | **🟨 ✓** |
+| `bodc-da142` | floors-only | ✗ | ✓ | **🟨 ✓** (its plan page verifies exactly 4 chains — at the bar; watch it live) |
+| `uralla-da45` | scan | ✓ | ✓ | **🛑 FAIL ✓** |
+| `desirehomes` | marketing | ✓ | ✓ | **🛑 FAIL ✓** |
+| `dp-wilston` | floors-only | ✓ | ✓ | **🟨 ✓** (4 → 3 plan pages: the chain-less existing-conditions plan rightly dropped) |
+
+**Sets that moved this round:** `ncc` PARTIAL → FAIL (intended, honestly worded). Within
+unchanged verdicts, three sets' plan-page counts tightened (`creativehomeplans` 3 → 1,
+`wilston` 4 → 3, `ncc` 2 → 0) — every dropped page is one whose own chains do not
+verify. Nothing else moved in either direction. Graduation bar met: 0 crashes, 0 silent
+guesses, 12 holds held, `ncc` back to FAIL with the appeal line on its letter.
+
+## What the lab cannot prove
+
+Thirteen sets, all seen by the people who tuned against them. The two sets sitting
+exactly at the 4-chain bar are the first thing to watch when real drawings arrive; the
+three WAF-blocked corpus sets remain un-runnable on this machine; the subprocess
+classification path and the headless pipeline still get their exercise on the local
+machine. The next test data is a real customer's drawings — which is the test that
+counts, and the one this report cannot contain.

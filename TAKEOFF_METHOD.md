@@ -42,6 +42,16 @@ machinery on purpose:
   measurable). Rates like chains-per-page are computed over classified **drawing**
   pages, so document-heavy DA packs don't dilute the sheets that carry the chains.
 
+**Per-page verification — the founding rule, applied to the gate.** The measurement
+layer's first law is §5.1: *chains must sum where they are used.* From round 5 the gate
+obeys the same law: a page counts as a **dimensioned floor plan** for verdict purposes
+only if **its own chains verify** — segment chains printed on that page summing to their
+printed totals within tolerance. Set-wide chain rates are advisory context for a
+reviewer; a verdict rests on the pages it depends on, exactly as a measured area rests
+on the chains of the sheet it came from. (This closed the last known way a
+pathological text layer could reach the measurement stage: a file whose set-wide noise
+produced plausible totals could never produce a floor plan whose own chains close.)
+
 ---
 
 ## 1. Build the sheet register

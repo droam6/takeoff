@@ -222,7 +222,9 @@ section says the walls weren't measured and asks for the internal elevations, an
 ```
 [1/3] intake gate
       ...
-      FAIL  wet_area_elevations  4 floor plan(s) and 7 elevation sheet(s) found, but none...
+      FAIL  wet_area_elevations  4 floor plan(s) and 7 elevation sheet(s) found, but
+                                 none of the elevations reads as a dimensioned internal
+                                 elevation of a wet area
       -> PARTIAL  floors + skirting only
          no internal wet-area elevations - walls not measured.
          Wrote jobs/smith-reno/PARTIAL_smith-reno.md (forward it with the takeoff)

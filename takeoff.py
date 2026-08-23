@@ -334,6 +334,16 @@ MIN_CHAINS_PER_PAGE = 0.4
 MIN_CLEAN_RATIO = 0.90
 MIN_WORD_HIT = 0.15     # ADVISORY only - see the word_hit_score check
 MIN_WET_KEYWORDS = 4    # on one elevation sheet, incl. at least one fitting
+# ROUND 5 - per-page verification. A page counts as a DIMENSIONED floor plan
+# for verdict purposes only if ITS OWN chains verify: segment chains on that
+# page summing to their printed totals within tolerance. This is the
+# measurement layer's founding rule - chains must sum where they're used -
+# applied to the gate. Set-wide chain rates are advisory context only.
+# Margins, stated plainly: across both corpora every real floor plan carries
+# >= 4 verified chains on its own sheet (weakest observed: 4), and the worst
+# corrupt-text page fakes 3 by coincidence. One chain of margin each way,
+# tuned on 13 sets, pending live validation - expect this number to move.
+MIN_PAGE_CHAINS = 4
 
 
 # --------------------------------------------------------------------------
@@ -533,10 +543,12 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
 
     if model_mode:
         # The model says what a page IS; the deterministic evidence on that
-        # page (dimension tokens, wet keywords, fittings) says whether it can
-        # be measured from. Neither substitutes for the other.
+        # page (dimension tokens, wet keywords, fittings, and - decisively -
+        # its own verified chains) says whether it can be measured from.
+        # Neither substitutes for the other.
         plan_pages = [p for p in pages if p["class"] == "floor_plan"
-                      and p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE]
+                      and p["dims"] >= MIN_TOKENS_FOR_DIM_PAGE
+                      and p["chains"] >= MIN_PAGE_CHAINS]
         elev_pages = [p for p in pages
                       if p["class"] in ("internal_elevation", "external_elevation")]
         wet_elev = [p for p in pages if p["class"] == "internal_elevation"
@@ -549,7 +561,8 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
         rate_base = f"{len(drawing_pages)} drawing page(s)"
         src_note = "model-classified pages"
     else:
-        plan_pages = [p for p in pages if p["is_plan"]]
+        plan_pages = [p for p in pages if p["is_plan"]
+                      and p["chains"] >= MIN_PAGE_CHAINS]
         elev_pages = [p for p in pages if p["is_elev"]]
         wet_elev = [p for p in elev_pages
                     if p["wet_kw"] >= MIN_WET_KEYWORDS and p["has_fitting"]
@@ -566,7 +579,8 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
                  dim_pages=len(dim_pages), plan_pages=len(plan_pages),
                  elev_pages=len(elev_pages), named_pages=len(named),
                  wet_elev_pages=len(wet_elev), scales=scales,
-                 drawing_pages=len(drawing_pages), classification=src_note)
+                 drawing_pages=len(drawing_pages), classification=src_note,
+                 plan_page_chains=[(p["page"], p["chains"]) for p in plan_pages])
 
     checks.append(Check(
         "text_layer", total_chars >= MIN_TOTAL_CHARS, True,
@@ -612,24 +626,20 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
         "from stated dimensions only - we never scale off the drawing.",
         "Send drawings with the dimension strings printed on them, in mm."))
 
+    # ROUND 5: the set-wide chain rate is ADVISORY CONTEXT only. Verdicts rest
+    # on the pages they depend on - see the plan_pages check, where each floor
+    # plan must verify its own chains. Letters state only verified facts; a low
+    # set-wide rate is context for a reviewer, never a rejection on its own.
     chains_ok = total_chains >= MIN_CHAINS and chains_pp >= MIN_CHAINS_PER_PAGE
-    # Letters state only verified facts. A low chain count is a verified fact;
-    # WHY it is low (scan, sparse dimensioning, a style we can't parse) is not
-    # - so the letter says we couldn't confidently read it, never a diagnosis.
     checks.append(Check(
-        "dimension_chains", chains_ok, True,
-        f"{total_chains} dimension chains verified ({chains_pp:.2f} per "
-        f"{'drawing page' if model_mode else 'page'} across {rate_base}, "
-        f"need {MIN_CHAINS} and {MIN_CHAINS_PER_PAGE})",
-        "We check a set by verifying that printed dimension chains add up to the "
-        "totals printed beside them - 100 + 840 + 790 = 1730. We couldn't "
-        "confidently verify enough of those here to trust an automated read of "
-        "your dimensions. That can happen with scanned files, sparsely dimensioned "
-        "drawings, or a drawing style we can't parse yet - we can't tell which "
-        "from here.",
-        "If this is the original vector PDF from the drawing software, reply and a "
-        "human will look at it by hand. Otherwise send the original export, not a "
-        "scan or print-out."))
+        "dimension_chains", chains_ok, False,
+        f"advisory: {total_chains} dimension chains verified set-wide "
+        f"({chains_pp:.2f} per {'drawing page' if model_mode else 'page'} across "
+        f"{rate_base}; context only - verdicts rest on per-page verification)",
+        "Fewer printed dimension chains verified across the whole set than we "
+        "usually see. On its own this decides nothing - the floor-plan check "
+        "verifies chains on the sheets that matter.",
+        "Nothing needed - the per-page checks decide."))
 
     checks.append(Check(
         "dimensioned_pages", len(dim_pages) >= MIN_DIM_PAGES, True,
@@ -637,26 +647,30 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
         "The set looks like cover sheets, 3D views or renders only.",
         "Include the dimensioned floor plans and elevations."))
 
-    # ---- sheet identification: never assert absence from a failed guess --
-    if model_mode:
-        plan_detail = (f"{len(plan_pages)} dimensioned floor plan sheet(s) recognised "
-                       f"[{src_note}]"
-                       if plan_pages else
-                       f"no dimensioned floor plan recognised among the {n} pages "
-                       f"[{src_note}]")
-        plan_means = ("Without a floor plan we cannot measure floor area."
-                      if plan_pages else
-                      "We looked at every page and couldn't confidently recognise a "
-                      "floor plan carrying printed dimensions. That may be our "
-                      "reading, not your drawings.")
+    # ---- the check verdicts rest on: a floor plan must verify ITS OWN chains.
+    # Never assert absence from a failed guess - and never assert "dimensioned
+    # and readable" beyond what was verified on the sheet itself.
+    verified_ch = sum(p["chains"] for p in plan_pages)
+    if plan_pages:
+        plan_detail = (f"{len(plan_pages)} floor plan sheet(s) whose own dimension "
+                       f"chains verify ({verified_ch} chains on those sheets)"
+                       + (f" [{src_note}]" if model_mode else ""))
+        plan_means = ""
+    elif model_mode:
+        plan_detail = (f"no floor plan whose own dimension chains verify, among the "
+                       f"{n} pages [{src_note}]")
+        plan_means = ("We looked at every page for a floor plan whose printed "
+                      "dimension chains add up on that sheet (100 + 840 + 790 = "
+                      "1730 next to a printed 1730). We couldn't verify one. That "
+                      "can mean a text layer we can't read, sparse dimensioning, "
+                      "or our reading of your drawings - we can't tell which from "
+                      "here, and we won't measure without it.")
     elif named:
-        plan_detail = (f"{len(plan_pages)} floor plan sheet(s) identified"
-                       if plan_pages else
-                       f"no floor plan among the {len(named)} sheet(s) we could name")
-        plan_means = ("Without a floor plan we cannot measure floor area."
-                      if plan_pages else
-                      f"We could only read sheet names on {len(named)} of {n} sheets, "
-                      "and none of those is a floor plan. We may simply not have "
+        plan_detail = (f"no floor plan whose own dimension chains verify, among the "
+                       f"{len(named)} sheet(s) we could name")
+        plan_means = ("We could only read sheet names on "
+                      f"{len(named)} of {n} sheets, and we couldn't verify a floor "
+                      "plan's dimension chains among those. We may simply not have "
                       "recognised yours.")
     else:
         plan_detail = f"couldn't confidently identify any sheet names across {n} sheets"
@@ -664,8 +678,9 @@ def run_intake(pdf_path: Path, want_walls: bool = True, page_classes: dict | Non
                       "is which. That may be our end, not yours.")
     checks.append(Check(
         "plan_pages", len(plan_pages) >= 1, True, plan_detail, plan_means,
-        "Send the floor plan sheet for every room you want quoted, or tell us which "
-        "sheet number it is and we'll work from that."))
+        "Send the floor plan sheet for every room you want quoted - the original "
+        "vector PDF from the drawing software - or reply and a human will look at "
+        "what you've sent."))
 
     if elev_pages:
         elev_detail = (f"{len(elev_pages)} elevation sheet(s) "
@@ -790,16 +805,25 @@ def write_partial_notice(job_dir: Path, job: str, pdf: Path,
     wall_fails = [c for c in checks if not c.ok and c.hard and c.key in PARTIAL_KEYS]
     out = job_dir / f"PARTIAL_{job}.md"
     today = _dt.date.today().isoformat()
+    # Letter truth rule: "dimensioned and readable" only as far as verified.
+    # This letter only exists when per-page verification passed, and it says
+    # exactly what passed: the chains on those sheets, counted.
+    ppc = facts.get("plan_page_chains", [])
+    n_pl, n_ch = len(ppc), sum(c for _, c in ppc)
     L = [f"# Floors first - {job}", "",
          f"**File:** `{pdf.name}`  |  **Checked:** {today}  |  "
          f"**Pages:** {facts.get('pages', '?')}", "",
          "Good news and a gap.", "",
-         "**The good news:** your floor plans are dimensioned and readable, so your "
-         "**floor areas and tile skirting are being measured now** and you'll have "
-         "them the same day.", "",
-         "**The gap:** the set has no internal wet-area elevations - the wall "
-         "drawings of each bathroom, ensuite and laundry, with tiling heights on "
-         "them. Wall tile can only be measured off those, and we won't guess.", ""]
+         f"**The good news:** we verified the dimension chains on your floor plan "
+         f"sheet{'s' if n_pl != 1 else ''} - {n_ch} chain{'s' if n_ch != 1 else ''} "
+         f"across {n_pl} sheet{'s' if n_pl != 1 else ''} add up to their printed "
+         "totals - so your **floor areas and tile skirting are being measured now** "
+         "and you'll have them the same day.", "",
+         "**The gap:** we couldn't find internal wet-area elevations in the set - "
+         "the wall drawings of each bathroom, ensuite and laundry, with tiling "
+         "heights on them. Wall tile can only be measured off those, and we won't "
+         "guess. (If they exist and we missed them, the reply line below is for "
+         "exactly that.)", ""]
     for c in wall_fails:
         L += [f"- **{c.detail}** - {c.means}", ""]
     L += ["**Send the internal elevations and we'll add every wall** - same job, "
@@ -1197,9 +1221,10 @@ def write_intake_report(job_dir: Path, job: str, pdf: Path,
     verdict = gate_verdict(checks)
     verdict_line = {
         "PASS": "**Verdict: PASS** - full takeoff.",
-        "PARTIAL": "**Verdict: PARTIAL** - dimensioned floor plans, no internal "
-                   "wet-area elevations. Floors + skirting measured now; send the "
-                   "internal elevations and we'll add every wall.",
+        "PARTIAL": "**Verdict: PARTIAL** - floor plans whose own dimension chains "
+                   "verify, but no internal wet-area elevations. Floors + skirting "
+                   "measured now; send the internal elevations and we'll add every "
+                   "wall.",
         "FAIL": "**Verdict: FAIL** - see the rejection letter.",
     }[verdict]
     out = job_dir / "intake_report.md"

@@ -190,9 +190,9 @@ the gate runs them:
 | 5 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
 | 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet | Text is present but is OCR spray, not a real text layer |
 | 7 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
-| 8 | **Dimension chains** | ≥ 5 chains that sum to a printed total (±5 mm), ≥ 0.4 per **drawing page** (per page when no classification is available) | Numbers exist but never add up. The rate counts classified drawing pages only, so a DA pack's notices and reports can't dilute the real sheets |
+| 8 | **Dimension chains** *(advisory since round 5)* | context: chains verified set-wide, per drawing page | Never decides on its own — verdicts rest on per-page verification (check 10). Recorded for the reviewer |
 | 9 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
-| 10 | **Plan pages** | ≥ 1 page the model classifies as a floor plan **and** that carries ≥ 8 dimension tokens (title heuristics as fallback) | No dimensioned floor plan → no floor area. The letter says what we couldn't *recognise* — never "you have no floor plan" |
+| 10 | **Plan pages** | ≥ 1 page the model classifies as a floor plan, carrying ≥ 8 dimension tokens **and ≥ 4 chains that verify on that page** — the measurement layer's founding rule (chains must sum where they're used) applied to the gate | No floor plan whose own chains verify → no floor area. The letter says exactly what we couldn't verify — never "you have no floor plan", never "dimensioned and readable" beyond what was proved |
 | 11 | **Elevation pages** | ≥ 1 page classified as an internal or external elevation (title heuristics as fallback) | Warning only, unless walls are in scope → then a fail |
 | 12 | **Wet-area elevations** | ≥ 1 page classified as an *internal* elevation carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | Floors are measurable, walls are not. Conditional, like #11 |
 
