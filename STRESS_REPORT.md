@@ -313,16 +313,20 @@ The separation is not close:
 | **ncc (OCR'd scan)** | **0.12** | **noise** |
 
 Threshold set at 5 chains total and 0.4/page — an order of magnitude below the weakest real
-set, and three times above the scan.
+set, and three times above the scan. *(Like every gate threshold, this was tuned on these
+nine sets and evaluated on the same nine. No held-out set exists yet: tuned-on-corpus,
+pending validation on live jobs.)*
 
 **A text-quality score** — the share of characters that belong on a drawing sheet, and the
 share of alphabetic tokens that are real words, scored against an embedded vocabulary rather
 than a system dictionary (so the verdict doesn't depend on which machine it ran on).
 
 **Honest finding: the word-hit rate did not do the work.** The OCR'd set scored 0.315 and a
-perfectly good set (`eastcoast`) scored 0.307 — the score cannot separate them. It is kept as
-a cheap catch for badly garbled text and reported in the intake record, but **the chain check
-is what actually caught the scan.** Reporting the opposite would have been easy and wrong.
+perfectly good set (`eastcoast`) scored 0.307 — the score cannot separate them. **The chain
+check is what actually caught the scan.** Reporting the opposite would have been easy and
+wrong. *(Follow-through: the word-hit score has since been demoted to advisory — recorded
+and warned on in the intake report, never a hard gate. A check that blocks nothing today
+could one day block something legitimate.)*
 
 ### Fix 2 — sheet titles from the title block
 

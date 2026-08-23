@@ -7,9 +7,13 @@ Nothing here is customer-facing; it exists to find out where the gate and the
 method break on plans we didn't choose.
 
     backtest/
-      inbox/            drop plan PDFs here
-      results/<name>/   per-plan output (rejection letter, or extraction + takeoff)
-      RESULTS.md        the scoreboard
+      inbox/                       drop plan PDFs here
+      results/<timestamp>/<name>/  per-run, per-plan output (rejection letter, or
+                                   extraction + takeoff) - every run gets its own
+                                   folder; nothing is overwritten by a later run
+      results/<timestamp>/RESULTS.md  that run's scoreboard
+      RESULTS.md        the scoreboard of the latest FULL run only ( --only runs
+                        never touch it - they stay in their own results folder)
       SOURCES.md        where each PDF came from
 
 Two depths:
@@ -152,12 +156,10 @@ def headline_areas(takeoff_md: Path | None) -> str:
     return " / ".join(out) if out else "produced, not parsed"
 
 
-def run_one(pdf: Path, args) -> dict:
+def run_one(pdf: Path, args, run_dir: Path) -> dict:
     name = re.sub(r"[^A-Za-z0-9_-]+", "_", pdf.stem)[:60]
-    out_dir = RESULTS / name
-    if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True)
+    out_dir = run_dir / name
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     row = {"file": pdf.name, "name": name, "size_mb": round(pdf.stat().st_size / 1e6, 1)}
     t0 = time.time()
@@ -228,17 +230,19 @@ def run_one(pdf: Path, args) -> dict:
 
 # --------------------------------------------------------------------------
 
-def write_scoreboard(rows: list[dict], args) -> Path:
-    out = HERE / "RESULTS.md"
+def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> Path:
+    out = run_dir / "RESULTS.md"
     passed = [r for r in rows if r["intake"] == "PASS"]
     failed = [r for r in rows if r["intake"] == "FAIL"]
     errored = [r for r in rows if r["intake"] == "ERROR"]
 
     L = ["# Backtest scoreboard", "",
-         f"**Run:** {_dt.date.today().isoformat()} · "
+         f"**Run:** {run_dir.name} · "
          f"**Depth:** {'full pipeline (gate + extract + model takeoff)' if args.analyse else 'structure probe (gate + extract, no model)'} · "
          f"**Plans:** {len(rows)}", "",
          f"**{len(passed)} passed the gate · {len(failed)} rejected · {len(errored)} errored**", "",
+         "*Every run archives to `backtest/results/<timestamp>/`; the committed "
+         "`backtest/RESULTS.md` always holds the latest full run only.*", "",
          "| File | Pages | Intake | Why | Rooms found | Headline areas | Flags | Runtime |",
          "|---|---|---|---|---|---|---|---|"]
     for r in rows:
@@ -252,7 +256,7 @@ def write_scoreboard(rows: list[dict], args) -> Path:
     if not failed:
         L.append("_None._")
     for r in failed:
-        letter = RESULTS / r["name"] / f"REJECTED_{r['name']}.md"
+        letter = run_dir / r["name"] / f"REJECTED_{r['name']}.md"
         L += [f"### `{r['file']}`", "",
               f"**Gate said:** {r['why']}", ""]
         if letter.exists():
@@ -274,6 +278,12 @@ def write_scoreboard(rows: list[dict], args) -> Path:
         L.append("")
 
     out.write_text("\n".join(L), encoding="utf-8")
+
+    # Only a FULL run (every PDF in the inbox, no --only filter) may update the
+    # committed scoreboard. A filtered run would overwrite a 9-set table with a
+    # 1-set one - the merge accident RESULTS.md used to invite.
+    if full_run:
+        shutil.copyfile(out, HERE / "RESULTS.md")
     return out
 
 
@@ -292,26 +302,35 @@ def main(argv=None) -> int:
     INBOX.mkdir(parents=True, exist_ok=True)
     RESULTS.mkdir(parents=True, exist_ok=True)
 
-    pdfs = sorted(p for p in INBOX.glob("*.pdf"))
-    if a.only:
-        pdfs = [p for p in pdfs if a.only.lower() in p.name.lower()]
+    all_pdfs = sorted(p for p in INBOX.glob("*.pdf"))
+    pdfs = ([p for p in all_pdfs if a.only.lower() in p.name.lower()]
+            if a.only else all_pdfs)
     if not pdfs:
         print(f"No PDFs in {INBOX}")
         return 2
 
+    # Every run writes into its own timestamped folder; runs never clobber
+    # each other, and a background --only run can't wipe a full run's output.
+    run_dir = RESULTS / _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    run_dir.mkdir(parents=True, exist_ok=True)
+    full_run = len(pdfs) == len(all_pdfs)
+
     print(f"BACKTEST  |  {len(pdfs)} plan set(s)  |  "
-          f"{'full pipeline' if a.analyse else 'structure probe'}\n")
+          f"{'full pipeline' if a.analyse else 'structure probe'}  |  {run_dir}\n")
     rows = []
     for pdf in pdfs:
         print(f"── {pdf.name}")
-        row = run_one(pdf, a)
+        row = run_one(pdf, a, run_dir)
         rows.append(row)
         print(f"   {row['intake']}  {row.get('why','')[:90]}")
         for x in (row.get("flags") or [])[:4]:
             print(f"   ⚠️  {x}")
         print(f"   {row.get('runtime')}s\n")
 
-    out = write_scoreboard(rows, a)
+    out = write_scoreboard(rows, a, run_dir, full_run)
+    if not full_run:
+        print("(--only run: backtest/RESULTS.md untouched - "
+              "it keeps the latest full run)")
     ok = sum(r["intake"] == "PASS" for r in rows)
     print(f"{ok}/{len(rows)} passed the gate.  Scoreboard: {out}")
     return 0

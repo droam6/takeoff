@@ -298,11 +298,15 @@ SHEET_ELEV_RE = re.compile(r"(elevations?\b|elev\.)", re.I)
 # A scale only counts as a scale when it is written like one.
 SCALE_RE = re.compile(r"(1\s*:\s*\d{1,4}\s*@?\s*A\d|scale[^\n]{0,18}?1\s*:\s*\d{1,4})", re.I)
 
+# TUNING STATUS: every threshold below was fitted on the nine-set backtest corpus
+# (backtest/SOURCES.md) and evaluated on the same nine files. There is no held-out
+# set. The separations are wide (see STRESS_REPORT.md), but treat these values as
+# tuned-on-corpus pending validation on live jobs.
 TITLE_CONF = 0.30       # below this we say we couldn't identify it, not that it's absent
 MIN_CHAINS = 5          # total verified chains across the document
 MIN_CHAINS_PER_PAGE = 0.4
 MIN_CLEAN_RATIO = 0.90
-MIN_WORD_HIT = 0.15
+MIN_WORD_HIT = 0.15     # ADVISORY only - see the word_hit_score check
 MIN_WET_KEYWORDS = 4    # on one elevation sheet, incl. at least one fitting
 
 
@@ -403,14 +407,26 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "Re-export the full set as vector PDF from the drawing software."))
 
     # ---- readability, not existence -------------------------------------
-    quality_ok = clean >= MIN_CLEAN_RATIO and word_hit >= MIN_WORD_HIT
     checks.append(Check(
-        "text_quality", quality_ok, True,
-        f"text quality: {clean:.1%} of characters usable, {word_hit:.0%} of words "
-        f"recognised (need {MIN_CLEAN_RATIO:.0%} / {MIN_WORD_HIT:.0%})",
+        "text_quality", clean >= MIN_CLEAN_RATIO, True,
+        f"text quality: {clean:.1%} of characters usable "
+        f"(need {MIN_CLEAN_RATIO:.0%})",
         "There is text in this file, but it doesn't read like a drawing sheet - "
         "which is what a scan looks like after OCR has been run over it.",
         "Send the original PDF exported from the drawing software, not a scan."))
+
+    # The word-hit score is ADVISORY only. On the backtest corpus it demonstrably
+    # cannot separate OCR spray from a clean set (0.315 vs 0.307 - see
+    # STRESS_REPORT.md round 2), so it is recorded and warned on, never a hard
+    # gate: it currently blocks nothing and must not one day block something
+    # legitimate. The chain check below is what actually catches a scan.
+    checks.append(Check(
+        "word_hit_score", word_hit >= MIN_WORD_HIT, False,
+        f"advisory: {word_hit:.0%} of words recognised "
+        f"(expect >= {MIN_WORD_HIT:.0%}; never blocks on its own)",
+        "Few of the words in the text layer look like drawing-sheet words. On its "
+        "own this proves nothing - it is recorded for the reviewer, not enforced.",
+        "Nothing - the other checks decide."))
 
     checks.append(Check(
         "dimension_tokens", total_dims >= MIN_DIM_TOKENS, True,

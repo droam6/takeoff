@@ -177,7 +177,7 @@ the gate runs them:
 | 3 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
 | 4 | **Text layer** | ≥ 200 extractable characters across the document | Scanned / raster / image-only PDF |
 | 5 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
-| 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet, ≥ 15% of words recognised | Text is present but is OCR spray, not a real text layer |
+| 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet | Text is present but is OCR spray, not a real text layer |
 | 7 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
 | 8 | **Dimension chains** | ≥ 5 chains that sum to a printed total (±5 mm), ≥ 0.4/page | Numbers exist but never add up — the OCR signature. The one check noise can't fake |
 | 9 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
@@ -194,12 +194,18 @@ edge, a sheet number nearby — with boilerplate excluded and wrapped names join
 failure message states only what was actually established: what we *did* find, before what
 we didn't.
 
-Two more things are recorded at intake but **never block the run**:
+Three more things are recorded at intake but **never block the run**:
 
-| Recorded | Rule | When missing |
+| Recorded | Rule | When missing / low |
 |---|---|---|
+| **Word-hit score** *(advisory)* | ≥ 15% of alphabetic tokens are recognised words | Warned and recorded for the reviewer. Demoted from a hard gate: on the test corpus it could not separate OCR spray (0.315) from a clean set (0.307) — the chain check (#8) is what actually catches a scan |
 | **Intake answers** | trade / rooms / wastage supplied | Carried into the takeoff as questions |
 | **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Trade-standard defaults, stated on the order box |
+
+> **Threshold status:** every numeric threshold above was tuned on the nine-set backtest
+> corpus (`backtest/SOURCES.md`) and evaluated on those same nine files. There is no
+> held-out set yet. The separations are wide (`STRESS_REPORT.md`), but the values are
+> **tuned-on-corpus, pending validation on live jobs** — expect them to move.
 
 ---
 

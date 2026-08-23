@@ -4,6 +4,9 @@
 
 **2 passed the gate · 7 rejected · 0 errored**
 
+*Every run archives to `backtest/results/<timestamp>/`; this committed file always holds
+the latest full run over the nine-set corpus only — `--only` runs never touch it.*
+
 | File | Pages | Intake | Why | Rooms found | Headline areas | Flags | Runtime |
 |---|---|---|---|---|---|---|---|
 | `creativehomeplans-sample.pdf` | 8 | 🛑 FAIL | 4 floor plan(s) and 1 elevation sheet(s) found, but none of the elevations is a dimensioned internal elevation of a wet area | — | — | ⚠️ rejected: wet_area_elevations | 0.3s |
