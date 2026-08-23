@@ -8,8 +8,9 @@ __pycache__/
 *.pyc
 .DS_Store
 
-# Third-party plan PDFs - see backtest/SOURCES.md for URLs.
+# Third-party plan PDFs - see backtest/SOURCES.md / HELD_OUT_SOURCES.md for URLs.
 # Not redistributed: each carries the drawing practice's copyright notice.
 backtest/inbox/
+backtest/heldout_inbox/
 backtest/results/
 backtest/*.log
