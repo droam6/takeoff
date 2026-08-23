@@ -12,7 +12,7 @@ dotted leaders line up.
 Page control
 ------------
 A line containing only `<!--newpage-->` starts a new page. Used to hold the
-ANSWER PACK to its three pages.
+ANSWER PACK to its four pages.
 
     pip install pymupdf markdown
 
@@ -130,7 +130,7 @@ def draw_footer(page, meta, n, total, pw, ph):
     L, R, y = 54, pw - 54, ph - 42
     page.draw_line(fitz.Point(L, y), fitz.Point(R, y), color=RULE, width=0.8)
     _text(page, L, y + 12, PROMISE, 7.5, ACCENT, "hebo")
-    contact = meta.get("contact", "hello@chalkline.example  ·  04XX XXX XXX")
+    contact = meta.get("contact", "<EMAIL>  ·  <MOBILE>")
     _text(page, L, y + 22, contact, 7, GREY)
     pn = f"{n} / {total}"
     _text(page, R - fitz.get_text_length(pn, fontname="helv", fontsize=7.5),
@@ -192,7 +192,7 @@ def main() -> None:
     ap.add_argument("--drawings", default="")
     ap.add_argument("--supersedes", default="")
     ap.add_argument("--date", default="")
-    ap.add_argument("--contact", default="hello@chalkline.example  ·  04XX XXX XXX")
+    ap.add_argument("--contact", default="<EMAIL>  ·  <MOBILE>")
     a = ap.parse_args()
     brand_name, brand_tagline = read_brand()
     render(a.src, a.dst, {

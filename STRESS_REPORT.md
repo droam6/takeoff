@@ -1,5 +1,12 @@
 # STRESS REPORT — nine plan sets we didn't choose
 
+> **CURRENT RESULT — Round 2 (16 August 2026): 2 passed, 7 rejected. Every verdict right,
+> every stated reason true.** Of the 7 rejections, 2 sets are genuinely unreadable and 5 are
+> measurable for floors but not walls. Round 2 is the round of record — see
+> [ROUND 2 — after the fixes](#round-2--after-the-fixes). Everything between here and that
+> heading is **Round 1**, kept because it documents what the fixes fixed; its headline
+> numbers are superseded.
+
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
 
@@ -11,9 +18,9 @@ So: eight real plan PDFs pulled off the open web — NSW council DA trackers, pu
 sample working drawings, an ABCB reference set — plus one raster case, all run through the
 gate cold.
 
-**5 passed, 4 rejected.** The headline is not the split. It's that **three of the four
-rejections were rejected for a reason that isn't true**, and **one of the five passes should
-have been rejected.**
+**Round 1: 5 passed, 4 rejected** *(superseded — round 2 below is current)*. The headline is
+not the split. It's that **three of the four rejections were rejected for a reason that isn't
+true**, and **one of the five passes should have been rejected.**
 
 ---
 
@@ -390,7 +397,7 @@ quote*, and the letter says so and offers floors-only instead. But it is worth s
 that the gate is now stricter, and that the right commercial answer to most of these
 rejections is **"we can still do your floors"** rather than "no".
 
-That reframes Risk 3 in the business plan: of nine sets, **one was genuinely unreadable** and
-**six could be measured for floors but not walls.** The addressable failure isn't
-unreadability — it's missing internal elevations, and there's a product on the other side of
-it.
+That reframes Risk 3 in the business plan: of nine sets, **two were genuinely unreadable**
+(`ncc` is OCR spray, `phone-scan` is a raster) and **five could be measured for floors but
+not walls.** The addressable failure isn't unreadability — it's missing internal elevations,
+and there's a product on the other side of it.

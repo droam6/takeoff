@@ -167,23 +167,39 @@ Different tile per room? Give us the m² per box for each and we'll do them sepa
 
 ## C. The automated gate — what `takeoff.py` actually checks
 
-Run before any analysis. Machine-checkable subset of the above.
+Run before any analysis. Machine-checkable subset of the above. Twelve checks, in the order
+the gate runs them:
 
 | # | Check | Rule | Fails when |
 |---|---|---|---|
-| 1 | **Text layer** | ≥ 200 extractable characters across the document | Scanned / raster / image-only PDF |
-| 2 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
-| 3 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
-| 4 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
-| 5 | **Plan pages** | ≥ 1 page whose title matches `PLAN` | No floor plan → no floor area |
-| 6 | **Elevation pages** | ≥ 1 page whose title matches `ELEVATION` | Warning only, unless walls are in scope → then a fail |
-| 7 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
-| 8 | **Encryption** | PDF not password-locked against extraction | Locked file |
-| 9 | **Intake answers** | trade / rooms / wastage supplied | Recorded as questions, never blocks the run |
-| 10 | **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Missing or unconfirmed → trade-standard defaults, stated on the order box, never blocks the run |
+| 1 | **Readable file** | The PDF opens at all | Corrupt file, or not a PDF |
+| 2 | **Encryption** | Not password-locked against extraction | Locked file |
+| 3 | **Page count** | ≥ 1, ≤ 300 | Empty or absurd file |
+| 4 | **Text layer** | ≥ 200 extractable characters across the document | Scanned / raster / image-only PDF |
+| 5 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
+| 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet, ≥ 15% of words recognised | Text is present but is OCR spray, not a real text layer |
+| 7 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
+| 8 | **Dimension chains** | ≥ 5 chains that sum to a printed total (±5 mm), ≥ 0.4/page | Numbers exist but never add up — the OCR signature. The one check noise can't fake |
+| 9 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
+| 10 | **Plan pages** | ≥ 1 sheet whose *title-block* name reads as a floor plan | No floor plan → no floor area. When no sheet can be named at all, the letter says *that* — never "you have no floor plan" |
+| 11 | **Elevation pages** | ≥ 1 sheet whose title-block name reads as an elevation | Warning only, unless walls are in scope → then a fail |
+| 12 | **Wet-area elevations** | ≥ 1 elevation sheet carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | The elevations are external only — floors are measurable, walls are not. Conditional, like #11 |
 
-Checks 1–5 and 7–8 are **hard**. Any hard failure writes `REJECTED_<job>.md` and stops.
-Check 6 is **conditional** — hard when the tradie asked for wall areas.
+Checks 1–10 are **hard**. Any hard failure writes `REJECTED_<job>.md` and stops.
+Checks 11–12 are **conditional** — hard when the tradie asked for wall areas, a warning
+under `--no-walls`.
+
+Sheet naming (checks 10–12) is scored from the title block — line size, position at a page
+edge, a sheet number nearby — with boilerplate excluded and wrapped names joined. Every
+failure message states only what was actually established: what we *did* find, before what
+we didn't.
+
+Two more things are recorded at intake but **never block the run**:
+
+| Recorded | Rule | When missing |
+|---|---|---|
+| **Intake answers** | trade / rooms / wastage supplied | Carried into the takeoff as questions |
+| **Customer profile** | `customers/<name>.md` exists and is `CONFIRMED` | Trade-standard defaults, stated on the order box |
 
 ---
 

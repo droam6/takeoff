@@ -137,16 +137,37 @@ those areas are reported as their own line because they carry a different rate.
 doesn't trust is worth nothing. He is reading this on a phone, one-handed, in a ute. A
 number that gets misread is exactly as wrong as one that was miscalculated.
 
-So the answer comes first and the working comes last. The full template is defined in
-`TAKEOFF_METHOD.md` §9–§11; the shape is:
+So the answer comes first and the working comes last. The document is two documents in one
+binder — the **ANSWER PACK** (pages 1–4), then **THE PROOF** behind an unmissable divider.
+The full template is defined in `TAKEOFF_METHOD.md` §9–§11; this is the shipped shape,
+section for section (see `TAKEOFF_sample.md` / `.pdf` for the worked example):
+
+**ANSWER PACK — pages 1–4**
+
+| Page | Section | |
+|---|---|---|
+| 1 | **ORDER THIS** box | Quantities to order, extra for cuts already added, rounded to 0.1. Pending lines inside the box, each naming the question that unblocks it. Settings sentence under the bottom rule. First thing on the page. |
+| 1 | **NOT INCLUDED** box | Scope we did not measure — waterproofing, screed, prep, labour, pricing — plus every ⚠-unresolved item, each pointing at its question. |
+| 1 | **CHECK THESE *n* THINGS BEFORE YOU QUOTE** | Three to five plain tick-box questions — only what changes a number materially, each with what it's worth in m². |
+| 2 | **ROOM BY ROOM** | One number per line, plain English, no arithmetic. ✅ or ⚠ on every room. |
+| 2 | **SITE NOTES** box | Drawing-set quirks a person on site needs: scale anomalies, hand-drawn markups, chain disagreements, the measurement convention. |
+| 3 | **FLAGGED FOR YOU** box | Cost items that aren't quantities: mitred corners and trims in lineal metres, and where the wet zones are. |
+| 4 | **ASSUMPTIONS — THE ANSWER FORM** | Every fill-in as a table row — what we assumed, what we used, what it's worth, a blank for their answer — plus scope tick-boxes. |
+
+**THE PROOF — everything after the divider**
 
 | | Section | |
 |---|---|---|
-| 1 | **ORDER THIS** | The totals box. Quantities to order, extra for cuts already added, rounded to 0.1. First thing on the page. |
-| 2 | **CHECK THESE *n* THINGS BEFORE YOU QUOTE** | Three to five plain tick-box questions — only what changes a number materially. |
-| 3 | **ROOM BY ROOM** | One number per line, plain English, no arithmetic. |
-| 4 | *Other trades* | Only if in scope. |
-| 5 | **HOW WE GOT THESE NUMBERS** | Straight measurements, all working, what we double-checked, what we filled in, drawings read, and the closing checklist. |
+| 1 | **The measured areas, and how they became the order** | Full precision, conversion in visible steps. The measured column never moves with anyone's settings. |
+| 2 | **Room by room working** | Every `×`, every subtraction. |
+| 3 | **What we double-checked** | The six verification checks as plain statements with ✅/⚠. |
+| 4 | **What we had to fill in** | Points back to the page-4 answer form, plus anything worth saying that doesn't change a number. |
+| 5 | **The drawings we read** | Sheet numbers, titles, scale, revision. |
+| 6 | **Before you quote** | The closing checklist, unticked. |
+| last | **SET UP YOUR ACCOUNT** | The six profile questions as a fillable form. Last because it isn't about this job. |
+
+Other trades' quantities (painter) sit behind a profile toggle: measured regardless, one line
+in the proof, shown in full only when asked for.
 
 Three rules govern everything above the divider:
 

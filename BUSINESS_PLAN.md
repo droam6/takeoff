@@ -288,9 +288,10 @@ content for a business with no paying customers is procrastination with a receip
   better files → M1 narrows to floors-only or dies.
 
 On intake we now have data rather than a guess: of nine plan sets pulled off the open web,
-**one was genuinely unreadable** and **six could be measured for floors but not walls**
-(`STRESS_REPORT.md`). The addressable failure isn't unreadability — it's missing internal
-elevations, and **floors-only is still a sellable product.** That materially softens the risk.
+**two were genuinely unreadable** and **five could be measured for floors but not walls**
+(`STRESS_REPORT.md`, round 2). The addressable failure isn't unreadability — it's missing
+internal elevations, and **floors-only is still a sellable product.** That materially softens
+the risk.
 
 ### The Sunday gate
 

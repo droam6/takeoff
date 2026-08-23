@@ -429,8 +429,9 @@ Every ⚠️ has a matching tick-box question. Nothing is flagged without being 
 
 The document is two documents in one binder, and the divider between them is unmissable.
 
-**ANSWER PACK** — pages 1–3. What to order, what to check, what to answer. Written to be read
-on a phone, in a ute, once. **THE PROOF** — everything after. Written to be checked, not read.
+**ANSWER PACK** — pages 1–4. What to order, what to check, what we flagged, what to answer.
+Written to be read on a phone, in a ute, once. **THE PROOF** — everything after. Written to be
+checked, not read.
 
 Branding, boxes, header and footer strips are specified in `BRAND.md` and are not optional
 decoration — the header's *drawings revision measured against* line is the only thing
@@ -496,9 +497,17 @@ came from, and inviting a change:
    and would otherwise have to dig out of the proof: scale anomalies between sheets,
    hand-drawn markups, setout discrepancies, the measurement convention from the notes page.
 
-### Page 3 — the answer form
+### Page 3 — flagged for you
 
-8. **ASSUMPTIONS — THE ANSWER FORM.** Every fill-in as a table row:
+8. **FLAGGED FOR YOU box.** Cost items that are not order quantities and would otherwise be
+   easy to leave out of a quote: mitred corners and other labour called up on the sheets (in
+   lineal metres, per room), trims, and where the wet zones are (locations only — membrane
+   extent is the waterproofer's scope and is stated as not in the numbers). Anything in the
+   profile's `always_flag` list lands here too.
+
+### Page 4 — the answer form
+
+9. **ASSUMPTIONS — THE ANSWER FORM.** Every fill-in as a table row:
 
    | What we assumed | We used | Worth | Your answer |
    |---|---|---|---|
@@ -523,19 +532,19 @@ has all of it. Neither wades through the other's document.
 
 ### THE PROOF
 
-9. **The measured areas, and how they became the order** — full precision, then the
-   conversion in visible steps (§7.8), stating that the measured column never changes with
-   anyone's settings and the order column always does.
-10. **Room by room working** — every `×`, every subtraction (§8).
-11. **What we double-checked** — the §5 checks as plain statements with ✅/⚠.
-12. **What we had to fill in** — pointing back to the page-3 form, plus anything that needs
+10. **The measured areas, and how they became the order** — full precision, then the
+    conversion in visible steps (§7.8), stating that the measured column never changes with
+    anyone's settings and the order column always does.
+11. **Room by room working** — every `×`, every subtraction (§8).
+12. **What we double-checked** — the §5 checks as plain statements with ✅/⚠.
+13. **What we had to fill in** — pointing back to the page-4 form, plus anything that needs
     saying but doesn't change a number.
-13. **The drawings we read** — sheet numbers, titles, scale, revision.
-14. **Before you quote** — the closing checklist (§11).
+14. **The drawings we read** — sheet numbers, titles, scale, revision.
+15. **Before you quote** — the closing checklist (§11).
 
 ### Last page — the account form
 
-15. **SET UP YOUR ACCOUNT — answer once, applies to every job you ever send.** The six
+16. **SET UP YOUR ACCOUNT — answer once, applies to every job you ever send.** The six
     profile questions (`PROFILE_QUESTIONS.md`) as a fillable form with tick-boxes and blanks.
     It goes last because it is not about this job. Ask it after he has seen his numbers, not
     before (`PROFILE_QUESTIONS.md`, *How to ask them*).
