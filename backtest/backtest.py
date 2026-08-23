@@ -53,7 +53,7 @@ import fitz  # noqa: E402
 from takeoff import (  # noqa: E402
     run_intake, write_rejection, write_intake_report, extract, analyse,
     load_profile, resolve_order_settings, write_profile_report,
-    gate_verdict, write_partial_notice,
+    gate_verdict, write_partial_notice, get_page_classes,
     WET_RE, SHEET_PLAN_RE, SHEET_ELEV_RE,
 )
 
@@ -165,8 +165,14 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
     row = {"file": pdf.name, "name": name, "size_mb": round(pdf.stat().st_size / 1e6, 1)}
     t0 = time.time()
 
+    # The model recognises pages (sidecar in-session, claude CLI on a local
+    # machine); the deterministic layer stays the trust authority for numbers.
+    classes, class_src = get_page_classes(pdf)
+    row["classification"] = class_src if classes else f"unclassified ({class_src})"
+
     try:
-        checks, facts = run_intake(pdf, want_walls=not args.no_walls)
+        checks, facts = run_intake(pdf, want_walls=not args.no_walls,
+                                   page_classes=classes)
     except Exception as exc:  # a PDF so broken the gate itself throws
         row.update(intake="ERROR", why=f"gate crashed: {exc}", pages="?",
                    rooms="—", areas="—", flags=["harness caught an exception"],
@@ -188,7 +194,9 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
             intake="FAIL",
             why="; ".join(c.detail for c in hard_fails),
             rooms="—", areas="—",
-            flags=[f"rejected: {c.key}" for c in hard_fails],
+            flags=[f"rejected: {c.key}" for c in hard_fails]
+                  + ([] if classes else [f"pages unclassified ({class_src}) - "
+                                         "title heuristics used"]),
             runtime=round(time.time() - t0, 1),
         )
         return row
@@ -234,7 +242,9 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
         rooms=", ".join(rooms) if rooms else "none identified",
         n_measurable=len(pr["measurable_rooms"]),
         areas=headline_areas(takeoff_md),
-        flags=probe_flags(pr, checks),
+        flags=probe_flags(pr, checks)
+              + ([] if classes else [f"pages unclassified ({class_src}) - "
+                                     "title heuristics used"]),
         scales=pr["scales"],
         runtime=round(time.time() - t0, 1),
     )
@@ -294,6 +304,7 @@ def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> P
     for r in passed + partial:
         L += [f"### `{r['file']}`", "",
               f"- Sheets: {r.get('why')}",
+              f"- Page classification: {r.get('classification', '—')}",
               f"- Scales: {', '.join(r.get('scales') or []) or 'none printed'}",
               f"- Wet rooms with plan **and** elevations: **{r.get('n_measurable', 0)}**",
               f"- Rooms: {r.get('rooms')}",
@@ -320,25 +331,31 @@ def main(argv=None) -> int:
     ap.add_argument("--customer", default="angus")
     ap.add_argument("--no-walls", action="store_true",
                     help="floors only - missing wet-area elevations warn instead of failing")
+    ap.add_argument("--inbox", type=Path, default=INBOX,
+                    help="folder of plan PDFs to run (default backtest/inbox). Only a "
+                         "full run of the DEFAULT inbox updates the committed RESULTS.md")
     ap.add_argument("--dpi", type=int, default=150)
     ap.add_argument("--timeout", type=int, default=5400)
     a = ap.parse_args(argv)
 
-    INBOX.mkdir(parents=True, exist_ok=True)
+    inbox = a.inbox.resolve()
+    inbox.mkdir(parents=True, exist_ok=True)
     RESULTS.mkdir(parents=True, exist_ok=True)
 
-    all_pdfs = sorted(p for p in INBOX.glob("*.pdf"))
+    all_pdfs = sorted(p for p in inbox.glob("*.pdf"))
     pdfs = ([p for p in all_pdfs if a.only.lower() in p.name.lower()]
             if a.only else all_pdfs)
     if not pdfs:
-        print(f"No PDFs in {INBOX}")
+        print(f"No PDFs in {inbox}")
         return 2
 
     # Every run writes into its own timestamped folder; runs never clobber
     # each other, and a background --only run can't wipe a full run's output.
     run_dir = RESULTS / _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=True)
-    full_run = len(pdfs) == len(all_pdfs)
+    # Only a full, unfiltered run of the DEFAULT inbox owns the committed
+    # scoreboard - an alternate --inbox run stays in its own folder.
+    full_run = len(pdfs) == len(all_pdfs) and inbox == INBOX.resolve()
 
     print(f"BACKTEST  |  {len(pdfs)} plan set(s)  |  "
           f"{'full pipeline' if a.analyse else 'structure probe'}  |  {run_dir}\n")

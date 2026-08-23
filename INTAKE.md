@@ -190,11 +190,11 @@ the gate runs them:
 | 5 | **Text density** | ≥ 20 characters per page on average | Mostly-image PDF with a title block only |
 | 6 | **Text quality** | ≥ 90% of characters belong on a drawing sheet | Text is present but is OCR spray, not a real text layer |
 | 7 | **mm dimension tokens** | ≥ 30 integer tokens in the range 20–20000 | No printed dimensions, or dimensions are in the image |
-| 8 | **Dimension chains** | ≥ 5 chains that sum to a printed total (±5 mm), ≥ 0.4/page | Numbers exist but never add up — the OCR signature. The one check noise can't fake |
+| 8 | **Dimension chains** | ≥ 5 chains that sum to a printed total (±5 mm), ≥ 0.4 per **drawing page** (per page when no classification is available) | Numbers exist but never add up. The rate counts classified drawing pages only, so a DA pack's notices and reports can't dilute the real sheets |
 | 9 | **Dimensioned pages** | ≥ 1 page carrying ≥ 8 dimension tokens | Cover sheets and 3Ds only |
-| 10 | **Plan pages** | ≥ 1 sheet whose *title-block* name reads as a floor plan | No floor plan → no floor area. When no sheet can be named at all, the letter says *that* — never "you have no floor plan" |
-| 11 | **Elevation pages** | ≥ 1 sheet whose title-block name reads as an elevation | Warning only, unless walls are in scope → then a fail |
-| 12 | **Wet-area elevations** | ≥ 1 elevation sheet carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | The elevations are external only — floors are measurable, walls are not. Conditional, like #11 |
+| 10 | **Plan pages** | ≥ 1 page the model classifies as a floor plan **and** that carries ≥ 8 dimension tokens (title heuristics as fallback) | No dimensioned floor plan → no floor area. The letter says what we couldn't *recognise* — never "you have no floor plan" |
+| 11 | **Elevation pages** | ≥ 1 page classified as an internal or external elevation (title heuristics as fallback) | Warning only, unless walls are in scope → then a fail |
+| 12 | **Wet-area elevations** | ≥ 1 page classified as an *internal* elevation carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | Floors are measurable, walls are not. Conditional, like #11 |
 
 **How the checks become a verdict:**
 
@@ -206,10 +206,20 @@ the gate runs them:
   Under `--no-walls` they are warnings and the verdict is PASS.
 - Nothing failed → **PASS.**
 
-Sheet naming (checks 10–12) is scored from the title block — line size, position at a page
-edge, a sheet number nearby — with boilerplate excluded and wrapped names joined. Every
-failure message states only what was actually established: what we *did* find, before what
-we didn't.
+Page recognition (checks 10–12) is a **model** task: each page image is classified as
+floor_plan / internal_elevation / external_elevation / detail / document /
+marketing_render / scan, via a sidecar JSON (in-session) or the headless CLI (local
+machine). The **deterministic layer stays the trust authority** — a model class never
+makes a quantity; it only chooses which pages the deterministic evidence (dimension
+tokens, wet-area terms, chains) is read against. With no classification available the
+gate falls back to the title-block heuristics and its output says so. See
+`TAKEOFF_METHOD.md` §0b.
+
+Every failure message states only what was actually established — what we *did* find and
+what we *couldn't confidently read* — never a confident diagnosis of what the file is.
+And **every outgoing letter ends with the appeal line** (*"Reckon we've got this wrong?
+Reply — a human will personally look at your file within the day."*): gate misses must
+convert to human review, not lost jobs.
 
 Three more things are recorded at intake but **never block the run**:
 

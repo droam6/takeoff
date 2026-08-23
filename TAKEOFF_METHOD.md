@@ -20,6 +20,28 @@ is pass silently as though it were the customer's choice.
 
 The profile governs the **order** only. It cannot touch a measured area — see §7.7.
 
+### 0b. Who does what: the deterministic layer verifies, the model recognises
+
+Two kinds of question run through this method, and they are answered by different
+machinery on purpose:
+
+- **Recognition — "what is this page?"** A seeing task: floor plan or brochure render,
+  internal or external elevation, drawing or council notice. Three stress rounds showed
+  the same failure family three times when a text heuristic did this job, so page
+  classification is performed by a **model** looking at the page images (a sidecar
+  `<pdf>.classes.json` written in-session, or the headless CLI on a local machine —
+  classes: floor_plan, internal_elevation, external_elevation, detail, document,
+  marketing_render, scan). When no classification is available the gate falls back to
+  the title heuristics **and says so** — it never silently pretends it looked.
+- **Verification — "can this number be trusted?"** Chains summing to printed totals,
+  text readability, every piece of arithmetic in §5–§8. This stays **deterministic**
+  and is the sole trust authority. A model class never makes a quantity: it only
+  decides which pages the deterministic evidence is read against (a page the model
+  calls a floor plan still needs printed dimension tokens to count as one; a page it
+  calls an internal elevation still needs wet-area evidence and dimensions to count as
+  measurable). Rates like chains-per-page are computed over classified **drawing**
+  pages, so document-heavy DA packs don't dilute the sheets that carry the chains.
+
 ---
 
 ## 1. Build the sheet register
