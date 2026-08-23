@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-cfg="COMPANY_NAME">Loading…</title>
+<meta name="description" content="Send us your plans. Get back exactly what to order - measured, checked, same day.">
+<link rel="stylesheet" href="style.css">
+<script src="site.config.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="wordmark" data-cfg="COMPANY_NAME"></span>
+  <span class="tagline" data-cfg="TAGLINE"></span>
+</header>
+
+<!-- 1. HERO -->
+<main>
+<section class="hero">
+  <h1>Send us your plans.<br>Get back exactly what to order &mdash; measured, checked, same&nbsp;day.</h1>
+  <p class="sub">No software to learn. No guesswork buried in the numbers. A PDF you can
+  read on your phone in the ute, with every assumption written down as a question.</p>
+  <a class="cta" href="#enquire">Send your plans through</a>
+</section>
+
+<!-- 2. FOUR SERVICES -->
+<section class="services" aria-labelledby="services-h">
+  <h2 id="services-h">What we do</h2>
+
+  <article class="card card-live">
+    <p class="badge">AVAILABLE NOW</p>
+    <h3>Takeoffs</h3>
+    <p>Plans in, shopping list back. Floor and wall quantities room by room, extra for
+    cuts already added, and every number shows its working. From <strong>$40</strong>.</p>
+  </article>
+
+  <article class="card">
+    <p class="badge badge-soon">ENQUIRE</p>
+    <h3>Never Miss a Job</h3>
+    <p>Missed a call on the tools? A text goes straight back so the job doesn't ring the
+    next bloke. And we chase the quotes you've already sent.</p>
+  </article>
+
+  <article class="card">
+    <p class="badge badge-soon">ENQUIRE</p>
+    <h3>Get Found</h3>
+    <p>A website, a Google profile that ranks, and reviews that actually get asked for.
+    The stuff that makes the phone ring.</p>
+  </article>
+
+  <article class="card">
+    <p class="badge badge-soon">ENQUIRE</p>
+    <h3>Look the Part</h3>
+    <p>Quotes with your name and colours on them, and photos of your work posted where
+    customers look. Big-company look, one-man-band overheads.</p>
+  </article>
+
+  <p class="bundles">Bundles negotiable &mdash; talk to us.</p>
+</section>
+
+<!-- 3. HOW IT WORKS -->
+<section class="how" aria-labelledby="how-h">
+  <h2 id="how-h">How it works</h2>
+  <ol class="steps">
+    <li>
+      <h3>1. Send the plans</h3>
+      <p>PDF straight from the drawing software, plus three quick questions: your trade,
+      which rooms, how much you allow for cuts. Flat out? We'll run it either way and
+      flag what we assumed.</p>
+    </li>
+    <li>
+      <h3>2. We measure and double-check everything</h3>
+      <p>Printed dimensions only &mdash; we never scale off a drawing. Every chain of
+      numbers has to add up to the totals on the sheet before we trust it.</p>
+    </li>
+    <li>
+      <h3>3. Your numbers back same day</h3>
+      <p>A phone-friendly PDF: what to order on page one, the working underneath.
+      Anything unclear is flagged as a question &mdash; never a guess. Answer the
+      questions and we re-issue free.</p>
+    </li>
+  </ol>
+</section>
+
+<!-- 4. WHY US -->
+<section class="why" aria-labelledby="why-h">
+  <h2 id="why-h">Why us</h2>
+  <ul class="why-list">
+    <li><strong>Measured, not guessed.</strong> All working shown &mdash; you can check
+    any number on the back of a docket.</li>
+    <li><strong>Straight answers about dodgy plans.</strong> If your set can't be quoted
+    off safely, we tell you exactly what to ask the builder for &mdash; not numbers you
+    can't trust.</li>
+    <li><strong>A human reviews every job</strong> before it's sent. And if you reckon
+    we've got something wrong, reply &mdash; a person looks at it within the day.</li>
+  </ul>
+</section>
+
+<!-- 5. ENQUIRY FORM -->
+<section class="enquire" id="enquire" aria-labelledby="enquire-h">
+  <h2 id="enquire-h">Send your plans through</h2>
+  <form id="enquiry-form" method="POST">
+    <label>Name
+      <input type="text" name="name" autocomplete="name" required>
+    </label>
+    <label>Trade
+      <input type="text" name="trade" placeholder="tiler, painter, chippy&hellip;" required>
+    </label>
+    <label>Mobile
+      <input type="tel" name="mobile" autocomplete="tel" inputmode="tel" required>
+    </label>
+    <label>What do you need?
+      <textarea name="message" rows="4"
+        placeholder="e.g. two bathrooms and a laundry, floors and walls"></textarea>
+    </label>
+    <button type="submit" class="cta" id="form-submit">Send it</button>
+    <p class="form-note" id="form-note" hidden>The form isn't wired up yet &mdash; text
+    or email your plans instead. Same service, same day.</p>
+  </form>
+  <p class="textline">Or just text your plans straight to
+    <a class="tel" data-cfg-tel="MOBILE" data-cfg="MOBILE" href="#"></a>.</p>
+</section>
+</main>
+
+<!-- 6. FOOTER -->
+<footer>
+  <p><span data-cfg="COMPANY_NAME"></span> &middot; <span class="foot-tag" data-cfg="TAGLINE"></span></p>
+  <p>
+    <a data-cfg-mail="EMAIL" data-cfg="EMAIL" href="#"></a> &middot;
+    <a class="tel" data-cfg-tel="MOBILE" data-cfg="MOBILE" href="#"></a>
+  </p>
+  <p class="abn">ABN <span data-cfg="ABN"></span></p>
+</footer>
+
+<noscript><p style="text-align:center;padding:1rem">Enable JavaScript to see our contact
+details, or check the page source for them.</p></noscript>
+
+<script>
+(function () {
+  var C = window.SITE_CONFIG || {};
+  // Text: every element marked data-cfg gets its value from the config.
+  document.querySelectorAll("[data-cfg]").forEach(function (el) {
+    var v = C[el.getAttribute("data-cfg")];
+    if (v) el.textContent = v;
+  });
+  // Links: tel/mailto built from config, never hardcoded.
+  document.querySelectorAll("[data-cfg-tel]").forEach(function (el) {
+    var v = C[el.getAttribute("data-cfg-tel")] || "";
+    if (v && v.indexOf("<") === -1) el.href = "tel:" + v.replace(/\s+/g, "");
+  });
+  document.querySelectorAll("[data-cfg-mail]").forEach(function (el) {
+    var v = C[el.getAttribute("data-cfg-mail")] || "";
+    if (v && v.indexOf("<") === -1) el.href = "mailto:" + v;
+  });
+  // Accent colour: one value, set once, used everywhere via the CSS variable.
+  if (C.ACCENT_COLOUR) document.documentElement.style.setProperty("--accent", C.ACCENT_COLOUR);
+  // Form: real endpoint -> wire it up; placeholder -> say so honestly.
+  var form = document.getElementById("enquiry-form");
+  if (C.FORM_ENDPOINT && C.FORM_ENDPOINT.indexOf("<") === -1) {
+    form.action = C.FORM_ENDPOINT;
+  } else {
+    document.getElementById("form-submit").disabled = true;
+    document.getElementById("form-note").hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

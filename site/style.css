@@ -1,0 +1,138 @@
+/* ---------------------------------------------------------------------------
+   Phone-first, no frameworks, no images, one accent colour.
+   The accent is set from site.config.js onto --accent; the fallback below is
+   a neutral grey so a missing config never fakes the brand.
+--------------------------------------------------------------------------- */
+
+:root {
+  --accent: #555;            /* overwritten from site.config.js */
+  --ink: #141414;
+  --paper: #ffffff;
+  --soft: #f4f6f8;
+  --rule: #d9dde1;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.5;
+  font-size: 1.0625rem;                 /* big base type for phones */
+  -webkit-text-size-adjust: 100%;
+}
+
+main, footer, .topbar { max-width: 40rem; margin: 0 auto; padding: 0 1.25rem; }
+
+/* top bar */
+.topbar { padding-top: 1rem; padding-bottom: .25rem; }
+.wordmark { font-weight: 800; letter-spacing: .18em; font-size: .95rem; }
+.tagline { display: block; color: #555; font-style: italic; font-size: .85rem; }
+
+/* hero */
+.hero { padding: 2.25rem 0 2rem; border-bottom: 4px solid var(--accent); }
+h1 { font-size: clamp(1.7rem, 6.5vw, 2.4rem); line-height: 1.15; font-weight: 800; }
+.hero .sub { margin: 1rem 0 1.5rem; color: #333; }
+
+.cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: .85rem 1.4rem;
+  border: 0;
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  width: auto;
+}
+.cta:active { filter: brightness(.9); }
+
+/* sections */
+section { padding: 2rem 0; }
+h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin-bottom: 1.1rem;
+  border-left: 6px solid var(--accent);
+  padding-left: .6rem;
+}
+h3 { font-size: 1.1rem; margin-bottom: .3rem; }
+
+/* services */
+.card {
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  margin-bottom: .9rem;
+  background: var(--soft);
+}
+.card-live { border: 2px solid var(--accent); background: var(--paper); }
+.badge {
+  display: inline-block;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: #fff;
+  background: var(--accent);
+  padding: .15rem .5rem;
+  border-radius: 4px;
+  margin-bottom: .45rem;
+}
+.badge-soon { background: #666; }
+.bundles { font-weight: 700; margin-top: .3rem; }
+
+/* how it works */
+.steps { list-style: none; }
+.steps li {
+  padding: .9rem 0 .9rem 1rem;
+  border-left: 4px solid var(--accent);
+  margin-bottom: .9rem;
+}
+
+/* why us */
+.why-list { list-style: none; }
+.why-list li { padding: .55rem 0; border-bottom: 1px solid var(--rule); }
+.why-list li:last-child { border-bottom: 0; }
+
+/* form */
+.enquire { background: var(--soft); border-radius: 10px; padding: 1.5rem 1.25rem; }
+form label { display: block; font-weight: 700; margin-bottom: .9rem; font-size: .95rem; }
+input, textarea {
+  display: block;
+  width: 100%;
+  margin-top: .3rem;
+  padding: .7rem .75rem;
+  font: inherit;
+  border: 1px solid #aab2b9;
+  border-radius: 6px;
+  background: var(--paper);
+}
+input:focus, textarea:focus { outline: 3px solid var(--accent); outline-offset: 0; }
+form .cta { width: 100%; margin-top: .25rem; }
+form .cta:disabled { background: #999; cursor: not-allowed; }
+.form-note { margin-top: .6rem; font-weight: 700; }
+.textline { margin-top: 1.1rem; font-size: 1.05rem; }
+.textline a, .why a { color: var(--accent); font-weight: 700; }
+
+/* footer */
+footer {
+  border-top: 4px solid var(--accent);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  padding-bottom: 2.5rem;
+  font-size: .95rem;
+  color: #333;
+}
+footer a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.foot-tag { font-style: italic; }
+.abn { color: #666; margin-top: .35rem; }
+
+/* slightly roomier on bigger screens - still one column, still instant */
+@media (min-width: 48rem) {
+  body { font-size: 1.125rem; }
+  section { padding: 2.5rem 0; }
+}
