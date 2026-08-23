@@ -4,10 +4,21 @@ Accuracy is the product. The fastest way to destroy it is to start measuring a p
 that cannot support a measurement. So every job passes an intake gate first, and the gate
 is automated (`takeoff.py` runs it before any analysis).
 
-**Pass → we measure. Fail → we send back `REJECTED_<job>.md` telling the tradie exactly
-what is missing and exactly what to send instead. We never guess off bad inputs.**
+Every job gets one of three verdicts:
+
+- **PASS → we measure everything.**
+- **PARTIAL → we measure the floors and skirting now.** The set has dimensioned floor
+  plans but no internal wet-area elevations — the most common shape a real set arrives in
+  (5 of the 9 stress-test sets). The takeoff delivered is floors + tile skirting, and its
+  walls section reads: *"Walls: not measured — this set has no internal wet-area
+  elevations. Send the internal elevations and we'll add every wall."* A `PARTIAL_<job>.md`
+  letter goes with it saying exactly which sheets unlock the walls.
+- **FAIL → we send back `REJECTED_<job>.md`** telling the tradie exactly what is missing
+  and exactly what to send instead. **We never guess off bad inputs.**
 
 A rejection is not a lost job. It is a 60-second email that saves both sides a wrong quote.
+And a PARTIAL is not a rejection at all — it is a smaller job delivered the same day, with
+a standing offer to finish it.
 
 ---
 
@@ -185,9 +196,15 @@ the gate runs them:
 | 11 | **Elevation pages** | ≥ 1 sheet whose title-block name reads as an elevation | Warning only, unless walls are in scope → then a fail |
 | 12 | **Wet-area elevations** | ≥ 1 elevation sheet carrying ≥ 4 distinct wet-area terms incl. a fitting, and ≥ 5 dimension tokens | The elevations are external only — floors are measurable, walls are not. Conditional, like #11 |
 
-Checks 1–10 are **hard**. Any hard failure writes `REJECTED_<job>.md` and stops.
-Checks 11–12 are **conditional** — hard when the tradie asked for wall areas, a warning
-under `--no-walls`.
+**How the checks become a verdict:**
+
+- Any failure among checks **1–10** → **FAIL.** `REJECTED_<job>.md` is written and
+  nothing is measured.
+- Checks **11–12** are the *wall-evidence* checks. When they are the **only** failures
+  (walls were asked for, floor plans are dimensioned and readable) → **PARTIAL.**
+  Floors + skirting are measured now; `PARTIAL_<job>.md` says what unlocks the walls.
+  Under `--no-walls` they are warnings and the verdict is PASS.
+- Nothing failed → **PASS.**
 
 Sheet naming (checks 10–12) is scored from the title block — line size, position at a page
 edge, a sheet number nearby — with boilerplate excluded and wrapped names joined. Every

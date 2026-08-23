@@ -11,7 +11,11 @@ by the firms that drew them.
 > not fair testing use. The URLs below make the run reproducible without us becoming a
 > distributor of other people's drawings.
 
-Fetched **16 August 2026**.
+Fetched **16 August 2026**. Re-fetched **23 August 2026** on a fresh machine: the five
+open-web sets below downloaded fine; the two Sutherland Shire DA sets now return
+`403 Access Denied` from the council's WAF, and `phone-scan-of-da-plans.pdf` is derived
+from one of them — so those three exist only where they were first fetched. The corpus is
+**partially reproducible**: 7 of 9 sets from a clean clone.
 
 ---
 
@@ -92,6 +96,21 @@ for i in range(6):
     out.new_page(width=pg.rect.width, height=pg.rect.height).insert_image(
         fitz.Rect(0, 0, pg.rect.width, pg.rect.height), pixmap=pix)
 out.save('phone-scan-of-da-plans.pdf', deflate=True)
+```
+
+## 3b. Derived floors-only set — must come out PARTIAL
+
+### `sample-floors-only-derived.pdf` — **derived, not third-party**
+The control set (`sample_plans.pdf`) with its **6 internal wet-area elevation sheets
+removed** (pages 10, 11, 15, 16, 20, 22): 19 sheets of dimensioned floor plans, notes and
+external/other elevations. Built to exercise the **PARTIAL** tier — a set whose floors are
+fully measurable and whose walls are not. Reproduce with:
+
+```python
+import fitz
+doc = fitz.open('sample_plans.pdf')
+doc.select([i for i in range(doc.page_count) if i + 1 not in (10, 11, 15, 16, 20, 22)])
+doc.save('sample-floors-only-derived.pdf')
 ```
 
 ## 4. Adversarial extra — OCR'd scan with a junk text layer

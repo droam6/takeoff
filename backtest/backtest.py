@@ -53,6 +53,7 @@ import fitz  # noqa: E402
 from takeoff import (  # noqa: E402
     run_intake, write_rejection, write_intake_report, extract, analyse,
     load_profile, resolve_order_settings, write_profile_report,
+    gate_verdict, write_partial_notice,
     WET_RE, SHEET_PLAN_RE, SHEET_ELEV_RE,
 )
 
@@ -177,8 +178,9 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
     write_intake_report(out_dir, name, pdf, checks, facts,
                         {"trade": "tiler", "rooms": "all wet areas", "wastage": "10"})
 
+    verdict = gate_verdict(checks)
     hard_fails = [c for c in checks if not c.ok and c.hard]
-    if hard_fails:
+    if verdict == "FAIL":
         # Fail politely, and keep the letter we would actually send.
         write_rejection(out_dir, name, pdf, checks, facts,
                         {"trade": "tiler", "rooms": None, "wastage": None})
@@ -190,6 +192,12 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
             runtime=round(time.time() - t0, 1),
         )
         return row
+
+    partial = verdict == "PARTIAL"
+    if partial:
+        # A job, not a rejection: floors + skirting now, walls when the
+        # internal elevations arrive. Keep the letter we would send with it.
+        write_partial_notice(out_dir, name, pdf, checks, facts)
 
     pr = probe(facts)
     (out_dir / "probe.json").write_text(json.dumps(pr, indent=2))
@@ -206,18 +214,23 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
                          ("PROFILE_QUESTIONS.md", "PROFILE_QUESTIONS.md")):
             if (ROOT / src).exists():
                 shutil.copyfile(ROOT / src, out_dir / dst)
+        rooms_ask = ("all wet areas - floors and skirting only" if partial
+                     else "floors only" if args.no_walls else "all wet areas")
         takeoff_md = analyse(out_dir, name,
-                             {"trade": "tiler",
-                              "rooms": "floors only" if args.no_walls else "all wet areas",
+                             {"trade": "tiler", "rooms": rooms_ask,
                               "wastage": None, "tile_size": None,
                               "m2_per_box": None, "lay_pattern": None},
-                             prof, settings, timeout=args.timeout)
+                             prof, settings, timeout=args.timeout,
+                             partial=partial)
 
     rooms = sorted(pr["measurable_rooms"]) or sorted(pr["wet_rooms"])
+    why = (f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev "
+           f"({pr['wet_elev_sheets']} internal wet) · {pr['total_chains']} chains")
+    if partial:
+        why += " → floors + skirting now, walls when the internal elevations arrive"
     row.update(
-        intake="PASS",
-        why=f"{pr['plan_sheets']} plan / {pr['elev_sheets']} elev "
-            f"({pr['wet_elev_sheets']} internal wet) · {pr['total_chains']} chains",
+        intake="PARTIAL" if partial else "PASS",
+        why=why,
         rooms=", ".join(rooms) if rooms else "none identified",
         n_measurable=len(pr["measurable_rooms"]),
         areas=headline_areas(takeoff_md),
@@ -233,6 +246,7 @@ def run_one(pdf: Path, args, run_dir: Path) -> dict:
 def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> Path:
     out = run_dir / "RESULTS.md"
     passed = [r for r in rows if r["intake"] == "PASS"]
+    partial = [r for r in rows if r["intake"] == "PARTIAL"]
     failed = [r for r in rows if r["intake"] == "FAIL"]
     errored = [r for r in rows if r["intake"] == "ERROR"]
 
@@ -240,7 +254,8 @@ def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> P
          f"**Run:** {run_dir.name} · "
          f"**Depth:** {'full pipeline (gate + extract + model takeoff)' if args.analyse else 'structure probe (gate + extract, no model)'} · "
          f"**Plans:** {len(rows)}", "",
-         f"**{len(passed)} passed the gate · {len(failed)} rejected · {len(errored)} errored**", "",
+         f"**{len(passed)} passed · {len(partial)} partial (floors + skirting) · "
+         f"{len(failed)} rejected · {len(errored)} errored**", "",
          "*Every run archives to `backtest/results/<timestamp>/`; the committed "
          "`backtest/RESULTS.md` always holds the latest full run only.*", "",
          "| File | Pages | Intake | Why | Rooms found | Headline areas | Flags | Runtime |",
@@ -248,7 +263,8 @@ def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> P
     for r in rows:
         flags = r.get("flags") or []
         fl = "<br>".join(f"⚠️ {x}" for x in flags) if flags else "—"
-        mark = {"PASS": "✅ PASS", "FAIL": "🛑 FAIL", "ERROR": "💥 ERROR"}[r["intake"]]
+        mark = {"PASS": "✅ PASS", "PARTIAL": "🟨 PARTIAL", "FAIL": "🛑 FAIL",
+                "ERROR": "💥 ERROR"}[r["intake"]]
         L.append(f"| `{r['file']}` | {r.get('pages','?')} | {mark} | {r.get('why','')} | "
                  f"{r.get('rooms','—')} | {r.get('areas','—')} | {fl} | {r.get('runtime','?')}s |")
 
@@ -265,8 +281,17 @@ def write_scoreboard(rows: list[dict], args, run_dir: Path, full_run: bool) -> P
             L += ["The letter we would actually send:", "",
                   "```", blocking.strip()[:1800], "```", ""]
 
+    if partial:
+        L += ["", "## Partial notices in full", ""]
+        for r in partial:
+            letter = run_dir / r["name"] / f"PARTIAL_{r['name']}.md"
+            L += [f"### `{r['file']}`", "", f"**Gate said:** {r['why']}", ""]
+            if letter.exists():
+                L += ["The letter we would actually send:", "", "```",
+                      letter.read_text(encoding="utf-8").strip()[:1800], "```", ""]
+
     L += ["", "## Per-plan detail", ""]
-    for r in passed:
+    for r in passed + partial:
         L += [f"### `{r['file']}`", "",
               f"- Sheets: {r.get('why')}",
               f"- Scales: {', '.join(r.get('scales') or []) or 'none printed'}",
@@ -332,7 +357,9 @@ def main(argv=None) -> int:
         print("(--only run: backtest/RESULTS.md untouched - "
               "it keeps the latest full run)")
     ok = sum(r["intake"] == "PASS" for r in rows)
-    print(f"{ok}/{len(rows)} passed the gate.  Scoreboard: {out}")
+    part = sum(r["intake"] == "PARTIAL" for r in rows)
+    print(f"{ok}/{len(rows)} passed, {part} partial (floors + skirting).  "
+          f"Scoreboard: {out}")
     return 0
 
 

@@ -84,6 +84,30 @@ class Check:
         return "PASS" if self.ok else ("FAIL" if self.hard else "WARN")
 
 
+# The wall-evidence checks. When these are the ONLY hard failures, the job is
+# PARTIAL rather than FAIL: the floors are measurable today, the walls aren't.
+PARTIAL_KEYS = {"elevation_pages", "wet_area_elevations"}
+
+
+def gate_verdict(checks: list) -> str:
+    """Document-level gate verdict: PASS / PARTIAL / FAIL.
+
+    PASS     every hard check passed - full takeoff.
+    PARTIAL  dimensioned floor plans, but no internal wet-area elevations
+             (the only hard failures are the wall-evidence checks). We deliver
+             a floors + skirting takeoff now, and add every wall the day the
+             internal elevations arrive. This is the most common real-world
+             shape - 5 of 9 corpus sets - and it is a job, not a rejection.
+    FAIL     anything else - rejection letter, nothing measured.
+    """
+    hard_fails = [c for c in checks if not c.ok and c.hard]
+    if not hard_fails:
+        return "PASS"
+    if all(c.key in PARTIAL_KEYS for c in hard_fails):
+        return "PARTIAL"
+    return "FAIL"
+
+
 DIM_RE = re.compile(r"\b(\d{2,5})\b")
 PLAN_RE = re.compile(r"\bPLAN\b", re.I)
 ELEV_RE = re.compile(r"\bELEVATION", re.I)
@@ -330,7 +354,10 @@ def classify_pages(doc):
             "chains": verify_chains(toks),
             "wet_kw": len(kws),
             "has_fitting": bool(FITTING_RE.search(text)),
-            "scales": sorted({m.group(0) for m in SCALE_RE.finditer(text)}),
+            # collapse whitespace - a scale wrapped across two lines would
+            # otherwise carry a newline into every table it is printed in
+            "scales": sorted({" ".join(m.group(0).split())
+                              for m in SCALE_RE.finditer(text)}),
         })
     return pages
 
@@ -491,8 +518,9 @@ def run_intake(pdf_path: Path, want_walls: bool = True):
         "The elevations in this set look like external elevations - the outside of "
         "the building. Wall tile quantities come from internal elevations: the wall "
         "drawings of each bathroom, ensuite and laundry, with tiling heights on them.",
-        "Ask for the internal elevations / joinery sheets for each wet area. If they "
-        "don't exist, we can still do floor areas - just say the word."))
+        "Ask for the internal elevations / joinery sheets for each wet area. "
+        "Meanwhile we'll measure your floors and skirting off the plans - send the "
+        "internal elevations and we'll add every wall."))
 
     doc.close()
     return checks, facts
@@ -553,6 +581,34 @@ def write_rejection(job_dir: Path, job: str, pdf: Path,
     L += ["---", "", "*We measure from stated dimensions only. We never scale off the "
           "drawing, and we never guess off a bad input — that's the whole point.*", ""]
 
+    out.write_text("\n".join(L), encoding="utf-8")
+    return out
+
+
+def write_partial_notice(job_dir: Path, job: str, pdf: Path,
+                         checks: list[Check], facts: dict) -> Path:
+    """The letter that goes with a PARTIAL job: what we're delivering today
+    (floors + skirting), and exactly what to send to get the walls added."""
+    wall_fails = [c for c in checks if not c.ok and c.hard and c.key in PARTIAL_KEYS]
+    out = job_dir / f"PARTIAL_{job}.md"
+    today = _dt.date.today().isoformat()
+    L = [f"# Floors first - {job}", "",
+         f"**File:** `{pdf.name}`  |  **Checked:** {today}  |  "
+         f"**Pages:** {facts.get('pages', '?')}", "",
+         "Good news and a gap.", "",
+         "**The good news:** your floor plans are dimensioned and readable, so your "
+         "**floor areas and tile skirting are being measured now** and you'll have "
+         "them the same day.", "",
+         "**The gap:** the set has no internal wet-area elevations - the wall "
+         "drawings of each bathroom, ensuite and laundry, with tiling heights on "
+         "them. Wall tile can only be measured off those, and we won't guess.", ""]
+    for c in wall_fails:
+        L += [f"- **{c.detail}** - {c.means}", ""]
+    L += ["**Send the internal elevations and we'll add every wall** - same job, "
+          "no extra back-and-forth. Ask your designer for the internal elevation / "
+          "joinery sheets for each wet area.", "",
+          "---", "", "*We measure from stated dimensions only. We never scale off "
+          "the drawing, and we never guess - that's the whole point.*", ""]
     out.write_text("\n".join(L), encoding="utf-8")
     return out
 
@@ -859,9 +915,27 @@ misreads is exactly as wrong as one you miscalculated.
 Write your result to TAKEOFF_{job}.md in this folder.
 """
 
+PARTIAL_INSTRUCTION = """
+THIS IS A PARTIAL JOB - FLOORS + SKIRTING ONLY. The set passed intake as PARTIAL:
+dimensioned floor plans, but NO internal wet-area elevations.
+
+  - Measure floor areas and tile skirting from the floor plans, exactly per METHOD.md.
+  - Do NOT measure, estimate or assume ANY wall tile area. Not as a pending line, not
+    as a provisional number, not as a question with a guess attached. No wall numbers
+    exist in this document.
+  - The document gets a walls section in the ANSWER PACK that reads exactly:
+    "Walls: not measured - this set has no internal wet-area elevations.
+    Send the internal elevations and we'll add every wall."
+  - The ORDER THIS box carries floor tiles and skirting only. Under the bottom rule,
+    one line: walls are waiting on the internal elevations.
+  - Niches, feature walls and tiling heights are wall scope - out, same message.
+  - Everything else (checks, measured-vs-order split, answer form, proof) as normal,
+    applied to the floors.
+"""
+
 
 def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
-            timeout: int = 3600) -> Path | None:
+            timeout: int = 3600, partial: bool = False) -> Path | None:
     binary = resolve_claude()
     if not binary:
         print("  ! claude CLI not found on PATH - skipping analysis.")
@@ -884,6 +958,8 @@ def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
         m2_per_box=answers.get("m2_per_box") or "not given - no boxes line",
         always_flag=s["always_flag"],
     )
+    if partial:
+        prompt += PARTIAL_INSTRUCTION
     cmd = build_command(binary, prompt)
     print(f"  > {binary} -p <instruction> --dangerously-skip-permissions")
     print(f"    cwd = {job_dir}")
@@ -919,10 +995,19 @@ def analyse(job_dir: Path, job: str, answers: dict, prof: dict, s: dict,
 
 def write_intake_report(job_dir: Path, job: str, pdf: Path,
                         checks: list[Check], facts: dict, answers: dict) -> Path:
+    verdict = gate_verdict(checks)
+    verdict_line = {
+        "PASS": "**Verdict: PASS** - full takeoff.",
+        "PARTIAL": "**Verdict: PARTIAL** - dimensioned floor plans, no internal "
+                   "wet-area elevations. Floors + skirting measured now; send the "
+                   "internal elevations and we'll add every wall.",
+        "FAIL": "**Verdict: FAIL** - see the rejection letter.",
+    }[verdict]
     out = job_dir / "intake_report.md"
     L = [f"# Intake report - {job}", "",
          f"**File:** `{pdf.name}`  |  **Pages:** {facts.get('pages','?')}  |  "
          f"**Checked:** {_dt.date.today().isoformat()}", "",
+         verdict_line, "",
          "| Check | Result | Detail |", "|---|---|---|"]
     for c in checks:
         L.append(f"| {c.key} | {c.status} | {c.detail} |")
@@ -978,13 +1063,21 @@ def main(argv=None) -> int:
 
     write_intake_report(job_dir, job, a.pdf, checks, facts, answers)
 
-    if any(not c.ok and c.hard for c in checks):
+    verdict = gate_verdict(checks)
+    if verdict == "FAIL":
         path = write_rejection(job_dir, job, a.pdf, checks, facts, answers)
         print(f"\nINTAKE FAILED - no analysis run.\nWrote {path}")
         print("We never guess off bad inputs.")
         return 1
 
-    print("      -> PASS")
+    partial = verdict == "PARTIAL"
+    if partial:
+        notice = write_partial_notice(job_dir, job, a.pdf, checks, facts)
+        print("      -> PARTIAL  floors + skirting only")
+        print("         no internal wet-area elevations - walls not measured.")
+        print(f"         Wrote {notice} (forward it with the takeoff)")
+    else:
+        print("      -> PASS")
 
     # ---- 1b. CUSTOMER PROFILE - the order settings, never the measurement ----
     root = Path(__file__).resolve().parent
@@ -1019,8 +1112,10 @@ def main(argv=None) -> int:
         return 0
 
     # ---- 3. ANALYSE ---------------------------------------------------------
-    print("[3/3] analysis via claude CLI")
-    out = analyse(job_dir, job, answers, prof, settings, timeout=a.timeout)
+    print("[3/3] analysis via claude CLI"
+          + ("  (PARTIAL: floors + skirting only)" if partial else ""))
+    out = analyse(job_dir, job, answers, prof, settings, timeout=a.timeout,
+                  partial=partial)
     if out:
         print(f"\nDone. {out}")
         return 0

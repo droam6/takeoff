@@ -1,11 +1,11 @@
 # STRESS REPORT — nine plan sets we didn't choose
 
-> **CURRENT RESULT — Round 2 (16 August 2026): 2 passed, 7 rejected. Every verdict right,
-> every stated reason true.** Of the 7 rejections, 2 sets are genuinely unreadable and 5 are
-> measurable for floors but not walls. Round 2 is the round of record — see
-> [ROUND 2 — after the fixes](#round-2--after-the-fixes). Everything between here and that
-> heading is **Round 1**, kept because it documents what the fixes fixed; its headline
-> numbers are superseded.
+> **CURRENT RESULT — Round 3 (23 August 2026), with the PARTIAL tier live:
+> 2 PASS · 5 PARTIAL (floors + skirting now, walls on receipt of internal elevations) ·
+> 2 FAIL.** The five sets that round 2 rejected for missing internal elevations are now
+> jobs, not rejections. Round 3 is the round of record — see
+> [ROUND 3 — the PARTIAL tier](#round-3--the-partial-tier). Rounds 1 and 2 below are kept
+> because they document what each set of fixes fixed; their headline numbers are superseded.
 
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
@@ -405,3 +405,78 @@ That reframes Risk 3 in the business plan: of nine sets, **two were genuinely un
 (`ncc` is OCR spray, `phone-scan` is a raster) and **five could be measured for floors but
 not walls.** The addressable failure isn't unreadability — it's missing internal elevations,
 and there's a product on the other side of it.
+
+---
+---
+
+# ROUND 3 — the PARTIAL tier
+
+**Re-run:** 23 August 2026, fresh machine, `backtest/backtest.py`, structure probe.
+**Result: 2 PASS · 5 PARTIAL · 2 FAIL — every verdict right, every stated reason true.**
+
+## What changed
+
+The gate now returns three verdicts instead of two:
+
+- **PASS** — every hard check passed. Full takeoff.
+- **PARTIAL** — dimensioned floor plans, but no internal wet-area elevations (the only
+  hard failures are the wall-evidence checks). **This is a job, not a rejection:** a
+  floors + tile-skirting takeoff is produced now, its walls section reads *"Walls: not
+  measured — this set has no internal wet-area elevations. Send the internal elevations
+  and we'll add every wall,"* and a `PARTIAL_<job>.md` letter goes with it naming exactly
+  which sheets unlock the rest.
+- **FAIL** — anything else. Rejection letter, nothing measured.
+
+Round 2 already knew the commercial answer to most rejections was "we can still do your
+floors" — but offered it only in the last line of a rejection letter, with no floors-only
+deliverable defined anywhere. Round 3 turns the most common real-world input into the
+product's default smaller job. Also in this round: the word-hit score was demoted to
+advisory (round 2 showed it separates nothing), and every threshold is now labelled
+tuned-on-corpus pending live validation.
+
+## Scoreboard
+
+**Corpus availability, stated plainly:** this run was made on a fresh machine.
+5 of the 8 web sets re-downloaded fine; the two Sutherland Shire DA sets now 403 behind
+the council's WAF, and `phone-scan` is derived from one of them, so those three were
+**not re-run** — their verdicts below are mapped from their recorded round-2 check
+results (the mapping is mechanical: which checks failed decides the verdict). One new
+derived set was added to exercise the tier: the control with its 6 internal wet-area
+elevation sheets removed.
+
+| Plan set | Round 2 | Round 3 | How |
+|---|---|---|---|
+| `sample_plans.pdf` | ✅ PASS | ✅ **PASS** · 4 plan / 13 elev (6 internal wet) · 144 chains | re-run |
+| `derbyshire-construction-sample.pdf` | ✅ PASS | ✅ **PASS** · 4 plan / 6 elev (4 internal wet) · 494 chains | re-run |
+| `ssc-da220327-architectural.pdf` | 🛑 FAIL | 🟨 **PARTIAL** — 5 floor plans, no internal wet elevations | mapped from round-2 checks (WAF blocks re-fetch) |
+| `ssc-da181440-architectural.pdf` | 🛑 FAIL | 🟨 **PARTIAL** — 4 floor plans, no internal wet elevations | mapped from round-2 checks (WAF blocks re-fetch) |
+| `housedesigners-working-drawings.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 3 plan / 2 elev · 86 chains | re-run |
+| `creativehomeplans-sample.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 4 plan / 1 elev · 13 chains | re-run |
+| `eastcoast-sample-plan-set.pdf` | 🛑 FAIL | 🟨 **PARTIAL** · 2 plan / 4 elev · 100 chains | re-run |
+| `ncc-building-plans-example.pdf` | 🛑 FAIL | 🛑 **FAIL** — 0.12 chains/page: text present but not reliably readable | re-run |
+| `phone-scan-of-da-plans.pdf` | 🛑 FAIL | 🛑 **FAIL** — 0 extractable characters | mapped from round-2 checks (source set unavailable) |
+| `sample-floors-only-derived.pdf` *(new)* | — | 🟨 **PARTIAL** · 4 plan / 7 elev (0 internal wet) · 93 chains | derived + run |
+
+Every PARTIAL set gets the *floors first* letter instead of a rejection: what's being
+measured today, what the gap is, and that sending the internal elevations adds every wall
+to the same job. Full letters in `backtest/RESULTS.md`.
+
+## What this means commercially
+
+Round 2's framing stands, sharpened: of nine sets we didn't choose, **two are genuinely
+unreadable and five are floors-only** — and floors-only is now a deliverable with a
+defined document, a defined letter, and a harness-tested path, not a hypothetical in the
+last line of a rejection. The most likely real-world job is a PARTIAL one, and the product
+now treats it as the default smaller job rather than a failure.
+
+## Honest limits of this round
+
+- **The structure probe ran; the model takeoff did not.** Verdicts and letters are
+  harness-tested; no measured numbers were produced in this round.
+- **Three of nine corpus sets were mapped, not re-run** (WAF). The mapping uses their
+  recorded round-2 per-check results, and the verdict function is deterministic in those
+  results — but a live re-run on the original machine should confirm it.
+- **The derived floors-only set shares geometry with the control.** It proves the PARTIAL
+  path, not the gate's behaviour on unfamiliar floors-only drawings — the three re-run
+  DA-level sets cover that.
+- Thresholds remain tuned-on-corpus. Nothing in this round adds held-out validation.

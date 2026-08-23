@@ -179,7 +179,27 @@ Three rules govern everything above the divider:
 - **Nothing unsafe to order sits in the order total.** A room we can't finish is excluded
   from the box and listed underneath as "not in that total".
 
-## 4. What we deliberately do **not** do
+## 4. The PARTIAL takeoff — floors + skirting first
+
+An intake verdict of **PARTIAL** (dimensioned floor plans, no internal wet-area
+elevations — `INTAKE.md` §C) produces a real deliverable, not a rejection. Five of the
+nine stress-test sets are exactly this shape (`STRESS_REPORT.md`): the most likely
+real-world job is a PARTIAL one.
+
+- **Measured and delivered:** floor areas per room (§1.1), tile skirting in lineal
+  metres, with the same verification checks, the same measured-vs-order split, and the
+  same answer form — applied to the floors.
+- **Not in the document:** any wall number. No wall tile, no niches, no feature zones,
+  no tiling heights — not even as a provisional line. A guessed wall is exactly the
+  product we refuse to sell.
+- **The walls section reads:** *"Walls: not measured — this set has no internal
+  wet-area elevations. Send the internal elevations and we'll add every wall."*
+- The ORDER THIS box carries floor tiles and skirting only, with one line under the
+  bottom rule saying the walls are waiting on the elevations.
+- Delivered alongside `PARTIAL_<job>.md` — the letter that says what we measured today
+  and exactly which sheets unlock the rest. Same job, no extra back-and-forth.
+
+## 5. What we deliberately do **not** do
 
 - We do not scale off the drawing. Ever. Printed dimensions only.
 - We do not price. We measure. Rates are the tradie's business.

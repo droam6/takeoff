@@ -288,8 +288,10 @@ content for a business with no paying customers is procrastination with a receip
 On intake we now have data rather than a guess: of nine plan sets pulled off the open web,
 **two were genuinely unreadable** and **five could be measured for floors but not walls**
 (`STRESS_REPORT.md`, round 2). The addressable failure isn't unreadability — it's missing
-internal elevations, and **floors-only is still a sellable product.** That materially softens
-the risk.
+internal elevations, and **floors-only is now a shipped product tier, not a hypothesis**: the
+gate's PARTIAL verdict produces a floors + skirting takeoff the same day, with a letter saying
+exactly which sheets unlock the walls (`INTAKE.md`, `SPEC.md` §4, `STRESS_REPORT.md` round 3).
+That materially softens the risk.
 
 ### The Sunday gate
 
