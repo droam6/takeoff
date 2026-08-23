@@ -6,6 +6,8 @@
 > jobs, not rejections. Round 3 is the round of record — see
 > [ROUND 3 — the PARTIAL tier](#round-3--the-partial-tier). Rounds 1 and 2 below are kept
 > because they document what each set of fixes fixed; their headline numbers are superseded.
+> **JOB 2 (23 August 2026)** put the *measurement method* itself through two unfamiliar
+> sets — see [JOB 2 — the measurement method on unfamiliar drawings](#job-2--the-measurement-method-on-unfamiliar-drawings).
 
 **Run:** 16 August 2026 · `backtest/backtest.py` · structure probe over 9 sets
 **Sources:** `backtest/SOURCES.md` · **Scoreboard:** `backtest/RESULTS.md`
