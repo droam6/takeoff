@@ -73,6 +73,13 @@ describes. Extraction and arithmetic are deterministic.
 buffers, rounding and box counts change the *order* only. Every takeoff prints both,
 labelled — so a tradie can disagree with the allowance and still trust the measurement.
 
+## Operating cadence
+
+The operating cadence — the Sunday gate reviews, kill-criteria checks and follow-ups the
+business plan depends on — **is scheduled and tracked in the manager system, not in this
+repo.** Nothing here fires a reminder; the repo holds the criteria (`BUSINESS_PLAN.md` §8),
+the manager system holds the schedule.
+
 ## Sample set
 
 `sample_plans.pdf` is a real architectural joinery set (Harper Lane Design, project 24107 —

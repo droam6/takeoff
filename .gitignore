@@ -1,5 +1,7 @@
 # Generated output - recreate with:  python3 takeoff.py <plans.pdf>
 jobs/
+# work/ is dead: first-day extraction, superseded by jobs/ and backtest/results/.
+# If a work/ folder still exists on your machine, delete it - nothing reads it.
 work/
 
 __pycache__/

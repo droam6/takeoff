@@ -69,6 +69,11 @@ run before we know what any of this is worth, and a published price list would f
 answer before we've heard it. It also keeps every enquiry a conversation, which is where the
 other three modules get sold.
 
+> **⚠ HYPOTHESIS — every number in this section.** Zero discovery conversations have
+> happened and zero prices have been paid. Nothing below is validated until **Gate 1
+> returns a named price from customer #1**; treat these as anchors for that conversation,
+> not as prices.
+
 Indicative, to be replaced by discovery:
 
 | | Product | From | Notes |
@@ -89,6 +94,9 @@ costs.
 ---
 
 ## 4. The revenue math
+
+> **⚠ HYPOTHESIS.** The $250/month average is a §3 hypothesis compounded — no client has
+> ever paid it. This table is arithmetic on an assumption, pending Gate 1's price.
 
 **30 clients at an average of $250/month = $7,500/month recurring — before a single per-job
 takeoff is invoiced.**
