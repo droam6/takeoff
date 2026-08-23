@@ -1,6 +1,4 @@
-# CHALKLINE — Business Plan
-
-**Measured, not guessed.**
+# Business plan
 
 *Version 3 · 16 August 2026 · reviewed every Sunday*
 
@@ -366,5 +364,5 @@ Weekday evening blocks, roughly 90 minutes after the tools, plus a Sunday review
 
 ---
 
-*CHALKLINE measures from stated dimensions only. It never scales off the drawing, and it never
-guesses. That rule is the product, it is the tagline, and it is the business.*
+*We measure from stated dimensions only. We never scale off the drawing, and we never
+guess. That rule is the product, it is the tagline, and it is the business.*

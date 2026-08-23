@@ -1,6 +1,7 @@
-# SPEC — What TAKEOFF measures, and for whom
+# SPEC — What we measure, and for whom
 
-TAKEOFF is a done-for-you plan-measurement service. A tradie sends a plan set; we send
+This is a done-for-you plan-measurement service (the brand name lives in `BRAND.md`).
+A tradie sends a plan set; we send
 back a room-by-room m² breakdown with every number showing its working, plus a list of
 questions we need answered before the numbers can be used to quote.
 

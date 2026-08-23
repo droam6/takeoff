@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-TAKEOFF backtest harness - QA only.
+Backtest harness - QA only. (The product's brand name lives in BRAND.md.)
 
 Runs every PDF in backtest/inbox/ through the real pipeline and scores the result.
 Nothing here is customer-facing; it exists to find out where the gate and the
@@ -278,7 +278,7 @@ def write_scoreboard(rows: list[dict], args) -> Path:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="TAKEOFF backtest harness (QA only)")
+    ap = argparse.ArgumentParser(description="Backtest harness (QA only)")
     ap.add_argument("--analyse", action="store_true",
                     help="also run the real headless takeoff on every set that passes")
     ap.add_argument("--only", help="substring filter on the filename")

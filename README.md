@@ -1,11 +1,13 @@
-# CHALKLINE
-
-**Measured, not guessed.**
+# Plan measurement for tradies
 
 AI plan measurement for tradies. Send a plan set, get a room-by-room m² breakdown back
 the same day, with every number showing its working.
 
 Not software they have to learn — a service they send plans to.
+
+**The brand name and tagline live in [`BRAND.md`](BRAND.md) and nowhere else** — every
+document, template and script sources them from there. (The name is currently under
+review — domain collision; see the note in `BRAND.md`.)
 
 ```bash
 pip install pymupdf

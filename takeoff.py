@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
-TAKEOFF v1 - AI plan-measurement for tradies.
+Takeoff pipeline v1 - AI plan-measurement for tradies.
+
+The product's brand name lives in BRAND.md and is read from there at runtime
+(brand_name below) - nothing in this script hardcodes it.
 
 Pipeline
 --------
@@ -43,6 +46,19 @@ try:
     import fitz  # PyMuPDF
 except ImportError:  # pragma: no cover
     sys.exit("PyMuPDF is required.  pip install pymupdf")
+
+
+def brand_name(root: Path | None = None) -> str:
+    """The product name, read from BRAND.md - the single source of truth."""
+    path = (root or Path(__file__).resolve().parent) / "BRAND.md"
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            m = re.match(r"\*\*Name:\*\*\s*(.+?)\s*$", line)
+            if m:
+                return m.group(1).strip()
+    except OSError:
+        pass
+    return "takeoff"
 
 
 # --------------------------------------------------------------------------
@@ -903,7 +919,8 @@ def write_intake_report(job_dir: Path, job: str, pdf: Path,
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="TAKEOFF v1 - AI plan measurement")
+    ap = argparse.ArgumentParser(
+        description=f"{brand_name()} takeoff pipeline v1 - AI plan measurement")
     ap.add_argument("pdf", type=Path, help="path to the plan set PDF")
     ap.add_argument("--job", help="job name (default: PDF stem)")
     ap.add_argument("--outdir", type=Path, default=Path("jobs"))
@@ -935,7 +952,7 @@ def main(argv=None) -> int:
                "tile_size": a.tile_size,
                "m2_per_box": a.m2_per_box, "lay_pattern": a.lay_pattern}
 
-    print(f"TAKEOFF v1  |  job '{job}'  |  {job_dir}")
+    print(f"{brand_name()} takeoff v1  |  job '{job}'  |  {job_dir}")
 
     # ---- 1. INTAKE GATE - always first, before any analysis -----------------
     print("[1/3] intake gate")

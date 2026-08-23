@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Render a markdown document to a branded CHALKLINE PDF.
+"""Render a markdown document to a branded PDF.
+
+The brand (name + tagline) is read from BRAND.md at render time - the single
+source of truth. Nothing here hardcodes it.
 
 Markdown -> HTML (`markdown`) -> PDF (PyMuPDF's Story engine), so the only
 dependencies are the two libraries takeoff.py already needs plus `markdown`.
@@ -84,7 +87,11 @@ def read_brand(path: Path = BRAND_FILE) -> tuple[str, str]:
                 break
     except OSError:
         pass
-    return name or "CHALKLINE", tagline or "Measured, not guessed."
+    if not (name and tagline):
+        # Fail loudly rather than render an unbranded or wrongly-branded PDF.
+        raise SystemExit(f"could not read **Name:** / **Tagline:** from {path} - "
+                         "BRAND.md is the single source of truth for the brand")
+    return name, tagline
 
 
 def spaced(name: str) -> str:
@@ -181,7 +188,8 @@ def render(src: Path, dst: Path, meta: dict) -> Path:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="Render markdown to a branded CHALKLINE PDF")
+    ap = argparse.ArgumentParser(
+        description="Render markdown to a branded PDF (brand read from BRAND.md)")
     ap.add_argument("src", type=Path)
     ap.add_argument("dst", type=Path)
     ap.add_argument("--title", default="")

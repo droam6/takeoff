@@ -3,6 +3,12 @@
 **Name:** CHALKLINE
 **Tagline:** *Measured, not guessed.*
 
+> **⚠ The name is under review** — `chalkline.com.au` is already taken (domain collision),
+> so CHALKLINE may not survive contact with the handle grab. It stays until Jack decides.
+> This file is the **single source of truth** for the name and tagline: every document,
+> template and script sources them from here — body copy included — so the rename, if it
+> comes, is an edit to this file plus a re-render of the PDFs, nothing else.
+
 A chalk line is the first true line on a job. You snap it before you lay anything, and
 everything after it references back to it. If the line's wrong, the floor's wrong, and no
 amount of good work later fixes it.
