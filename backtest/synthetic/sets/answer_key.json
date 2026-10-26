@@ -1,0 +1,413 @@
+{
+  "S1_simple_bath": {
+    "file": "S1_simple_bath.pdf",
+    "expect_gate": "PASS",
+    "rooms": {
+      "MAIN BATHROOM": {
+        "floor_m2": 6.48,
+        "wall_tile_m2": 22.8072,
+        "niche_m2": 0.36,
+        "niche_opening_m2": 0.18,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 5.76
+          },
+          {
+            "wall": "E02",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          },
+          {
+            "wall": "E03",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 4.0872
+          },
+          {
+            "wall": "E04",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          }
+        ]
+      }
+    },
+    "what": "Rectangular bathroom, full-height tile, one door, one niche, wall-hung vanity."
+  },
+  "S2_L_ensuite": {
+    "file": "S2_L_ensuite.pdf",
+    "expect_gate": "PASS",
+    "rooms": {
+      "ENSUITE": {
+        "floor_m2": 6.78,
+        "wall_tile_m2": 15.486,
+        "niche_m2": 0.304,
+        "niche_opening_m2": 0.16,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 3000.0,
+            "tile": [
+              "full",
+              2100
+            ],
+            "area_m2": 5.22
+          },
+          {
+            "wall": "E02",
+            "run_mm": 1700.0,
+            "tile": [
+              "full",
+              2100
+            ],
+            "area_m2": 3.57
+          },
+          {
+            "wall": "E03",
+            "run_mm": 900.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 1.08
+          },
+          {
+            "wall": "E04",
+            "run_mm": 800.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 0.96
+          },
+          {
+            "wall": "E05",
+            "run_mm": 2100.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 1.656
+          },
+          {
+            "wall": "E06",
+            "run_mm": 2500.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 3.0
+          }
+        ]
+      }
+    },
+    "what": "L-shaped ensuite (6 walls), two tile heights, window inside the tiled band, door partly inside a 1200 band, niche."
+  },
+  "S3_laundry_powder": {
+    "file": "S3_laundry_powder.pdf",
+    "expect_gate": "PASS",
+    "rooms": {
+      "LAUNDRY": {
+        "floor_m2": 2.52,
+        "wall_tile_m2": 1.08,
+        "niche_m2": 0.0,
+        "niche_opening_m2": 0.0,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 2000.0,
+            "tile": [
+              "splash",
+              900,
+              1500,
+              200,
+              2000
+            ],
+            "area_m2": 1.08
+          },
+          {
+            "wall": "E02",
+            "run_mm": 1800.0,
+            "tile": null,
+            "area_m2": 0.0
+          },
+          {
+            "wall": "E03",
+            "run_mm": 2000.0,
+            "tile": null,
+            "area_m2": 0.0
+          },
+          {
+            "wall": "E04",
+            "run_mm": 1800.0,
+            "tile": null,
+            "area_m2": 0.0
+          }
+        ]
+      },
+      "POWDER ROOM": {
+        "floor_m2": 1.92,
+        "wall_tile_m2": 0.0,
+        "niche_m2": 0.0,
+        "niche_opening_m2": 0.0,
+        "skirting_m": 4.88,
+        "skirting_m2": 1.464,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 1200.0,
+            "tile": [
+              "skirting",
+              300
+            ],
+            "area_m2": 0.36
+          },
+          {
+            "wall": "E02",
+            "run_mm": 1600.0,
+            "tile": [
+              "skirting",
+              300
+            ],
+            "area_m2": 0.48
+          },
+          {
+            "wall": "E03",
+            "run_mm": 1200.0,
+            "tile": [
+              "skirting",
+              300
+            ],
+            "area_m2": 0.144
+          },
+          {
+            "wall": "E04",
+            "run_mm": 1600.0,
+            "tile": [
+              "skirting",
+              300
+            ],
+            "area_m2": 0.48
+          }
+        ]
+      }
+    },
+    "what": "Two rooms: laundry with floor-standing cabinets (taken off the floor) and a splashback only; powder room with 300 tile skirting only."
+  },
+  "S4_floors_only": {
+    "file": "S4_floors_only.pdf",
+    "expect_gate": "PARTIAL",
+    "rooms": {
+      "ENSUITE": {
+        "floor_m2": 6.78,
+        "wall_tile_m2": 15.486,
+        "niche_m2": 0.304,
+        "niche_opening_m2": 0.16,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 3000.0,
+            "tile": [
+              "full",
+              2100
+            ],
+            "area_m2": 5.22
+          },
+          {
+            "wall": "E02",
+            "run_mm": 1700.0,
+            "tile": [
+              "full",
+              2100
+            ],
+            "area_m2": 3.57
+          },
+          {
+            "wall": "E03",
+            "run_mm": 900.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 1.08
+          },
+          {
+            "wall": "E04",
+            "run_mm": 800.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 0.96
+          },
+          {
+            "wall": "E05",
+            "run_mm": 2100.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 1.656
+          },
+          {
+            "wall": "E06",
+            "run_mm": 2500.0,
+            "tile": [
+              "full",
+              1200
+            ],
+            "area_m2": 3.0
+          }
+        ]
+      }
+    },
+    "what": "The S2 floor plan with no elevations - must come back floors only, no walls.",
+    "expect_behaviour": "No wall tile numbers anywhere. Floor = S2 floor."
+  },
+  "S5_trap_bad_chain": {
+    "file": "S5_trap_bad_chain.pdf",
+    "expect_gate": "PASS",
+    "rooms": {
+      "MAIN BATHROOM": {
+        "floor_m2": 6.48,
+        "wall_tile_m2": 22.8072,
+        "niche_m2": 0.36,
+        "niche_opening_m2": 0.18,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 5.76
+          },
+          {
+            "wall": "E02",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          },
+          {
+            "wall": "E03",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 4.0872
+          },
+          {
+            "wall": "E04",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          }
+        ]
+      }
+    },
+    "what": "S1 with one plan sub-chain that doesn't add up (1400 + 820 + 330 = 2550 vs 2400).",
+    "expect_behaviour": "Must raise the 150 mm discrepancy as a question. Must not silently use 2550 anywhere."
+  },
+  "S6_trap_no_heights": {
+    "file": "S6_trap_no_heights.pdf",
+    "expect_gate": "PASS",
+    "rooms": {
+      "MAIN BATHROOM": {
+        "floor_m2": 6.48,
+        "wall_tile_m2": 22.8072,
+        "niche_m2": 0.36,
+        "niche_opening_m2": 0.18,
+        "skirting_m": 0.0,
+        "skirting_m2": 0.0,
+        "ceiling_mm": 2400,
+        "per_wall": [
+          {
+            "wall": "E01",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 5.76
+          },
+          {
+            "wall": "E02",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          },
+          {
+            "wall": "E03",
+            "run_mm": 2400.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 4.0872
+          },
+          {
+            "wall": "E04",
+            "run_mm": 2700.0,
+            "tile": [
+              "full",
+              2400
+            ],
+            "area_m2": 6.48
+          }
+        ]
+      }
+    },
+    "what": "S1 with every height dimension removed from the elevations - 'tile full height' is written but no ceiling height is printed anywhere.",
+    "expect_behaviour": "Floor still measurable. Wall tile must NOT go in the order total as a firm number; the missing height must be a question. Importing 2400 silently is a fail."
+  },
+  "S7_scan": {
+    "file": "S7_scan.pdf",
+    "expect_gate": "FAIL",
+    "rooms": {},
+    "what": "S1 as a picture-only PDF (a phone scan).",
+    "expect_behaviour": "Rejected at the gate. Nothing measured."
+  }
+}
