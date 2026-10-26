@@ -1,0 +1,19 @@
+CHALKLINE takeoff v1  |  job 'S7_scan'  |  /tmp/claude-0/-home-claude/205989b0-2a8e-5ab6-b9f0-b30398739bc3/scratchpad/gate/S7_scan
+[1/3] intake gate
+      pages: claude CLI
+      PASS  encryption           PDF is not locked
+      PASS  page_count           3 page(s)
+      FAIL  text_layer           0 extractable characters (need 200)
+      FAIL  text_density         0 characters per page (need 20)
+      FAIL  text_quality         text quality: 0.0% of characters usable (need 90%)
+      WARN  word_hit_score       advisory: 0% of words recognised (expect >= 15%; never blocks on its own)
+      FAIL  dimension_tokens     0 mm dimension tokens found (need 30)
+      WARN  dimension_chains     advisory: 0 dimension chains verified set-wide (0.00 per drawing page across 2 drawing page(s); context only - verdicts rest on per-page verification)
+      FAIL  dimensioned_pages    0 sheet(s) carry a real dimension chain
+      FAIL  plan_pages           no floor plan whose own dimension chains verify, among the 3 pages [model-classified pages]
+      PASS  elevation_pages      1 elevation sheet(s) recognised
+      FAIL  wet_area_elevations  0 floor plan(s) and 1 elevation sheet(s) found, but none of the elevations reads as a dimensioned internal elevation of a wet area
+
+INTAKE FAILED - no analysis run.
+Wrote /tmp/claude-0/-home-claude/205989b0-2a8e-5ab6-b9f0-b30398739bc3/scratchpad/gate/S7_scan/REJECTED_S7_scan.md
+We never guess off bad inputs.
